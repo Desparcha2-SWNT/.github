@@ -1,12 +1,12 @@
-## Hi there 👋
+DIEGO ALEJANDRO JARA ARANGO	y RODRIGO HUMBERTO GUALTERO MARTINEZ
+* BRAYAN LOAIZA LEAL
+* CARLOS MARIO PIEDRAHITA ARANGO
+* ISAAC DAVID PALOMO PERALTA
+* JUAN SEBASTIÁN GUAYAZÁN CLAVIJO
+* MANUEL ALEJANDRO GUARNIZO GARCIA  
 
-<!--
-
-**Here are some ideas to get you started:**
-
-🙋‍♀️ A short introduction - what is your organization all about?
-🌈 Contribution guidelines - how can the community get involved?
-👩‍💻 Useful resources - where can the community find your docs? Is there anything else the community should know?
-🍿 Fun facts - what does your team eat for breakfast?
-🧙 Remember, you can do mighty things with the power of [Markdown](https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
--->
+Innovación Software Apoyada en Nuevas Tecnologías (ISIS SWNT-2 y SWNT-201, SWNT-2 y SWNT-201)  
+Decanatura Ingeniería de Sistemas → Centro de Estudios en Ingeniería de Software y Ciencias de la Computación  
+Ingeniería de Sistemas  
+Escuela Colombiana de Ingeniería Julio Garavito  
+2026-2   
