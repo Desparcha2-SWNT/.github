@@ -1,3 +1,12 @@
+# FESTA
+
+> ⚠️ Estado: ***EN DESARROLLO*** Versión académica
+
+Festa es una aplicación móvil que centraliza el descubrimiento de eventos y planes en Bogotá en un mapa interactivo en tiempo real, resolviendo el problema de que los planes se pierden entre publicaciones de redes sociales sin trazabilidad temporal clara, y de que los comercios pequeños no pueden competir por visibilidad sin pagar pauta. Su diferenciador central es un motor de Inteligencia Artificial Generativa que recomienda eventos personalizados y ayuda a los comercios a redactar automáticamente descripciones atractivas.
+
+---
+
+## 👥 Autores
 DIEGO ALEJANDRO JARA ARANGO	y RODRIGO HUMBERTO GUALTERO MARTINEZ
 * BRAYAN LOAIZA LEAL
 * CARLOS MARIO PIEDRAHITA ARANGO
