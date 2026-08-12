@@ -13,8 +13,9 @@ DIEGO ALEJANDRO JARA ARANGO	y RODRIGO HUMBERTO GUALTERO MARTINEZ
 * ISAAC DAVID PALOMO PERALTA
 * JUAN SEBASTIÁN GUAYAZÁN CLAVIJO
 * MANUEL ALEJANDRO GUARNIZO GARCIA  
+* SEBASTIAN DUQUE CEBALLOS  
 
-Innovación Software Apoyada en Nuevas Tecnologías (ISIS SWNT-2 y SWNT-201, SWNT-2 y SWNT-201)  
+Innovación Software Apoyada en Nuevas Tecnologías (ISIS SWNT-2 y SWNT-201, SWNT-2 y SWNT-201, SWNT-3 y SWNT-301)  
 Decanatura Ingeniería de Sistemas → Centro de Estudios en Ingeniería de Software y Ciencias de la Computación  
 Ingeniería de Sistemas  
 Escuela Colombiana de Ingeniería Julio Garavito  
