@@ -6,7 +6,7 @@ Festa es una aplicación móvil que centraliza el descubrimiento de eventos y pl
 
 ---
 
-## 👥 Autores
+## 👥 Autores — Equipo Desparchados
 DIEGO ALEJANDRO JARA ARANGO	y RODRIGO HUMBERTO GUALTERO MARTINEZ
 * BRAYAN LOAIZA LEAL
 * CARLOS MARIO PIEDRAHITA ARANGO
