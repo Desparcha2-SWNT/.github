@@ -84,3 +84,33 @@ Decisión de uso vacía hasta que yo revise.
   facilitando la auditoría posterior de decisiones tomadas sobre resultados
   de IA (sesgo de autoconfirmación si no se revisa cada entrada).
 - **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
+
+## P5
+- **Fecha:** 2026-09-05
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Implementación (documentación)
+- **Técnica de prompting utilizada:** Few-shot (repositorio de referencia `CodeForge-DOSW/.github` como ejemplo de estructura) + Instrucción dirigida paso a paso
+- **Prompt utilizado:**
+
+```
+ROL: Eres un ingeniero de documentación que mantiene el repositorio
+`Desparcha2-SWNT/.github`.
+CONTEXTO: El repo es la portada de la organización. La estructura del
+README debe imitar https://github.com/CodeForge-DOSW/.github (solo la
+estructura, no sus fechas). Nuestro grupo se llama "Desparchados" y el
+proyecto "Festa". El historial debe reflejar la evolución real del trabajo.
+TAREA: Reconstruye el historial en commits separados y fechados:
+(1) 3-ago 17:35 nombres de profesores e información institucional;
+(2) 4-ago contexto del proyecto; (3) 12-ago integrante Sebastián Duque
+Ceballos (SWNT-3/SWNT-301); (4) 14-ago nombre del grupo y del proyecto;
+(5) 31-ago bitácora de prompts.
+FORMATO: Un commit por paso, mensaje convencional (`docs: ...`), listado
+final de hashes y fechas para que yo lo verifique antes de empujar.
+RIESGOS: Reescribir fechas cambia el historial; confírmame antes de
+cualquier force-push y no toques ramas ajenas.
+```
+
+- **Resultado obtenido:** El historial del repo quedó como commits fechados del 3, 4, 12, 14 y 31 de agosto (visibles en `git log`), con el README alineado a la estructura del repo de referencia.
+- **Validación (riesgos):** El ejemplo concreto (few-shot) evita que la IA invente una estructura de README; pedir un paso por vez y listar hashes permite verificar el historial reescrito. Riesgo residual: fechas de commit editadas a mano no coinciden con la fecha real de trabajo, por lo que esta bitácora conserva las fechas reales.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente de confirmación del autor.
