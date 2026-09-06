@@ -20,79 +20,55 @@ como una nueva entrada, usando la plantilla exacta a continuación.
 - **Técnica de prompting utilizada:** (Zero-shot / Few-shot / Chain-of-Thought /
   Delimitadores / System Persona / Role-play adversarial / Instrucción
   dirigida / etc.)
-- **Prompt utilizado:**
+- **Prompt utilizado:** (estructurado con los cinco elementos vistos en el
+  curso: rol, contexto, tarea, formato y riesgos)
 
 ​```
-(aquí va el prompt exacto, tal cual fue escrito)
+ROL: ...
+CONTEXTO: ...
+TAREA: ...
+FORMATO: ...
+RIESGOS: ...
 ​```
 
 - **Resultado obtenido:** (resumen o fragmento más representativo)
 - **Validación (riesgos):** (qué riesgo mitiga esta técnica específica —
   alucinación, inconsistencia, requisitos vagos, bugs silenciosos, cobertura
   falsa de tests, sesgo de autoconfirmación, sobre-ingeniería, etc.)
-- **Decisión de uso:** (en blanco — lo completa el autor tras revisar el
-  resultado)
+- **Decisión de uso:** (Aceptado / Aceptado con ajustes / Descartado, con
+  motivo. La IA puede proponerla; el autor la confirma)
 ```
 
 ---
 
 ## Entradas
 
+Orden cronológico, agrupado por etapas. Cada entrada consolida los mensajes
+de una misma tarea; los mensajes de control (`/model`, "sí", "continúa") no
+tienen entrada propia. El texto completo de los 117 mensajes está en
+`Sustentacion2/prompts_sesion.md`.
+
+## Etapa 1 — Configuración del repositorio y requisitos (5 al 14 de septiembre de 2026)
+
 ## P1
 - **Fecha:** 2026-09-05
-- **Autor:** [COMPLETAR]
-- **Herramienta/Modelo:** [COMPLETAR]
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
 - **Fase del SDLC:** Implementación
 - **Técnica de prompting utilizada:** Instrucción dirigida con plantilla estructurada (few-shot template)
 - **Prompt utilizado:**
 
 ```
-Necesito que configures un mecanismo de bitácora de prompts en este
-repositorio, para registrar cada prompt que te dé junto con su resultado,
-siguiendo los lineamientos de mi curso sobre uso documentado de IA en el
-desarrollo de software.
-
-1. Crea un archivo BITACORA_PROMPTS.md con esta plantilla reutilizable en
-Markdown, para que cada entrada nueva se agregue con esta estructura EXACTA:
-
-## [ID del prompt, ej. P1, P2, P3...]
-- **Fecha:**
-- **Autor:**
-- **Herramienta/Modelo:**
-- **Fase del SDLC:** (Análisis / Diseño / Implementación / Pruebas)
-- **Técnica de prompting utilizada:** (Zero-shot / Few-shot / Chain-of-Thought /
-  Delimitadores / System Persona / Role-play adversarial / Instrucción
-  dirigida / etc. — infiere cuál aplica según el prompt que te dé)
-- **Prompt utilizado:**
-
-(aquí va el prompt exacto que te di, tal cual lo escribí)
-
-- **Resultado obtenido:** (tu resultado real para ese prompt — resumen si es
-muy largo, o el fragmento más representativo)
-- **Validación (riesgos):** (qué riesgo mitiga esta técnica específica —
-alucinación, inconsistencia, requisitos vagos, bugs silenciosos, cobertura
-falsa de tests, sesgo de autoconfirmación, sobre-ingeniería, etc.)
-- **Decisión de uso:** (deja este campo en blanco — lo completo yo después
-de revisar el resultado)
-
-2. A partir de ahora, cada vez que te dé un prompt nuevo para ejecutar:
- - Ejecuta el prompt normalmente y dame el resultado.
- - Automáticamente, agrega una entrada nueva a BITACORA_PROMPTS.md siguiendo
-   la plantilla de arriba, con el ID siguiente en la secuencia (P1, P2,
-   P3...), la fecha de hoy, y el resultado real que generaste.
- - Deja los campos Autor y Herramienta/Modelo como [COMPLETAR] si no te
-   los especifico en ese momento.
- - Haz un commit por cada entrada nueva agregada a la bitácora, con el
-   mensaje "docs: registra prompt [ID] en bitácora".
-
-3. Además, cualquier commit que contenga código o documentos generados
-directamente por ti (no solo la entrada de la bitácora) debe indicar
-explícitamente que es resultado de IA — agrega la línea
-"Co-authored-by: Claude <noreply@anthropic.com>" al final del mensaje de
-ese commit, manteniéndome a mí como autor principal.
-
-Confírmame que el mecanismo quedó listo antes de que te pase el primer
-prompt de contenido del proyecto.
+ROL: Responsable de trazabilidad de IA del repositorio de documentación.
+CONTEXTO: Repo `Desparcha2-SWNT/.github`; el curso exige registrar cada
+prompt con técnica, riesgo mitigado y decisión de uso.
+TAREA: Crea `BITACORA_PROMPTS.md` con la plantilla (fecha, autor, modelo,
+fase SDLC, técnica, prompt, resultado, riesgos, decisión) y registra cada
+prompt futuro como entrada nueva.
+FORMATO: Un commit por entrada (`docs: registra prompt [ID] en bitácora`);
+commits con contenido de IA marcados con `Co-authored-by`.
+RIESGOS: Confirma el mecanismo antes del primer prompt de contenido; deja
+Decisión de uso vacía hasta que yo revise.
 ```
 
 - **Resultado obtenido:** Se creó `BITACORA_PROMPTS.md` en la raíz del repo
@@ -107,4 +83,4 @@ prompt de contenido del proyecto.
   curso), reduciendo el riesgo de atribución incorrecta de autoría y
   facilitando la auditoría posterior de decisiones tomadas sobre resultados
   de IA (sesgo de autoconfirmación si no se revisa cada entrada).
-- **Decisión de uso:**
+- **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
