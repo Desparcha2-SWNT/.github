@@ -146,3 +146,29 @@ documentos fuente.
 - **Resultado obtenido:** Se actualizó el BPMN y el diagrama de arquitectura en Lucid. Hubo varias rondas de corrección porque la primera versión añadió servicios no pedidos y dejó el diagrama fragmentado; se rehízo como un solo sistema en cinco bloques. Los límites de edición de la cuenta de Lucid obligaron a borrar documentos generados para liberar cupo.
 - **Validación (riesgos):** Contrastar el diagrama con los documentos fuente detectó una alucinación de alcance (servicios inventados). La revisión visual humana en cada ronda fue el control principal.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (la arquitectura AWS fue superada después por la de GCP y luego por Azure, ver P12 y P20).
+
+## P7
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Few-shot visual (imágenes con la simbología AWS y un diagrama Lucid previo como ejemplo) + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto cloud con experiencia en diagramas AWS.
+CONTEXTO: Adjunto imágenes de la simbología AWS y el diagrama
+https://lucid.app/... como referencia de estilo. Requerimientos y
+arquitectura de microservicios ya compartidos.
+TAREA: Propón la arquitectura y dibújala con la simbología de la
+referencia (VPC, subredes, servicios, flechas con etiquetas), y aplica la
+misma limpieza visual al BPMN.
+FORMATO: Reglas explícitas de limpieza (sin cruces, espaciado uniforme,
+una capa por fila); entrega por iteraciones pequeñas que yo reviso.
+RIESGOS: Si un ícono no existe en la biblioteca de Lucid, dímelo en vez
+de reemplazarlo por uno distinto.
+```
+
+- **Resultado obtenido:** Diagrama de arquitectura AWS reordenado y BPMN depurado; iteraciones de armonía visual hasta que el equipo lo dio por válido para la sustentación.
+- **Validación (riesgos):** El ejemplo visual reduce la libertad de la IA para inventar simbología. Riesgo residual: cumplimiento solo estético; la corrección técnica de la arquitectura la validó el equipo.
+- **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
