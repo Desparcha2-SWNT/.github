@@ -114,3 +114,35 @@ cualquier force-push y no toques ramas ajenas.
 - **Resultado obtenido:** El historial del repo quedó como commits fechados del 3, 4, 12, 14 y 31 de agosto (visibles en `git log`), con el README alineado a la estructura del repo de referencia.
 - **Validación (riesgos):** El ejemplo concreto (few-shot) evita que la IA invente una estructura de README; pedir un paso por vez y listar hashes permite verificar el historial reescrito. Riesgo residual: fechas de commit editadas a mano no coinciden con la fecha real de trabajo, por lo que esta bitácora conserva las fechas reales.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente de confirmación del autor.
+
+## Etapa 2 — Diagramas y sustentación 2 (14 al 16 de septiembre de 2026)
+
+## P6
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar) con conector de Lucid
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida con contexto multimodal (documentos Word adjuntos) + Critique-and-Correct (varias rondas de corrección visual)
+- **Prompt utilizado:**
+
+```
+ROL: Eres un arquitecto de software que documenta en Lucidchart.
+CONTEXTO: Festa es una app de descubrimiento de eventos en Bogotá. Adjunto
+la arquitectura de microservicios y los requerimientos (RF1–RF19,
+RNF1–RNF12). Despliegue previsto: AWS. Mi cuenta de Lucid permite editar
+solo 3 documentos.
+TAREA: En el documento "Festa" (páginas "Proceso BPMN" y "Arquitectura"),
+mejora la legibilidad del BPMN y del diagrama de arquitectura usando los
+íconos oficiales de AWS, agrupando los servicios en cinco bloques
+lógicos, sin flechas que se crucen ni textos ilegibles.
+FORMATO: Un diagrama por página, flechas ortogonales, nombres de servicio
+consistentes entre BPMN y arquitectura; al final, lista de los cambios
+hechos para que los valide.
+RIESGOS: No elimines ni sobrescribas páginas existentes sin avisarme; no
+agregues servicios (p. ej. payment o notification) que no estén en los
+documentos fuente.
+```
+
+- **Resultado obtenido:** Se actualizó el BPMN y el diagrama de arquitectura en Lucid. Hubo varias rondas de corrección porque la primera versión añadió servicios no pedidos y dejó el diagrama fragmentado; se rehízo como un solo sistema en cinco bloques. Los límites de edición de la cuenta de Lucid obligaron a borrar documentos generados para liberar cupo.
+- **Validación (riesgos):** Contrastar el diagrama con los documentos fuente detectó una alucinación de alcance (servicios inventados). La revisión visual humana en cada ronda fue el control principal.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (la arquitectura AWS fue superada después por la de GCP y luego por Azure, ver P12 y P20).
