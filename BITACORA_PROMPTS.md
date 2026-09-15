@@ -403,3 +403,29 @@ que dijo el profesor de lo que infieres.
 - **Resultado obtenido:** Commit `docs(arquitectura): corrige diagrama de contexto segun feedback de la sustentacion` (visible en `git log`) con DSL e imagen actualizados.
 - **Validación (riesgos):** Mitiga el sesgo de autoconfirmación al exigir evidencia por criterio. Riesgo residual: la transcripción puede contener errores de reconocimiento de voz.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P12
+- **Fecha:** 2026-09-15
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Diseño / Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida con estructura narrativa indicada (comparativa → ganadora → arquitectura → viabilidad)
+- **Prompt utilizado:**
+
+```
+ROL: Consultor que prepara una sustentación técnica para el profesor.
+CONTEXTO: Se pide propuesta de arquitectura y casos de uso priorizados.
+Imágenes de arquitectura ya existentes (ArquitecturaFesta.jpeg,
+ContextoFesta.png). Las cifras de costo son supuestos propios.
+TAREA: Construye el deck `.pptx` con: (1) matriz de costos por nube;
+(2) nube ganadora y justificación; (3) arquitectura con la imagen
+oficial; (4) viabilidad económica; (5) casos de uso priorizados.
+FORMATO: Una diapositiva por punto, imágenes originales sin redibujar,
+supuestos de costo marcados como tales.
+RIESGOS: No inventes cifras ni rehagas diagramas; marca todo número sin
+fuente como estimación.
+```
+
+- **Resultado obtenido:** `Sustentacion2/Festa_Sustentacion2.pptx`. El profesor aprobó la arquitectura pero indicó que los costos estaban mal estimados (p. ej. "$4 por 5000 usuarios"); un compañero recalculó los costos después.
+- **Validación (riesgos):** El riesgo de números inventados se materializó: las cifras de costo generadas por la IA fueron rechazadas. Lección documentada: costear por transacción × uso proyectado, sin capas gratuitas.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (diapositivas de costos descartadas).
