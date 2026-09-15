@@ -378,3 +378,28 @@ avísame en vez de inferir contenido.
 - **Resultado obtenido:** Commits `docs(arquitectura): primera version del diagrama de contexto (C4 nivel 1)` (3-sep) y `docs(arquitectura): agrega ficha de alcance del sistema (diagrama de contexto)` (visibles en `git log`).
 - **Validación (riesgos):** La plantilla de referencia limita la estructura; la imagen incrustada evita enlaces rotos.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P11
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Pruebas (validación del diseño)
+- **Técnica de prompting utilizada:** Critique-and-Correct (la IA contrasta el diagrama con la retroalimentación del profesor y corrige) + Delimitadores (audios, video y documentos como fuentes)
+- **Prompt utilizado:**
+
+```
+ROL: Revisor de arquitectura que audita contra criterios del profesor.
+CONTEXTO: Fuentes: transcripción de la sustentación, documentos de
+requerimientos y el DSL actual (`festa.dsl`).
+TAREA: (1) Extrae los criterios que el profesor dio; (2) para cada
+criterio indica cumple / no cumple con evidencia citada; (3) corrige el
+DSL y regenera la imagen para los incumplimientos.
+FORMATO: Tabla criterio / evidencia / estado / cambio aplicado, y diff del
+DSL antes de commitear.
+RIESGOS: No des por cumplido un criterio sin citar la fuente; separa lo
+que dijo el profesor de lo que infieres.
+```
+
+- **Resultado obtenido:** Commit `docs(arquitectura): corrige diagrama de contexto segun feedback de la sustentacion` (visible en `git log`) con DSL e imagen actualizados.
+- **Validación (riesgos):** Mitiga el sesgo de autoconfirmación al exigir evidencia por criterio. Riesgo residual: la transcripción puede contener errores de reconocimiento de voz.
+- **Decisión de uso (propuesta):** Aceptado.
