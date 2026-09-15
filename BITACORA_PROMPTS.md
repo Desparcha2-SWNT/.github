@@ -172,3 +172,28 @@ de reemplazarlo por uno distinto.
 - **Resultado obtenido:** Diagrama de arquitectura AWS reordenado y BPMN depurado; iteraciones de armonía visual hasta que el equipo lo dio por válido para la sustentación.
 - **Validación (riesgos):** El ejemplo visual reduce la libertad de la IA para inventar simbología. Riesgo residual: cumplimiento solo estético; la corrección técnica de la arquitectura la validó el equipo.
 - **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
+
+## P8
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Zero-shot de consulta + Instrucción dirigida (reparto de trabajo a partir del enunciado del profesor)
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que prepara la sustentación 2.
+CONTEXTO: El profesor pidió una propuesta de arquitectura y casos de uso
+priorizados. Somos 8 integrantes. Aún no hemos fijado la nube.
+TAREA: Lista las calculadoras oficiales de costos de todos los
+proveedores relevantes (AWS, Azure, GCP, otros) y propón una distribución
+de tareas para mañana (costos, diagrama de arquitectura, casos de uso).
+FORMATO: Tabla proveedor / URL oficial / qué estima / limitaciones, y tabla
+de tareas con responsable sugerido.
+RIESGOS: Verifica que las URL existan; no des cifras de precios sin
+fuente, indícalas como supuestos.
+```
+
+- **Resultado obtenido:** Lista de calculadoras de costos por proveedor y propuesta de reparto de tareas para el equipo.
+- **Validación (riesgos):** Prompt de consulta de bajo riesgo; el riesgo es que las URL o precios estén desactualizados, por eso las cifras se calcularon aparte (ver P12).
+- **Decisión de uso (propuesta):** Aceptado.
