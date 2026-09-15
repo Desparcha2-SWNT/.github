@@ -130,6 +130,43 @@ requisitos Should, Could ni Won't.
   (sesgo de autoconfirmación si se presenta sin revisión).
 - **Decisión de uso (propuesta):** Aceptado con ajustes (se reemplazó por el consolidado de P3). Pendiente de confirmación del autor.
 
+## P3
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida (corrección explícita del formato de salida del prompt anterior, P2)
+- **Prompt utilizado:**
+
+```
+ROL: Analista de requisitos.
+CONTEXTO: El resultado anterior fragmentó los RF en 12 archivos y omitió
+los demás.
+TAREA: Consolida todo en un único archivo con la plantilla completa.
+FORMATO: Secciones 1.1 funcionales, 1.2 no funcionales, 2 casos de uso
+detallados de los 19 RF.
+RIESGOS: Borra los archivos individuales solo después de confirmar que el
+consolidado está completo.
+```
+
+- **Resultado obtenido:** Se eliminaron los 12 archivos `RF0X-*.md`
+  generados en P2 y se reemplazaron por un único archivo
+  `docs/requirements/requirements.md` que llena la plantilla completa de
+  `dosw-lab4-example/requirement-template.md`: sección 1.1 con las 19
+  funcionales en alto nivel, sección 1.2 con las 12 no funcionales,
+  y sección 2 con un caso de uso detallado (tabla completa) por cada uno
+  de los 19 RF — no solo los 9 Must, sino también Should, Could y Won't,
+  cubriendo el 100% de los requerimientos funcionales del Word. Se
+  actualizó `README.md` para reflejar el archivo único.
+- **Validación (riesgos):** Corrige una alucinación de alcance del
+  resultado anterior (asumí que "casos de uso priorizados" implicaba
+  fragmentar en un archivo por requerimiento y limitar a los
+  prioritarios, cuando el usuario pidió explícitamente un solo archivo
+  con la plantilla completa y todos los requerimientos). Mitiga el
+  riesgo de que el equipo tenga que buscar información repartida en
+  múltiples archivos bajo presión de tiempo antes de la sustentación.
+- **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
+
 ## P5
 - **Fecha:** 2026-09-05
 - **Autor:** Juan Sebastián Guayazán Clavijo
