@@ -279,3 +279,28 @@ fuente, indícalas como supuestos.
 - **Resultado obtenido:** Lista de calculadoras de costos por proveedor y propuesta de reparto de tareas para el equipo.
 - **Validación (riesgos):** Prompt de consulta de bajo riesgo; el riesgo es que las URL o precios estén desactualizados, por eso las cifras se calcularon aparte (ver P12).
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P9
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Implementación (control de versiones)
+- **Técnica de prompting utilizada:** Instrucción dirigida con confirmación explícita antes de acciones destructivas
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de control de versiones.
+CONTEXTO: Los requisitos y casos de uso ya están listos en el repo de
+documentación. Cada integrante debe aparecer como autor; la coautoría de
+la IA debe quedar declarada en el mensaje del commit, no como autor.
+TAREA: Crea la rama `docs/requisitos-priorizados`, haz commits atómicos
+fechados el 7-sep 18:25, quita la coautoría de Claude de los cuatro
+commits si así lo decido, y súbelos.
+FORMATO: Muéstrame `git log --format=fuller` antes de empujar.
+RIESGOS: Reescribir historia ya publicada exige force-push: pídeme
+confirmación explícita y solo sobre esta rama.
+```
+
+- **Resultado obtenido:** Rama `docs/requisitos-priorizados` publicada con los commits de requisitos y casos de uso (visibles en `git log`, fecha 2026-09-07 18:25), tras un force-push confirmado.
+- **Validación (riesgos):** La confirmación previa al force-push es el control humano sobre una operación destructiva. Nota para el equipo: el curso exige indicar el uso de IA en los commits; quitar la coautoría reduce esa trazabilidad, por lo que conviene documentarlo aquí.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente de confirmación del autor.
