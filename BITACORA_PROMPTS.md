@@ -167,6 +167,54 @@ consolidado está completo.
   múltiples archivos bajo presión de tiempo antes de la sustentación.
 - **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
 
+## P4
+- **Fecha:** 2026-09-14 (21:21, commits `29a5912` y `87456e1` de brloa05)
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code — Claude Opus 5 (1M context)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida con delimitadores y contexto multimodal (código DSL + imagen del diagrama renderizado + ruta del repositorio destino)
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto que versiona el modelo C4.
+CONTEXTO: Se entrega el DSL Structurizr (entre delimitadores) y el PNG del
+diagrama de contexto; el repo destino es el de documentación.
+TAREA: Versiona el DSL sin modificarlo, la imagen y un README de uso.
+FORMATO: `docs/arquitectura/festa.dsl`, `diagramas/ContextoFesta.png`,
+`README.md` con cómo renderizar.
+RIESGOS: No "mejores" el DSL; avisa si la imagen y el código no coinciden.
+```
+
+- **Resultado obtenido:** Se versionó el modelo de arquitectura en la rama
+  `docs/arquitectura-c4-contexto` del repo `Desparcha2-SWNT/.github`, con la
+  estructura:
+  - `docs/arquitectura/festa.dsl` — el workspace Structurizr DSL **sin cambios
+    de contenido** (se preservó tal cual fue entregado), como fuente de verdad
+    del modelo C4.
+  - `docs/arquitectura/diagramas/ContextoFesta.png` — la exportación del
+    diagrama de contexto (C4 nivel 1) adjunta en el prompt.
+  - `docs/arquitectura/README.md` — documenta ambas vistas (`ContextoFesta` y
+    `ContenedoresFesta`), tres formas de renderizar el DSL (Structurizr Lite
+    vía Docker, `structurizr-cli`, o el editor web) y la convención de cambios:
+    editar solo el `.dsl`, re-exportar la imagen y registrar el prompt en esta
+    bitácora.
+
+  Commit: `docs(arquitectura): versiona el modelo C4 de Festa en Structurizr
+  DSL`, con la línea de co-autoría de IA.
+- **Validación (riesgos):** Entregar el código y la imagen renderizada juntos
+  (delimitadores + contexto multimodal) evita que la IA reinterprete o
+  "mejore" el modelo por su cuenta: el DSL se versionó literalmente, sin
+  alucinar contenedores, relaciones ni estilos inexistentes. Tratar el `.dsl`
+  como única fuente de verdad mitiga el riesgo de inconsistencia entre el
+  diagrama publicado y el modelo real (imágenes editadas a mano que divergen
+  del código). El riesgo residual es que la exportación PNG quede
+  desactualizada frente al DSL si alguien no re-exporta; por eso se documentó
+  explícitamente en el README.
+- **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
+
+
+---
+
 ## P5
 - **Fecha:** 2026-09-05
 - **Autor:** Juan Sebastián Guayazán Clavijo
