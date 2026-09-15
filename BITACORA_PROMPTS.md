@@ -108,3 +108,56 @@ prompt de contenido del proyecto.
   facilitando la auditoría posterior de decisiones tomadas sobre resultados
   de IA (sesgo de autoconfirmación si no se revisa cada entrada).
 - **Decisión de uso:**
+
+---
+
+## P2
+- **Fecha:** 2026-09-14
+- **Autor:** [COMPLETAR]
+- **Herramienta/Modelo:** Claude Code — Claude Opus 5 (1M context)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida con delimitadores y contexto multimodal (código DSL + imagen del diagrama renderizado + ruta del repositorio destino)
+- **Prompt utilizado:**
+
+```
+claude nesecito hacer vercionamiento de este codigo que es del diagrama de
+contexto:
+
+workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para comercios locales, construida por Soluciones Tecnológicas de Ingeniería" {
+    ... (workspace Structurizr DSL completo: modelo, vistas ContextoFesta y
+    ContenedoresFesta, y bloque styles; el contenido íntegro quedó versionado
+    sin modificaciones en docs/arquitectura/festa.dsl) ...
+}
+
+y este es el diagrama de contexto: [imagen adjunta: ContextoFesta.png,
+exportación de la vista System Context de Festa]
+
+y este es el repo: C:\Users\alvar\Desktop\.github
+```
+
+- **Resultado obtenido:** Se versionó el modelo de arquitectura en la rama
+  `docs/arquitectura-c4-contexto` del repo `Desparcha2-SWNT/.github`, con la
+  estructura:
+  - `docs/arquitectura/festa.dsl` — el workspace Structurizr DSL **sin cambios
+    de contenido** (se preservó tal cual fue entregado), como fuente de verdad
+    del modelo C4.
+  - `docs/arquitectura/diagramas/ContextoFesta.png` — la exportación del
+    diagrama de contexto (C4 nivel 1) adjunta en el prompt.
+  - `docs/arquitectura/README.md` — documenta ambas vistas (`ContextoFesta` y
+    `ContenedoresFesta`), tres formas de renderizar el DSL (Structurizr Lite
+    vía Docker, `structurizr-cli`, o el editor web) y la convención de cambios:
+    editar solo el `.dsl`, re-exportar la imagen y registrar el prompt en esta
+    bitácora.
+
+  Commit: `docs(arquitectura): versiona el modelo C4 de Festa en Structurizr
+  DSL`, con la línea de co-autoría de IA.
+- **Validación (riesgos):** Entregar el código y la imagen renderizada juntos
+  (delimitadores + contexto multimodal) evita que la IA reinterprete o
+  "mejore" el modelo por su cuenta: el DSL se versionó literalmente, sin
+  alucinar contenedores, relaciones ni estilos inexistentes. Tratar el `.dsl`
+  como única fuente de verdad mitiga el riesgo de inconsistencia entre el
+  diagrama publicado y el modelo real (imágenes editadas a mano que divergen
+  del código). El riesgo residual es que la exportación PNG quede
+  desactualizada frente al DSL si alguien no re-exporta; por eso se documentó
+  explícitamente en el README.
+- **Decisión de uso:**
