@@ -352,3 +352,29 @@ confirmación explícita y solo sobre esta rama.
 - **Resultado obtenido:** Rama `docs/requisitos-priorizados` publicada con los commits de requisitos y casos de uso (visibles en `git log`, fecha 2026-09-07 18:25), tras un force-push confirmado.
 - **Validación (riesgos):** La confirmación previa al force-push es el control humano sobre una operación destructiva. Nota para el equipo: el curso exige indicar el uso de IA en los commits; quitar la coautoría reduce esa trazabilidad, por lo que conviene documentarlo aquí.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente de confirmación del autor.
+
+## P10
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida + Few-shot (plantilla `scope-template.md` de referencia) + Referencia por bloques (versionado en dos pasos con fechas)
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de software que documenta el modelo C4.
+CONTEXTO: La rama `docs/arquitectura-c4-contexto` contiene el DSL
+Structurizr y el PNG del diagrama. Existe una versión anterior del
+diagrama (3-sep 18:33) y la actual (corregida tras la sustentación 1).
+TAREA: Genera la ficha de alcance con la plantilla scope-template.md,
+incrustando la imagen (no un enlace); versiona primero la imagen antigua
+y luego la actual en commits separados.
+FORMATO: `docs/arquitectura/scope.md`, commits `docs(arquitectura): ...`,
+mensaje del segundo commit con la causa de la corrección.
+RIESGOS: No alteres el DSL; si el diagrama no coincide con la plantilla,
+avísame en vez de inferir contenido.
+```
+
+- **Resultado obtenido:** Commits `docs(arquitectura): primera version del diagrama de contexto (C4 nivel 1)` (3-sep) y `docs(arquitectura): agrega ficha de alcance del sistema (diagrama de contexto)` (visibles en `git log`).
+- **Validación (riesgos):** La plantilla de referencia limita la estructura; la imagen incrustada evita enlaces rotos.
+- **Decisión de uso (propuesta):** Aceptado.
