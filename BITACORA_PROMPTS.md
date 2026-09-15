@@ -455,3 +455,26 @@ duplique; no uses figuras "parecidas".
 - **Resultado obtenido:** Diagramas de caso de uso de RF1–RF10 en la página "Casos de uso" de Lucid, con la simbología de la plantilla, flechas rectas y tamaños uniformes tras las correcciones de RF3, RF4, RF7 y RF9.
 - **Validación (riesgos):** La plantilla como ejemplo evitó simbología inventada; sin ella, la primera versión se parecía pero no era igual. Revisión visual humana por cada RF.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P14
+- **Fecha:** 2026-09-15
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar) con ffmpeg + Whisper (Groq)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida con delimitadores (audio adjunto) + Critique-and-Correct sobre una limitación declarada
+- **Prompt utilizado:**
+
+```
+ROL: Asistente de actas de la sustentación.
+CONTEXTO: Audio de WhatsApp (.ogg) con la retroalimentación del profesor.
+Tengo ffmpeg y una API de transcripción configurada localmente.
+TAREA: Transcribe el audio, extrae las decisiones y correcciones
+(especialmente de costos) y dime qué cambia respecto a lo que estimaste.
+FORMATO: Transcripción completa + lista de acciones con responsable.
+RIESGOS: Marca con [?] los pasajes ininteligibles; no completes cifras que
+no se escuchen; no imprimas credenciales en la salida.
+```
+
+- **Resultado obtenido:** La IA primero indicó que no podía transcribir; después se reutilizó el flujo ffmpeg + Whisper ya instalado y se obtuvo la transcripción. Conclusión de costos: las cifras de la IA no eran las vigentes.
+- **Validación (riesgos):** Contrastar con la capacidad real del entorno evitó una respuesta falsa de "no puedo". Riesgo: errores de transcripción; la transcripción se usa como apoyo, no como fuente única.
+- **Decisión de uso (propuesta):** Aceptado.
