@@ -13,6 +13,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
         group "Soluciones Tecnológicas de Ingeniería" {
             administrador = person "Administrador de la plataforma" "Verifica comercios y modera eventos publicados; soporte interno del producto."
+            equipoPlataforma = person "Equipo de plataforma (DevOps)" "Perfil técnico interno: despliega, configura y monitorea la infraestructura de Festa."
 
             festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa en tiempo real, con recomendaciones por IA y venta de boletería." {
                 gateway = container "API Gateway" "Punto de entrada único; enruta peticiones, valida tokens y aplica rate limiting." "Kong / Apache APISIX"
@@ -48,6 +49,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         persona -> festa "Descubre eventos y confirma su asistencia"
         comercio -> festa "Crea eventos y consulta su panel"
         administrador -> festa.admin "Modera eventos y verifica comercios"
+        equipoPlataforma -> festa "Despliega, configura y monitorea la plataforma"
         festa.payment -> pagos "Procesa el pago de boletería"
         festa.ai -> recomendacionesIA "Solicita descripciones y recomendaciones"
         festa.notification -> notificaciones "Envía notificaciones push"
