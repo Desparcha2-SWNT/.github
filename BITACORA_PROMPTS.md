@@ -85,6 +85,51 @@ Decisión de uso vacía hasta que yo revise.
   de IA (sesgo de autoconfirmación si no se revisa cada entrada).
 - **Decisión de uso (propuesta):** Aceptado. Pendiente de confirmación del autor.
 
+## P2
+- **Fecha:** 2026-09-14
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida con contexto acumulado (el pedido se construyó a lo largo de varios turnos: reparto de tareas del equipo para la Sustentación 2, luego se aportaron `Requerimientos.docx` y la plantilla de referencia `dosw-lab4-example/requirement-template.md`, y finalmente la ubicación del repo de documentación del equipo)
+- **Prompt utilizado:**
+
+```
+ROL: Analista de requisitos.
+CONTEXTO: Sustentación 2 pide casos de uso priorizados. Fuentes:
+Requerimientos.docx (MoSCoW ya definido) y requirement-template.md. Repo de
+documentación: Desparcha2-SWNT/.github.
+TAREA: Llena la plantilla con los requisitos del Word.
+FORMATO: Un solo archivo `docs/requirements/requirements.md` (funcionales
+y no funcionales), no un archivo por requerimiento.
+RIESGOS: Marca como borrador lo que el equipo no haya validado; no omitas
+requisitos Should, Could ni Won't.
+```
+
+- **Resultado obtenido:** Se leyó `Requerimientos.docx` (especificación
+  completa con priorización MoSCoW ya definida: RF1–RF19, RNF1–RNF12,
+  RN1–RN6) y la estructura de la plantilla de referencia (ID, nombre,
+  descripción, precondiciones, actor, flujo principal, diagrama de caso
+  de uso, postcondiciones). Se localizó el repo `Desparcha2-SWNT/.github`
+  como el repositorio de documentación del equipo. Se creó
+  `docs/requirements/` con un `README.md` (tabla MoSCoW + índice de
+  responsables) y 12 archivos `RF0X-*.md` — uno por cada requerimiento
+  Must (RF1–RF5, RF8–RF11) y Should principal (RF6, RF7, RF12) — cada uno
+  con un borrador completo siguiendo el formato de la plantilla, listo
+  para que cada integrante lo revise y ajuste antes de la sustentación de
+  mañana. Se asignó un responsable por archivo entre los 8 integrantes
+  listados en `profile/README.md`.
+- **Validación (riesgos):** Mitiga el riesgo de requisitos vagos o
+  incompletos de cara a la sustentación (cada caso de uso quedó con
+  flujo principal, alternativo y postcondiciones explícitos, no solo una
+  frase suelta) y el riesgo de reparto de trabajo desbalanceado o
+  ambiguo bajo presión de tiempo (entrega al día siguiente). Riesgo
+  pendiente de validar por el equipo: los borradores fueron generados a
+  partir del documento de requerimientos sin validación humana del
+  equipo todavía — cada responsable debe revisar que su caso de uso
+  refleje lo que el equipo realmente tiene en mente antes de presentarlo
+  (sesgo de autoconfirmación si se presenta sin revisión).
+- **Decisión de uso (propuesta):** Aceptado con ajustes (se reemplazó por el consolidado de P3). Pendiente de confirmación del autor.
+
 ## P5
 - **Fecha:** 2026-09-05
 - **Autor:** Juan Sebastián Guayazán Clavijo
