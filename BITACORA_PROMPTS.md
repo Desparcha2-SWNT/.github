@@ -429,3 +429,29 @@ fuente como estimación.
 - **Resultado obtenido:** `Sustentacion2/Festa_Sustentacion2.pptx`. El profesor aprobó la arquitectura pero indicó que los costos estaban mal estimados (p. ej. "$4 por 5000 usuarios"); un compañero recalculó los costos después.
 - **Validación (riesgos):** El riesgo de números inventados se materializó: las cifras de costo generadas por la IA fueron rechazadas. Lección documentada: costear por transacción × uso proyectado, sin capas gratuitas.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (diapositivas de costos descartadas).
+
+## P13
+- **Fecha:** 2026-09-15
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar) con conector de Lucid
+- **Fase del SDLC:** Análisis / Diseño
+- **Técnica de prompting utilizada:** Few-shot (plantilla de simbología puesta encima de RF1) + Critique-and-Correct (ocho rondas de corrección visual)
+- **Prompt utilizado:**
+
+```
+ROL: Analista que modela casos de uso UML en Lucidchart.
+CONTEXTO: Documento "Festa", página "Casos de uso". Hay una plantilla de
+simbología encima de RF1 (actor, óvalo, frontera del sistema). Los
+requisitos están en `requirements.md`.
+TAREA: Dibuja el diagrama de los RF1–RF10 clonando los elementos de la
+plantilla (no recreándolos), con un actor por diagrama, casos de uso en
+columna y flechas rectas; si hay cruce, usa un salto de línea.
+FORMATO: Un marco por RF, mismas dimensiones, título "RFn – nombre" arriba
+fuera del marco del sistema.
+RIESGOS: Si no puedes duplicar la plantilla, dímelo para que yo la
+duplique; no uses figuras "parecidas".
+```
+
+- **Resultado obtenido:** Diagramas de caso de uso de RF1–RF10 en la página "Casos de uso" de Lucid, con la simbología de la plantilla, flechas rectas y tamaños uniformes tras las correcciones de RF3, RF4, RF7 y RF9.
+- **Validación (riesgos):** La plantilla como ejemplo evitó simbología inventada; sin ella, la primera versión se parecía pero no era igual. Revisión visual humana por cada RF.
+- **Decisión de uso (propuesta):** Aceptado.
