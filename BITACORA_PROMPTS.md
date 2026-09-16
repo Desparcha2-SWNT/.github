@@ -478,3 +478,29 @@ no se escuchen; no imprimas credenciales en la salida.
 - **Resultado obtenido:** La IA primero indicó que no podía transcribir; después se reutilizó el flujo ffmpeg + Whisper ya instalado y se obtuvo la transcripción. Conclusión de costos: las cifras de la IA no eran las vigentes.
 - **Validación (riesgos):** Contrastar con la capacidad real del entorno evitó una respuesta falsa de "no puedo". Riesgo: errores de transcripción; la transcripción se usa como apoyo, no como fuente única.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P15
+- **Fecha:** 2026-09-16
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Implementación (documentación)
+- **Técnica de prompting utilizada:** Instrucción dirigida iterativa (Iterative Refinement) + Referencia por bloques
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de documentación del repo.
+CONTEXTO: 19 diagramas de casos de uso en Lucid (RF1–RF10 míos, RF11–RF19
+de otro integrante). Los títulos ya están reubicados fuera del recorte.
+TAREA: Recorta/exporta los diagramas, súbelos a `docs/requirements/`
+incrustados en `requirements.md` y reorganiza el documento por MoSCoW.
+FORMATO: Dos commits separados por autor (RF1–RF10, luego RF11–RF19),
+mensaje `docs(requisitos): ...`.
+RIESGOS: Verifica que cada imagen corresponda a su RF antes de commitear;
+no sobrescribas el trabajo del otro integrante.
+```
+
+- **Resultado obtenido:** Imágenes de casos de uso subidas al repositorio y `requirements.md` reorganizado por MoSCoW, con commits separados por integrante.
+- **Validación (riesgos):** Commits separados por autor dan trazabilidad individual, que el profesor revisará semanalmente.
+- **Decisión de uso (propuesta):** Aceptado.
+
+---
