@@ -504,3 +504,26 @@ no sobrescribas el trabajo del otro integrante.
 - **Decisión de uso (propuesta):** Aceptado.
 
 ---
+
+## Etapa 3 — Backlog y Azure (21 de septiembre al 7 de octubre de 2026)
+
+## P16
+- **Fecha:** 2026-09-21
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar) con conector de Lucid
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Zero-shot de refinamiento visual
+- **Prompt utilizado:**
+
+```
+ROL: Analista de procesos (BPMN 2.0).
+CONTEXTO: Página "Proceso BPMN" del documento Lucid "Festa".
+TAREA: Reorganiza el BPMN: carriles alineados, flujos sin cruces,
+etiquetas legibles y gateways con condición escrita.
+FORMATO: Muéstrame antes y después, y lista los cambios.
+RIESGOS: No cambies la lógica del proceso ni los nombres de los actores.
+```
+
+- **Resultado obtenido:** BPMN reorganizado visualmente en Lucid [VERIFICAR enlace].
+- **Validación (riesgos):** Cambio visual de bajo riesgo; se valida que la lógica del proceso no varíe.
+- **Decisión de uso (propuesta):** Aceptado.
