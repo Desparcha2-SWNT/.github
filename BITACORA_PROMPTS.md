@@ -527,3 +527,26 @@ RIESGOS: No cambies la lógica del proceso ni los nombres de los actores.
 - **Resultado obtenido:** BPMN reorganizado visualmente en Lucid [VERIFICAR enlace].
 - **Validación (riesgos):** Cambio visual de bajo riesgo; se valida que la lógica del proceso no varíe.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P17
+- **Fecha:** 2026-09-23
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo por confirmar)
+- **Fase del SDLC:** Implementación (documentación)
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de trazabilidad de IA del proyecto.
+CONTEXTO: La bitácora debe seguir la plantilla del curso y consolidar los
+prompts dispersos en varias ramas.
+TAREA: Crea `docs/bitacora-prompts`, consolida allí las entradas
+existentes sin alterarlas y deja la plantilla lista para recibir las demás.
+FORMATO: Un commit `docs: consolida bitácora de prompts en rama dedicada`.
+RIESGOS: No pierdas entradas existentes; muéstrame el diff antes de
+empujar.
+```
+
+- **Resultado obtenido:** Commit `docs: consolida bitácora de prompts en rama dedicada` en la rama `docs/bitacora-prompts` (23-sep).
+- **Validación (riesgos):** Verificado por `git log`; las entradas previas se conservaron.
+- **Decisión de uso (propuesta):** Aceptado.
