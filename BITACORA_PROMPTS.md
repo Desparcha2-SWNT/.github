@@ -550,3 +550,25 @@ empujar.
 - **Resultado obtenido:** Commit `docs: consolida bitácora de prompts en rama dedicada` en la rama `docs/bitacora-prompts` (23-sep).
 - **Validación (riesgos):** Verificado por `git log`; las entradas previas se conservaron.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P18
+- **Fecha:** 2026-10-02
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Delimitadores (contexto en archivo adjunto) + Zero-shot
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de software.
+CONTEXTO: Adjunto Festa.zip (requerimientos, pitch y sustentaciones). En
+este mensaje solo quiero que lo asimiles.
+TAREA: Resume en 10 líneas lo que entendiste y espera mi siguiente
+instrucción antes de producir artefactos.
+FORMATO: Lista de supuestos y preguntas abiertas.
+RIESGOS: No generes diagramas ni archivos todavía.
+```
+
+- **Resultado obtenido:** La IA interpretó "contexto" como pedido de diagrama y pudo generar una estructura básica de arquitectura; el usuario aclaró que solo era contexto [VERIFICAR qué se generó]. Este malentendido motiva la mejora del prompt.
+- **Validación (riesgos):** Un prompt sin tarea explícita causó trabajo no solicitado; pedir resumen y supuestos lo evita.
+- **Decisión de uso (propuesta):** Descartado (el pedido real era solo dar contexto).
