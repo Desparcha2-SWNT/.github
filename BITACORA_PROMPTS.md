@@ -572,3 +572,30 @@ RIESGOS: No generes diagramas ni archivos todavía.
 - **Resultado obtenido:** La IA interpretó "contexto" como pedido de diagrama y pudo generar una estructura básica de arquitectura; el usuario aclaró que solo era contexto [VERIFICAR qué se generó]. Este malentendido motiva la mejora del prompt.
 - **Validación (riesgos):** Un prompt sin tarea explícita causó trabajo no solicitado; pedir resumen y supuestos lo evita.
 - **Decisión de uso (propuesta):** Descartado (el pedido real era solo dar contexto).
+
+## P19
+- **Fecha:** 2026-10-02
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con conector de Jira
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Persona (Business Analyst) + plantilla de historias de usuario + Instrucción dirigida iterativa
+- **Prompt utilizado:**
+
+```
+ROL: Business Analyst / Product Owner del proyecto Festa.
+CONTEXTO: Proyecto Jira desparcha2-festa. RF1–RF19, RNF1–RNF12 en
+`requirements.md`, priorizados con MoSCoW. El profesor exige sprints de 2
+semanas con corte vertical ejecutable (pantalla, endpoint real,
+persistencia básica, prueba automatizada).
+TAREA: Crea épicas, features, historias (formato "Como <rol> quiero
+<acción> para <valor>" con criterios Gherkin) y tareas. Aún no
+asignes sprints. Un color por épica.
+FORMATO: Tabla jerarquía / clave / título / prioridad; lista de issues que
+no pudiste crear o borrar, con enlace.
+RIESGOS: No borres issues que yo no haya autorizado; no inventes
+requerimientos fuera del documento.
+```
+
+- **Resultado obtenido:** Backlog base creado en Jira con épicas, features, historias y tareas; issues de ejemplo eliminados salvo algunos que el usuario borró manualmente por restricciones del conector; colores por épica. Los sprints quedaron pendientes para una fase posterior.
+- **Validación (riesgos):** Verificación de los issues creados en Jira; mitiga requisitos vagos con criterios de aceptación explícitos.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (los sprints se definen después).
