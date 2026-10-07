@@ -599,3 +599,29 @@ requerimientos fuera del documento.
 - **Resultado obtenido:** Backlog base creado en Jira con épicas, features, historias y tareas; issues de ejemplo eliminados salvo algunos que el usuario borró manualmente por restricciones del conector; colores por épica. Los sprints quedaron pendientes para una fase posterior.
 - **Validación (riesgos):** Verificación de los issues creados en Jira; mitiga requisitos vagos con criterios de aceptación explícitos.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (los sprints se definen después).
+
+## P20
+- **Fecha:** 2026-10-06
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con conector de Lucid
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida con contexto pegado (resumen de un chat anterior entre delimitadores) + Negative Constraints
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto cloud (Azure).
+CONTEXTO: Sustentación 2 usó GCP serverless + Supabase. Ahora el equipo
+despliega en Azure. En el documento Lucid "Festa" la página "Arquitectura"
+corresponde a otra arquitectura (AWS/ECS Fargate): no se toca.
+TAREA: Crea una página nueva con la arquitectura de Festa en Azure,
+mapeando cada componente (Cloud Run → Azure Container Apps o Functions,
+Supabase Auth/PostgreSQL → equivalentes, FCM, Gemini, Wompi) con íconos de
+Azure.
+FORMATO: Tabla de equivalencias GCP→Azure y un diagrama por capas.
+RIESGOS: No modifiques ni borres páginas existentes sin mi confirmación;
+indica los servicios sin equivalente directo.
+```
+
+- **Resultado obtenido:** Diagrama de arquitectura en Azure en el documento Lucid; se identificó una página duplicada creada por error en otro chat y se eliminó con confirmación explícita del usuario.
+- **Validación (riesgos):** Pegar el contexto del chat anterior evitó rehacer trabajo; la confirmación del usuario previno borrar la página equivocada.
+- **Decisión de uso (propuesta):** Aceptado.
