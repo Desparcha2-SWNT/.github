@@ -625,3 +625,30 @@ indica los servicios sin equivalente directo.
 - **Resultado obtenido:** Diagrama de arquitectura en Azure en el documento Lucid; se identificó una página duplicada creada por error en otro chat y se eliminó con confirmación explícita del usuario.
 - **Validación (riesgos):** Pegar el contexto del chat anterior evitó rehacer trabajo; la confirmación del usuario previno borrar la página equivocada.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P21
+- **Fecha:** 2026-10-07
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Implementación (documentación)
+- **Técnica de prompting utilizada:** Instrucción dirigida iterativa con decisión del usuario sobre el criterio de organización
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de trazabilidad de IA.
+CONTEXTO: 117 mensajes del proyecto en `prompts_sesion.md`; plantilla y 4
+entradas en `BITACORA_PROMPTS.md`; lineamientos del profesor (evidencia
+mínima por prompt: fecha, autor, herramienta, modelo, prompt, respuesta,
+decisión).
+TAREA: Consolida los mensajes en entradas por tarea, en orden cronológico,
+con técnica del curso, fase del SDLC, resultado real, riesgo mitigado,
+decisión propuesta y una versión mejorada del prompt con rol, contexto,
+tarea, formato y riesgos.
+FORMATO: Misma plantilla; separa claramente el prompt original del
+mejorado.
+RIESGOS: No inventes resultados que no puedas verificar.
+```
+
+- **Resultado obtenido:** Esta versión de la bitácora.
+- **Validación (riesgos):** Pedir resultados verificables y marcar lo no confirmado con [VERIFICAR] evita falsear el registro.
+- **Decisión de uso (propuesta):** Aceptado.
