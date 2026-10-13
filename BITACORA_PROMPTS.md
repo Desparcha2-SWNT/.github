@@ -681,3 +681,31 @@ escuchen.
 - **Resultado obtenido:** Transcripción en dos tramos (ffmpeg + `whisper-large-v3`, el audio se procesó en memoria). Se obtuvieron 6 recomendaciones para Festa (más imágenes y gráficas, competencia con fuente, no explicar la cotización de nubes, indicadores con umbral, validar el problema con entrevistas, entrega) y 8 consejos generales. Se redactó el mensaje para WhatsApp.
 - **Validación (riesgos):** La transcripción tenía ruido; el punto 6 (entrega) se marcó como no claro. Más tarde se contrastó de nuevo: el profesor pidió enviar la presentación "tal cual" y dejar las mejoras para el parcial.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (el punto 6 se aclaró después, ver P32).
+
+## P23
+- **Fecha:** 2026-10-13 (hora aproximada, 12:30)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis (documentación del proyecto)
+- **Técnica de prompting utilizada:** Iterative Refinement + Negative Constraints (no mencionar piloto, comisión ni cuestiones de negocio) + Few-shot (texto propuesto por otra IA como referencia)
+- **Prompt utilizado:**
+
+```
+ROL: Redactor de fichas de proyecto para un concurso académico.
+CONTEXTO: El formulario del curso pide nombre del proyecto, nombres de los
+estudiantes (dos nombres y dos apellidos, con solo la inicial en mayúscula),
+una descripción de 100 a 150 palabras (contexto del problema, solución
+propuesta y elementos destacados) y un video de 30 a 45 segundos.
+TAREA: Completa los datos con la información del README de la organización y
+redacta la descripción de Festa. Versión 1: tono descriptivo. Versión 2: más
+llamativa. Versión final: equilibrio entre ambas, sin hablar del piloto ni de
+la comisión.
+FORMATO: Texto de 100 a 150 palabras, sin lenguaje técnico ni publicitario
+exagerado.
+RIESGOS: No inventes nombres, logo ni enlace del video; cuenta las palabras
+antes de entregar.
+```
+
+- **Resultado obtenido:** Descripción final de 126 palabras (problema: planes que se pierden y comercios sin visibilidad; solución: app con mapa, IA que recomienda y boleta con QR). Se entregaron nombre del proyecto y lista de estudiantes. Quedaron pendientes el logo y el enlace del video.
+- **Validación (riesgos):** El conteo de palabras se verificó con `wc`. Los nombres salieron del README (no se inventaron segundos nombres). Se señalaron como pendientes los segundos nombres de Brayan y Sebastián.
+- **Decisión de uso (propuesta):** Aceptado.
