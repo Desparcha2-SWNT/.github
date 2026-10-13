@@ -735,3 +735,27 @@ video debe poder reemplazarse luego por uno del equipo.
 - **Resultado obtenido:** Proyecto `videos/festa-pitch` (16:9, 41 s) y `videos/festa-pitch-vertical` (9:16). Pasaron `check` (0 errores) y el contraste AA. El render desde el Studio falló y se resolvió con el CLI.
 - **Validación (riesgos):** Se aclaró que un video con animaciones y voz sintética puede no cumplir "el equipo presenta la idea". Se eliminaron las versiones de prueba para dejar solo los dos videos definitivos.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (el equipo terminó entregando videos propios, ver P29).
+
+## P25
+- **Fecha:** 2026-10-13 (hora aproximada, 15:40)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Role + solicitud de alternativas divergentes (3 propuestas creativas antes de generar)
+- **Prompt utilizado:**
+
+```
+ROL: Redactor de prompts para generación de video con IA.
+CONTEXTO: Queremos usar Google Flow para un video corto de Festa (30 a 40
+segundos, en español, público de jóvenes y universitarios).
+TAREA: Entrega un prompt general, no escena por escena, que le pida a la IA
+proponer 3 direcciones creativas distintas antes de generar el video final.
+FORMATO: Un solo bloque de texto con problema, solución, público, tono,
+restricciones y la instrucción de presentar las 3 opciones.
+RIESGOS: Sin marcas ni personas reales identificables; texto en pantalla
+correcto en español.
+```
+
+- **Resultado obtenido:** Se entregaron un prompt por escena y luego uno general con las tres propuestas.
+- **Validación (riesgos):** No se ejecutó en Flow, por lo que no hay resultado que validar. Se advirtió que estas herramientas suelen fallar con la ortografía dentro de la imagen.
+- **Decisión de uso (propuesta):** Descartado (no se usó en el entregable final).
