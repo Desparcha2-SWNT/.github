@@ -709,3 +709,29 @@ antes de entregar.
 - **Resultado obtenido:** Descripción final de 126 palabras (problema: planes que se pierden y comercios sin visibilidad; solución: app con mapa, IA que recomienda y boleta con QR). Se entregaron nombre del proyecto y lista de estudiantes. Quedaron pendientes el logo y el enlace del video.
 - **Validación (riesgos):** El conteo de palabras se verificó con `wc`. Los nombres salieron del README (no se inventaron segundos nombres). Se señalaron como pendientes los segundos nombres de Brayan y Sebastián.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P24
+- **Fecha:** 2026-10-13 (hora aproximada, 13:05)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con HyperFrames
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida con preguntas de alcance previas (storyboard, modo, estilo, audio) + Critique-and-Correct (revisión de imágenes de cada escena)
+- **Prompt utilizado:**
+
+```
+ROL: Director de video de producto.
+CONTEXTO: Necesitamos el video de 30 a 45 segundos del formulario. Festa es
+una app que reúne en un mapa los eventos de Bogotá, con IA que recomienda y
+boleta con QR. El video no debe usar jerga técnica.
+TAREA: Crea el video con HyperFrames: 7 escenas (gancho, problema, logo,
+mapa, IA, comercios y boleta, cierre), estilo juvenil y colorido, solo texto
+en pantalla, sin voz ni música por ahora.
+FORMATO: MP4 16:9 de unos 41 segundos y una versión vertical 9:16 apta para
+Shorts. Valida con `hyperframes check` y revisa una imagen de cada escena.
+RIESGOS: No uses datos falsos (marca como ejemplo el evento del mapa); el
+video debe poder reemplazarse luego por uno del equipo.
+```
+
+- **Resultado obtenido:** Proyecto `videos/festa-pitch` (16:9, 41 s) y `videos/festa-pitch-vertical` (9:16). Pasaron `check` (0 errores) y el contraste AA. El render desde el Studio falló y se resolvió con el CLI.
+- **Validación (riesgos):** Se aclaró que un video con animaciones y voz sintética puede no cumplir "el equipo presenta la idea". Se eliminaron las versiones de prueba para dejar solo los dos videos definitivos.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (el equipo terminó entregando videos propios, ver P29).
