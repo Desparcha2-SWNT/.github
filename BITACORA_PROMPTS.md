@@ -652,3 +652,32 @@ RIESGOS: No inventes resultados que no puedas verificar.
 - **Resultado obtenido:** Esta versión de la bitácora.
 - **Validación (riesgos):** Pedir resultados verificables y marcar lo no confirmado con [VERIFICAR] evita falsear el registro.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## Etapa 4 — Pitch deck, videos y presentación final (12 al 15 de octubre de 2026)
+
+## P22
+- **Fecha:** 2026-10-12 (21:20)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con ffmpeg y Whisper (Groq)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Delimitadores (audio adjunto como fuente) + Structured Output (lista de recomendaciones separadas por equipo y generales)
+- **Prompt utilizado:**
+
+```
+ROL: Asistente de actas de la sesión de pitch decks.
+CONTEXTO: Audio de 33 minutos (`Grabación estándar 220.mp3`) con la
+retroalimentación del profesor a todos los equipos. El último equipo en
+presentar es el nuestro (Festa).
+TAREA: Transcribe el audio y recoge todas las recomendaciones, cambios y
+retroalimentación del profesor, separando las que son específicamente para
+Festa de las generales para todos los equipos.
+FORMATO: Lista numerada para Festa y lista de consejos generales, lista para
+copiar al grupo de WhatsApp del equipo.
+RIESGOS: Marca lo que no quede claro en la transcripción; no atribuyas a
+Festa comentarios dirigidos a otros equipos; no completes cifras que no se
+escuchen.
+```
+
+- **Resultado obtenido:** Transcripción en dos tramos (ffmpeg + `whisper-large-v3`, el audio se procesó en memoria). Se obtuvieron 6 recomendaciones para Festa (más imágenes y gráficas, competencia con fuente, no explicar la cotización de nubes, indicadores con umbral, validar el problema con entrevistas, entrega) y 8 consejos generales. Se redactó el mensaje para WhatsApp.
+- **Validación (riesgos):** La transcripción tenía ruido; el punto 6 (entrega) se marcó como no claro. Más tarde se contrastó de nuevo: el profesor pidió enviar la presentación "tal cual" y dejar las mejoras para el parcial.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (el punto 6 se aclaró después, ver P32).
