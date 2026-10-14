@@ -811,3 +811,29 @@ final) y [FOTO] las fotos del equipo.
 - **Resultado obtenido:** Prompt largo con diagnóstico (diapositivas sin imágenes, costos en Google Cloud, indicadores solo en el guion, equipo sin fotos).
 - **Validación (riesgos):** Se verificó el contenido real de las 12 diapositivas y del guion antes de redactar el diagnóstico. Se advirtió la contradicción entre "Google Cloud" y la decisión de desplegar en Azure.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (se aplicó luego con el conector de Pitch, ver P28).
+
+## P28
+- **Fecha:** 2026-10-14 (hora aproximada, 00:25)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con el conector de Pitch
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Delimitadores + Structured Output (estructura de 11 diapositivas con contenido exacto) + Negative Constraints (no inventar cifras, conservar marcadores)
+- **Prompt utilizado:**
+
+```
+ROL: Diseñador de presentaciones para inversionistas jóvenes.
+CONTEXTO: Rehacemos el pitch de Festa en Pitch con una plantilla coherente
+(se eligió "Color Pop"). El contenido, las cifras y las fuentes son los del
+deck actual y el guion.
+TAREA: Crea 11 diapositivas (portada, problema, mercado, solución, así de
+fácil, competencia, modelo de negocio, números, crecimiento, indicadores y
+cierre) con gráficas, cifras grandes y notas del presentador.
+FORMATO: Texto mínimo en pantalla; fuentes al pie; marcadores [CONFIRMAR] y
+[FOTO] intactos; estilo juvenil.
+RIESGOS: No inventes datos; sin nubes ni jerga técnica; revisa los
+resultados del agente de Pitch contra la lista de verificación.
+```
+
+- **Resultado obtenido:** Presentación "FESTA" en Pitch (11 diapositivas) y varias ediciones con el agente. Los créditos de IA de Pitch se agotaron (100 de 100). Algunos defectos se corrigieron a mano en el editor (título tapado en la 9, numeración en la 5, tabla en la 6).
+- **Validación (riesgos):** Se revisó cada diapositiva en pantalla con el navegador integrado y se encontraron defectos que el texto de la API no mostraba (solapes, texto pequeño). El agente no insertó dibujos animados.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (las fotos y el contenido sirvieron de base; la entrega final pasó a PowerPoint, ver P29).
