@@ -837,3 +837,29 @@ resultados del agente de Pitch contra la lista de verificación.
 - **Resultado obtenido:** Presentación "FESTA" en Pitch (11 diapositivas) y varias ediciones con el agente. Los créditos de IA de Pitch se agotaron (100 de 100). Algunos defectos se corrigieron a mano en el editor (título tapado en la 9, numeración en la 5, tabla en la 6).
 - **Validación (riesgos):** Se revisó cada diapositiva en pantalla con el navegador integrado y se encontraron defectos que el texto de la API no mostraba (solapes, texto pequeño). El agente no insertó dibujos animados.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (las fotos y el contenido sirvieron de base; la entrega final pasó a PowerPoint, ver P29).
+
+## P29
+- **Fecha:** 2026-10-14 (hora aproximada, 17:15)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con pptxgenjs
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida con corrección de alcance (el guion fija 6 secciones y la IA había creado 11 diapositivas) + Delimitadores (carpeta con videos y fotos)
+- **Prompt utilizado:**
+
+```
+ROL: Diseñador de presentaciones.
+CONTEXTO: El guion del pitch tiene 6 secciones, una por diapositiva. Tengo
+en una carpeta 5 videos de mis compañeros (uno por sección), las fotos de
+los 6 integrantes (nombradas con cada nombre) y mi presentación anterior.
+TAREA: Rehaz la presentación en PowerPoint con una diapositiva por sección
+del guion, más una de conclusiones y agradecimientos con las fotos. Incrusta
+cada video en un lugar visible y actualiza las cifras para que coincidan con
+lo que dicen los videos. Sin roles en la diapositiva final.
+FORMATO: Archivo .pptx con notas del presentador y créditos.
+RIESGOS: No repitas el error del número de diapositivas; señala cifras que
+puedan contradecir al profesor; valida el archivo antes de entregarlo.
+```
+
+- **Resultado obtenido:** `Pitch.pptx` de 7 diapositivas (portada, problema, solución, competencia, modelo de negocio, indicadores y conclusiones) con 6 videos incrustados, fotos del equipo y cifras alineadas ($113 USD/mes de infraestructura y 17 meses con USD 2.000). Se extrajo el video de la portada desde el `Pitch.pptx` del usuario.
+- **Validación (riesgos):** Se validó con `validate.py`, con mediciones de texto y exportando las diapositivas con PowerPoint. Se señaló que las cifras de costo son del equipo y que el profesor había cuestionado los costos anteriores.
+- **Decisión de uso (propuesta):** Aceptado.
