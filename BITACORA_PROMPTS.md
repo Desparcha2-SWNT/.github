@@ -786,3 +786,28 @@ el plan gratuito.
 - **Resultado obtenido:** Voz de Jessica (ElevenLabs) elegida entre 3 muestras. Música sintética propia, porque la API de música es de pago. Video v3 con voz y música.
 - **Validación (riesgos):** La clave quedó en `~/.config/elevenlabs/.env` y nunca se mostró. Se controlaron los créditos (unos 560 de 10.000). Una primera clave tenía el límite en 0 y se corrigió desde ElevenLabs.
 - **Decisión de uso (propuesta):** Aceptado con ajustes (la voz sintética se mantuvo solo en el cierre de la IA, ver P31).
+
+## P27
+- **Fecha:** 2026-10-14 (hora aproximada, 00:05)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** System Persona (diseñador de presentaciones) + Delimitadores (archivos y retroalimentación entre bloques) + Structured Output
+- **Prompt utilizado:**
+
+```
+ROL: Diseñador de presentaciones y consultor de pitch para startups.
+CONTEXTO: Adjunto FESTA_Pitch.pptx (12 diapositivas), Guion_Pitch_Festa.docx
+y la retroalimentación del profesor (más imágenes y gráficas, competencia
+con fuente, sin cotizar nubes, indicadores con umbral, validar con
+entrevistas, fotos del equipo, lenguaje no técnico).
+TAREA: Genera un prompt para que otra IA mejore las diapositivas según esa
+retroalimentación y el guion, con el diagnóstico concreto de cada diapositiva.
+FORMATO: Bloque de prompt con rol, contexto, tarea, formato y restricciones.
+RIESGOS: No inventes cifras; marca [CONFIRMAR] lo no definido (costos, nube
+final) y [FOTO] las fotos del equipo.
+```
+
+- **Resultado obtenido:** Prompt largo con diagnóstico (diapositivas sin imágenes, costos en Google Cloud, indicadores solo en el guion, equipo sin fotos).
+- **Validación (riesgos):** Se verificó el contenido real de las 12 diapositivas y del guion antes de redactar el diagnóstico. Se advirtió la contradicción entre "Google Cloud" y la decisión de desplegar en Azure.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (se aplicó luego con el conector de Pitch, ver P28).
