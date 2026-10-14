@@ -759,3 +759,30 @@ correcto en español.
 - **Resultado obtenido:** Se entregaron un prompt por escena y luego uno general con las tres propuestas.
 - **Validación (riesgos):** No se ejecutó en Flow, por lo que no hay resultado que validar. Se advirtió que estas herramientas suelen fallar con la ortografía dentro de la imagen.
 - **Decisión de uso (propuesta):** Descartado (no se usó en el entregable final).
+
+## P26
+- **Fecha:** 2026-10-13 (hora aproximada, 22:40)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con Kokoro, edge-tts y ElevenLabs
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Iterative Refinement con comparación de alternativas (muestras de voces) + Negative Constraints (la clave nunca se pega en el chat)
+- **Prompt utilizado:**
+
+```
+ROL: Productor de audio para video de producto.
+CONTEXTO: El video de Festa necesita voz en off en español y música de fondo.
+La primera voz (Kokoro) sonó plana; probamos una voz colombiana (edge-tts) y
+luego ElevenLabs. Uso mi cuenta gratuita de ElevenLabs.
+TAREA: Genera 7 frases de narración sincronizadas con las escenas, una voz
+más natural y una pista de música; compara voces con una muestra antes de
+generar todo.
+FORMATO: Un MP3 por escena, ajustado a la duración de cada escena; video
+final con audio.
+RIESGOS: La clave de API se guarda en un archivo local y no se escribe en el
+chat; informa los créditos que se gastan; indica qué no está disponible en
+el plan gratuito.
+```
+
+- **Resultado obtenido:** Voz de Jessica (ElevenLabs) elegida entre 3 muestras. Música sintética propia, porque la API de música es de pago. Video v3 con voz y música.
+- **Validación (riesgos):** La clave quedó en `~/.config/elevenlabs/.env` y nunca se mostró. Se controlaron los créditos (unos 560 de 10.000). Una primera clave tenía el límite en 0 y se corrigió desde ElevenLabs.
+- **Decisión de uso (propuesta):** Aceptado con ajustes (la voz sintética se mantuvo solo en el cierre de la IA, ver P31).
