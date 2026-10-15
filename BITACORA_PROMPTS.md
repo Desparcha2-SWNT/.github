@@ -863,3 +863,29 @@ puedan contradecir al profesor; valida el archivo antes de entregarlo.
 - **Resultado obtenido:** `Pitch.pptx` de 7 diapositivas (portada, problema, solución, competencia, modelo de negocio, indicadores y conclusiones) con 6 videos incrustados, fotos del equipo y cifras alineadas ($113 USD/mes de infraestructura y 17 meses con USD 2.000). Se extrajo el video de la portada desde el `Pitch.pptx` del usuario.
 - **Validación (riesgos):** Se validó con `validate.py`, con mediciones de texto y exportando las diapositivas con PowerPoint. Se señaló que las cifras de costo son del equipo y que el profesor había cuestionado los costos anteriores.
 - **Decisión de uso (propuesta):** Aceptado.
+
+## P30
+- **Fecha:** 2026-10-14 (hora aproximada, 19:30)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Critique-and-Correct (revisión visual de cada diapositiva exportada desde PowerPoint) + Negative Constraints
+- **Prompt utilizado:**
+
+```
+ROL: Revisor de calidad visual de presentaciones.
+CONTEXTO: En PowerPoint, la imagen de la portada se ve distorsionada y la de
+la diapositiva 5 se deforma; la diapositiva 4 tiene una imagen muy pequeña y
+un hueco bajo la tabla; los videos hay que ponerlos a mano en "Iniciar:
+Automáticamente"; el profesor prefiere imágenes tipo caricatura y las fotos
+originales no estaban mal.
+TAREA: Corrige los tamaños, haz que los videos y el audio arranquen solos,
+combina fotos y dibujos animados y usa una portada que se integre.
+FORMATO: Un solo `Pitch.pptx`; verifica abriendo el archivo en PowerPoint.
+RIESGOS: No cambies textos ni cifras; no dejes el archivo corrupto; elimina
+las versiones duplicadas.
+```
+
+- **Resultado obtenido:** Ilustraciones vectoriales propias (la generación de Canva salía en 200 px y sin créditos), fotos originales restauradas en las diapositivas 2, 3 y 6, y el video de la diapositiva 5 reconvertido (traía una marca de rotación de 90°). El inicio automático se logró editando el XML de cada diapositiva.
+- **Validación (riesgos):** Un primer intento corrompió el archivo (identificadores repetidos entre el video y una forma decorativa); se detectó al abrirlo en PowerPoint y se corrigió. Se verificó, por diapositiva, que PowerPoint reconoce la acción de reproducir con inicio automático.
+- **Decisión de uso (propuesta):** Aceptado con ajustes.
