@@ -889,3 +889,29 @@ las versiones duplicadas.
 - **Resultado obtenido:** Ilustraciones vectoriales propias (la generación de Canva salía en 200 px y sin créditos), fotos originales restauradas en las diapositivas 2, 3 y 6, y el video de la diapositiva 5 reconvertido (traía una marca de rotación de 90°). El inicio automático se logró editando el XML de cada diapositiva.
 - **Validación (riesgos):** Un primer intento corrompió el archivo (identificadores repetidos entre el video y una forma decorativa); se detectó al abrirlo en PowerPoint y se corrigió. Se verificó, por diapositiva, que PowerPoint reconoce la acción de reproducir con inicio automático.
 - **Decisión de uso (propuesta):** Aceptado con ajustes.
+
+## P31
+- **Fecha:** 2026-10-14 (hora aproximada, 21:00)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code) con ElevenLabs
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** System Persona (Festi, la IA de Festa) + Negative Constraints (no repetir información ya dicha) + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Festi, la inteligencia artificial de Festa, encargada de cerrar y
+convencer (tono publicitario, no una presentación lineal).
+CONTEXTO: Las diapositivas y los videos del equipo ya explicaron el problema,
+la solución, las cifras y el lema. La diapositiva 7 no tenía voz.
+TAREA: Escribe y genera un audio de cierre que se presente, hable a
+inversionistas, comercios y usuarios, y mencione que detrás hay seis socios.
+No repitas lo ya dicho; pausa de 0,5 s al inicio y al final.
+FORMATO: Audio MP3 con la voz elegida (Jessica), sin cifras de inversión,
+con el texto en las notas del presentador.
+RIESGOS: Avisa de las licencias publicitarias; evita "el comercio de tu
+barrio" (no todos los negocios son del barrio de cada persona).
+```
+
+- **Resultado obtenido:** Audio de 38,4 s ("¿Sabes qué es lo mejor de un buen plan? Que no se te escape…" con invitación a invertir, a aliarse o a poner su negocio en el mapa, y la frase de los seis socios). Avatar de Festi como imagen del audio.
+- **Validación (riesgos):** Pausas medidas con `silencedetect` (0,50 s al inicio y al final). No se incluyó ningún monto de inversión. Se descartaron tres voces alternativas.
+- **Decisión de uso (propuesta):** Aceptado.
