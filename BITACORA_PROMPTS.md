@@ -915,3 +915,32 @@ barrio" (no todos los negocios son del barrio de cada persona).
 - **Resultado obtenido:** Audio de 38,4 s ("¿Sabes qué es lo mejor de un buen plan? Que no se te escape…" con invitación a invertir, a aliarse o a poner su negocio en el mapa, y la frase de los seis socios). Avatar de Festi como imagen del audio.
 - **Validación (riesgos):** Pausas medidas con `silencedetect` (0,50 s al inicio y al final). No se incluyó ningún monto de inversión. Se descartaron tres voces alternativas.
 - **Decisión de uso (propuesta):** Aceptado.
+
+
+## P32
+- **Fecha:** 2026-10-16 (hora aproximada, 22:30)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis / Diseño
+- **Técnica de prompting utilizada:** Few-shot (plantillas del laboratorio) + Instrucción dirigida + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Analista funcional que redacta especificaciones para un equipo de
+desarrollo o un agente de IA.
+CONTEXTO: Laboratorio 2 del curso. Festa ya tiene RF1-RF19 y RNF1-RNF12
+(requirements.md). Se entregan una plantilla de Mapa de Componentes (2.1) y
+una de Especificación de Componente (2.2).
+TAREA: Genera el Mapa de Componentes v1 (3-6 módulos, 2-5 componentes por
+módulo, dependencias, qué entra al MVP) y la especificación de 5-7
+componentes críticos, con RNF y criterios Dado/Cuando/Entonces. Cada
+historia de usuario debe quedar cubierta. Después: entrega el texto para la
+caja de respuesta, que admite máximo 10.000 caracteres.
+FORMATO: Texto plano, sin tablas, con la plantilla del laboratorio.
+RIESGOS: No inventar requisitos; marcar como supuestos los valores que no
+estén en los requerimientos.
+```
+
+- **Resultado obtenido:** Mapa de 15 componentes en 5 módulos y 7 especificaciones críticas (Auth, Eventos y Geolocalización, Mapa, Boletería y QR, Wompi, Orquestador de IA, Panel de comercio), con tabla de trazabilidad HU → componentes. Versión comprimida de 8.209 caracteres para la caja de respuesta.
+- **Validación (riesgos):** Trazabilidad HU → componente → criterio para detectar historias sin cobertura (HU-02 quedó cubierta solo de forma indirecta y se dejó anotado). Los valores que no venían de los requerimientos (10 solicitudes de IA por minuto, bloqueo tras 5 intentos fallidos, JWT de 1 h) se señalaron como supuestos para confirmar con el equipo. Conteo de caracteres verificado con un script.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Después de la decisión de pasar a Azure (6 de octubre) se reemplazaron Supabase, Gemini y FCM por Entra External ID, Azure OpenAI y Notification Hubs en los dos archivos.
