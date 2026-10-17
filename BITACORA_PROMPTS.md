@@ -944,3 +944,30 @@ estén en los requerimientos.
 - **Resultado obtenido:** Mapa de 15 componentes en 5 módulos y 7 especificaciones críticas (Auth, Eventos y Geolocalización, Mapa, Boletería y QR, Wompi, Orquestador de IA, Panel de comercio), con tabla de trazabilidad HU → componentes. Versión comprimida de 8.209 caracteres para la caja de respuesta.
 - **Validación (riesgos):** Trazabilidad HU → componente → criterio para detectar historias sin cobertura (HU-02 quedó cubierta solo de forma indirecta y se dejó anotado). Los valores que no venían de los requerimientos (10 solicitudes de IA por minuto, bloqueo tras 5 intentos fallidos, JWT de 1 h) se señalaron como supuestos para confirmar con el equipo. Conteo de caracteres verificado con un script.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Después de la decisión de pasar a Azure (6 de octubre) se reemplazaron Supabase, Gemini y FCM por Entra External ID, Azure OpenAI y Notification Hubs en los dos archivos.
+
+
+## P33
+- **Fecha:** 2026-10-16 (hora aproximada, 22:50)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Plantilla dirigida (template filling) + Delimitadores + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Ingeniero que convierte una especificación en un prompt técnico para
+una herramienta de vibe coding (Lovable).
+CONTEXTO: Laboratorio 3. Se debe elegir un componente crítico del Laboratorio
+2 y usar la plantilla de prompt de implementación (3.1). Componente elegido:
+C4, Pantalla Mapa y filtros de Festa.
+TAREA: Redacta el prompt inicial, un prompt refinado con las mejoras, la
+sección de validación con los criterios de aceptación y una reflexión.
+Todo debe caber en 10.000 caracteres.
+FORMATO: Un solo bloque de texto para copiar en la caja de respuesta.
+RIESGOS: No inventar resultados de una herramienta que aún no se ejecutó;
+dejar espacios claros para pegar el código real y marcar los criterios.
+```
+
+- **Resultado obtenido:** Prompt inicial para generar en React + TypeScript + Leaflet el mapa con clústeres, filtros y confirmación de asistencia, con 3 criterios de aceptación; prompt refinado con casos límite (fechas inválidas, lista vacía, carga y error, pruebas); reflexión en borrador (unos 7.500 caracteres).
+- **Validación (riesgos):** Las secciones de código generado y de validación se dejaron vacías a propósito, porque el prompt todavía no se había ejecutado en Lovable. La reflexión se marcó como borrador para ajustarla con el resultado real. Se advirtió que Lovable genera React y no Flutter, así que es un prototipo web.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Queda pendiente ejecutarlo en Lovable y completar el código generado, la validación y la reflexión final.
