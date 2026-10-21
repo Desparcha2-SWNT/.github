@@ -971,3 +971,32 @@ dejar espacios claros para pegar el código real y marcar los criterios.
 - **Resultado obtenido:** Prompt inicial para generar en React + TypeScript + Leaflet el mapa con clústeres, filtros y confirmación de asistencia, con 3 criterios de aceptación; prompt refinado con casos límite (fechas inválidas, lista vacía, carga y error, pruebas); reflexión en borrador (unos 7.500 caracteres).
 - **Validación (riesgos):** Las secciones de código generado y de validación se dejaron vacías a propósito, porque el prompt todavía no se había ejecutado en Lovable. La reflexión se marcó como borrador para ajustarla con el resultado real. Se advirtió que Lovable genera React y no Flutter, así que es un prototipo web.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Queda pendiente ejecutarlo en Lovable y completar el código generado, la validación y la reflexión final.
+
+
+## P34
+- **Fecha:** 2026-10-21 (hora aproximada, 16:20)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño / Planeación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement (con verificación contra la herramienta)
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que organiza el backlog de Festa en Jira.
+CONTEXTO: El profesor pidió planear cuatro sprints de una semana, cada uno
+con un incremento funcional. El proyecto SCRUM en Jira ya tiene épicas
+E0-E8, 26 historias (SCRUM-14 a 39) y subtareas. El Sprint 0 fue de
+organización y diseño; el Sprint 5 es para lo que no entra al MVP.
+TAREA: Acomoda las historias existentes en los sprints por dependencia
+funcional (no por capa técnica), crea el Sprint 5, agrega puntos de historia
+y prioridad, registra el trabajo ya hecho en el Sprint 0 y fija fechas
+(Sprint 1 del lunes 19 al domingo 25 de octubre, y así sucesivamente).
+FORMATO: Cambios directos en Jira a través del conector de Atlassian, con
+un resumen por sprint.
+RIESGOS: No duplicar issues ya cargados; no inventar responsables; avisar
+qué puntos son estimaciones.
+```
+
+- **Resultado obtenido:** Reparto en Jira: Sprint 1 (infraestructura, CI/CD, RF1-RF3), Sprint 2 (observabilidad, RF4-RF6), Sprint 3 (RF7-RF9), Sprint 4 (RF10, RF11, RF15) y Sprint 5 para RF12-RF14 y RF16-RF19. Puntos de historia (26, 29, 16 y 26 por sprint) y prioridad según la etiqueta MoSCoW. Ocho tareas finalizadas en el Sprint 0 (SCRUM-118 a 125). Fechas del 19 de octubre al 15 de noviembre.
+- **Validación (riesgos):** Antes de importar el CSV que la IA había generado, se revisó el backlog real y se vio que ya existía: se descartó el CSV para no duplicar 26 issues. Se leyó de nuevo el Sprint 1 después de mover las historias y se comprobaron las fechas en el tablero. El conector no permite crear sprints ni editar fechas, así que eso se hizo desde la interfaz.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Los puntos de historia son estimaciones de la IA pendientes de planning poker, las subtareas no tienen sprint propio y faltan los responsables de cada historia.
