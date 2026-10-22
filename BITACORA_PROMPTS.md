@@ -1000,3 +1000,30 @@ qué puntos son estimaciones.
 - **Resultado obtenido:** Reparto en Jira: Sprint 1 (infraestructura, CI/CD, RF1-RF3), Sprint 2 (observabilidad, RF4-RF6), Sprint 3 (RF7-RF9), Sprint 4 (RF10, RF11, RF15) y Sprint 5 para RF12-RF14 y RF16-RF19. Puntos de historia (26, 29, 16 y 26 por sprint) y prioridad según la etiqueta MoSCoW. Ocho tareas finalizadas en el Sprint 0 (SCRUM-118 a 125). Fechas del 19 de octubre al 15 de noviembre.
 - **Validación (riesgos):** Antes de importar el CSV que la IA había generado, se revisó el backlog real y se vio que ya existía: se descartó el CSV para no duplicar 26 issues. Se leyó de nuevo el Sprint 1 después de mover las historias y se comprobaron las fechas en el tablero. El conector no permite crear sprints ni editar fechas, así que eso se hizo desde la interfaz.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Los puntos de historia son estimaciones de la IA pendientes de planning poker, las subtareas no tienen sprint propio y faltan los responsables de cada historia.
+
+
+## P35
+- **Fecha:** 2026-10-22 (hora aproximada, 17:00)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis / Diseño
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparación entre fuentes) + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Revisor que verifica la consistencia entre artefactos del proyecto.
+CONTEXTO: Festa tiene requerimientos (requirements.md), Jira (historias y
+subtareas), un documento de Lucid con el BPMN, la arquitectura en Azure y 19
+casos de uso, y material de entrega (laboratorios y pitch). El usuario cree
+que Jira está bien y que lo que se debe corregir es Lucid, pero deja la
+decisión a la IA.
+TAREA: Revisa que todo concuerde; si no, corrige lo que toque, ya sea Jira,
+Lucid, ambos o ninguno. Después, aplica los cambios que propongas.
+FORMATO: Lista priorizada de hallazgos con la acción para cada uno.
+RIESGOS: No cambiar diagramas a ciegas ni asumir que la arquitectura vieja
+sigue vigente; confirmar el estado actual antes de editar.
+```
+
+- **Resultado obtenido:** Hallazgos: la arquitectura de Lucid ya estaba en Azure (decisión del 6 de octubre) y Jira seguía en GCP, Supabase y Gemini, por lo que se corrigieron 12 issues de Jira; el título del caso de uso RF9 en Lucid estaba roto ("c") y se corrigió. Se crearon dos subtareas por privacidad (RNF5, Ley 1581) y se alineó el QR de eventos gratuitos entre requerimiento, Jira y BPMN.
+- **Validación (riesgos):** Se contrastaron las tres fuentes, cada una con su exportación o lectura directa (PNG de Lucid, JQL en Jira). Al volver a leer Lucid se vio que otra persona ya había aplicado varios cambios del BPMN, y se revirtió una nota de la IA en SCRUM-28 que contradecía el diagrama. Queda como pregunta abierta el costo del pitch (USD 113 por mes, calculado para GCP).
+- **Decisión de uso (propuesta):** Aceptado con ajustes. La decisión sobre el QR se alineó con el BPMN y el requerimiento; falta que el equipo confirme el costo de infraestructura con Azure.
