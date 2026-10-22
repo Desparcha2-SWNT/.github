@@ -1027,3 +1027,29 @@ sigue vigente; confirmar el estado actual antes de editar.
 - **Resultado obtenido:** Hallazgos: la arquitectura de Lucid ya estaba en Azure (decisión del 6 de octubre) y Jira seguía en GCP, Supabase y Gemini, por lo que se corrigieron 12 issues de Jira; el título del caso de uso RF9 en Lucid estaba roto ("c") y se corrigió. Se crearon dos subtareas por privacidad (RNF5, Ley 1581) y se alineó el QR de eventos gratuitos entre requerimiento, Jira y BPMN.
 - **Validación (riesgos):** Se contrastaron las tres fuentes, cada una con su exportación o lectura directa (PNG de Lucid, JQL en Jira). Al volver a leer Lucid se vio que otra persona ya había aplicado varios cambios del BPMN, y se revirtió una nota de la IA en SCRUM-28 que contradecía el diagrama. Queda como pregunta abierta el costo del pitch (USD 113 por mes, calculado para GCP).
 - **Decisión de uso (propuesta):** Aceptado con ajustes. La decisión sobre el QR se alineó con el BPMN y el requerimiento; falta que el equipo confirme el costo de infraestructura con Azure.
+
+
+## P36
+- **Fecha:** 2026-10-22 (hora aproximada, 18:30)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** System Persona (contexto persistente) + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Asistente técnico que documenta el contexto del proyecto para otros
+agentes de IA.
+CONTEXTO: La carpeta raíz del proyecto no tenía un archivo de contexto. Se
+debe buscar agents.md; si no existe, crear claude.md.
+TAREA: Verifica si existe agents.md y, si no, crea claude.md con el contexto
+del proyecto: qué es Festa, stack y arquitectura vigente, requerimientos,
+Jira y sprints, Lucid, GitHub y carpetas, reglas del curso y convenciones.
+FORMATO: Markdown en español, en la raíz del proyecto.
+RIESGOS: No inventar datos del equipo ni de la universidad; no reintroducir
+la arquitectura obsoleta (GCP, Supabase, Gemini).
+```
+
+- **Resultado obtenido:** CLAUDE.md creado en la raíz con el stack en Azure, los RF/RNF por prioridad, los sprints con fechas, los identificadores de Jira y Lucid, las reglas del curso (evidencia de prompts, commits marcados) y las convenciones. Se verificó antes que no existía agents.md ni claude.md en la raíz (solo los del proyecto de video).
+- **Validación (riesgos):** Se buscó el archivo con una búsqueda sin distinguir mayúsculas antes de crearlo. Los datos sensibles o sin confirmar (nombres de los integrantes, costos) se dejaron fuera o marcados como pendientes de confirmar.
+- **Decisión de uso (propuesta):** Aceptado.
