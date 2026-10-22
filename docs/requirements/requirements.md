@@ -21,7 +21,7 @@ El sistema de Festa debe tener la capacidad de:
 9. Generar automáticamente, a partir de datos básicos del comercio, una descripción atractiva del evento redactada por IA Generativa. *(RF9 — Must, requisito del profesor)*
 10. Validar asistencia mediante código QR generado por evento, de un solo uso. *(RF10 — Must, indicación del profesor)*
 11. Vender boletería dentro de la app, reteniendo una comisión por cada entrada vendida. *(RF11 — Must, indicación del profesor)*
-12. Enviar notificaciones push por eventos cercanos y recordatorios de asistencia. *(RF12 — Should)*
+12. Enviar notificaciones push por eventos cercanos y recordatorios de asistencia. *(RF12 — Should, fase 2; fuera del MVP actual)*
 13. Compartir eventos mediante enlaces hacia redes sociales externas. *(RF13 — Could)*
 14. Reportar eventos o usuarios, con revisión manual del equipo. *(RF14 — Should)*
 15. Mostrar un panel de comercio simple para medir retorno (conteos de asistentes y boletos vendidos). *(RF15 — Should)*
@@ -38,7 +38,7 @@ El sistema de Festa debe tener:
 2. Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. *(RNF2)*
 3. Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. *(RNF3)*
 4. Seguridad: autenticación con tokens (JWT/OAuth2), cifrado en tránsito (HTTPS) y en reposo para datos personales. *(RNF4)*
-5. Privacidad: uso de ubicación solo con consentimiento explícito; cumplimiento de la Ley 1581 de 2012. *(RNF5)*
+5. Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. *(RNF5)*
 6. Integración con una pasarela de pagos existente (Wompi/PayU/Mercado Pago) para la venta de boletería. *(RNF6)*
 7. Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. *(RNF7)*
 8. Costo de IA controlado: descripciones (RF9) se generan una sola vez y se persisten; recomendaciones (RF8) usan un modelo de costo reducido con límite de 5–20 solicitudes por usuario por minuto. *(RNF8)*
@@ -58,7 +58,7 @@ El sistema de Festa debe tener:
 | **Descripción** | El sistema debe permitir a un usuario o comercio registrarse e iniciar sesión mediante correo electrónico y contraseña, o mediante autenticación con Google (OAuth2). |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y disponible. |
 | **Actor** | Usuario, Comercio/Organizador |
-| **Flujo principal** | 1. El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".<br>2. El actor elige el método: correo/contraseña o Google.<br>3. El sistema valida las credenciales (o el token de Google).<br>4. El sistema genera un token JWT de sesión.<br>5. El sistema redirige al actor a su pantalla principal. |
+| **Flujo principal** | 1. El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".<br>2. Para registrarse, el actor consulta el aviso de privacidad y autoriza el tratamiento de sus datos personales conforme a la Ley 1581 de 2012.<br>3. El actor elige el método: correo/contraseña o Google.<br>4. El sistema valida las credenciales (o el token de Google).<br>5. El sistema genera un token JWT de sesión.<br>6. El sistema redirige al actor a su pantalla principal. |
 | **Diagrama de caso de uso** | *pendiente — boceto Usuario/Comercio → "Registrarse / Iniciar sesión" → Sistema* |
 | **Poscondiciones** | Se espera como resultado que el actor quede autenticado con una sesión válida (JWT) y pueda acceder a las funcionalidades según su rol. |
 
@@ -108,9 +108,9 @@ El sistema de Festa debe tener:
 | **ID** | RF-05 |
 | **Nombre del requerimiento** | Mapa interactivo en tiempo real |
 | **Descripción** | El sistema debe mostrar en un mapa interactivo los eventos activos y próximos, agrupados en clústeres por zona, cargando lo visible en menos de 2 segundos (RNF1). |
-| **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado (u omitido) el consentimiento de ubicación (RNF5). |
+| **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado su consentimiento explícito antes de acceder a la ubicación del dispositivo (RNF5). |
 | **Actor** | Usuario |
-| **Flujo principal** | 1. El actor abre la pantalla principal (mapa).<br>2. El sistema obtiene la ubicación del actor (o usa la ubicación por defecto del piloto ECI).<br>3. El sistema consulta los eventos activos/próximos cercanos.<br>4. El sistema agrupa eventos cercanos en clústeres y los renderiza.<br>5. El actor puede hacer zoom/pan; el sistema recalcula clústeres. |
+| **Flujo principal** | 1. El actor abre la pantalla principal (mapa).<br>2. Si el actor consiente, el sistema obtiene la ubicación del dispositivo; si la rechaza o no está disponible, informa y usa la ubicación predeterminada del piloto ECI.<br>3. El sistema consulta los eventos activos/próximos cercanos.<br>4. El sistema agrupa eventos cercanos en clústeres y los renderiza.<br>5. El actor puede hacer zoom/pan; el sistema recalcula clústeres. |
 | **Diagrama de caso de uso** | *pendiente — boceto Usuario → "Ver mapa de eventos" → Sistema* |
 | **Poscondiciones** | Se espera como resultado que el actor visualice los eventos activos y próximos cercanos, organizados por clústeres, en menos de 2 segundos. |
 
@@ -172,10 +172,10 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-10 |
 | **Nombre del requerimiento** | Validación de asistencia por QR |
-| **Descripción** | El sistema debe generar un código QR único por boleto/asistente (de un solo uso, RNF7), escaneado al ingreso del evento para validar la asistencia. Indicación explícita del profesor. |
+| **Descripción** | El sistema debe generar un código QR único por asistente para eventos gratuitos confirmados y por boleto comprado para eventos pagos. El QR es de un solo uso (RNF7) y se escanea al ingreso para validar la asistencia. Indicación explícita del profesor. |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor con una confirmación de asistencia o boleto para el evento (RF-07 o RF-11). |
 | **Actor** | Usuario (presenta el QR), Comercio/Organizador (escanea el QR) |
-| **Flujo principal** | 1. El sistema genera un código QR único al confirmar la asistencia o compra del actor.<br>2. El actor presenta el QR al ingreso del evento.<br>3. El comercio escanea el QR con la app.<br>4. El sistema valida que el QR sea auténtico, corresponda al evento y no haya sido usado antes.<br>5. El sistema marca el QR como usado y registra el check-in. |
+| **Flujo principal** | 1. El sistema genera un código QR único cuando el usuario confirma asistencia a un evento gratuito (RF-07) o cuando se completa la compra de una entrada para un evento pago (RF-11).<br>2. El actor presenta el QR al ingreso del evento.<br>3. El comercio escanea el QR con la app.<br>4. El sistema valida que el QR sea auténtico, corresponda al evento y no haya sido usado antes.<br>5. El sistema marca el QR como usado y registra el check-in. |
 | **Diagrama de caso de uso** | *pendiente — boceto Usuario → "Mostrar QR" / Comercio → "Escanear QR" → Sistema* |
 | **Poscondiciones** | Se espera como resultado que el check-in quede registrado de forma única e irrepetible, visible en tiempo real para el organizador. |
 
@@ -198,7 +198,7 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-12 |
 | **Nombre del requerimiento** | Notificaciones push |
-| **Descripción** | El sistema debe enviar notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados. |
+| **Descripción** | Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados mediante Azure Notification Hubs, con entrega a dispositivos iOS y Android. |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y con permiso de notificaciones otorgado en el dispositivo. |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. Ocurre un evento relevante en el sistema (evento nuevo cercano, o recordatorio de un evento confirmado).<br>2. El sistema encola la notificación correspondiente.<br>3. El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging.<br>4. El actor recibe la notificación y puede tocarla para ir al detalle del evento. |
