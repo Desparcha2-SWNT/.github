@@ -9,23 +9,37 @@ Modelo de arquitectura de Festa escrito como código (*diagrams as code*) con
 
 | Archivo | Descripción |
 | --- | --- |
-| `festa.dsl` | Workspace Structurizr: modelo (personas, sistemas, contenedores), vistas y estilos. |
-| `diagramas/ContextoFesta.png` | Exportación de la vista `ContextoFesta` (C4 nivel 1 — Contexto de sistema). |
-| [`alcance.md`](./alcance.md) | Ficha de alcance del sistema (objetivo, problema a resolver, diagrama de contexto con actores y sistemas externos, y qué está dentro/fuera del alcance), en el formato de [`dosw-lab4-example/scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md). |
+| `festa.dsl` | Workspace Structurizr: modelo (personas, sistemas, contenedores, componentes, despliegue), vistas y estilos. |
+| `diagramas/ContextoFesta.png` | C4 nivel 1: contexto de sistema. |
+| `diagramas/ContenedoresFesta.png` | C4 nivel 2: app móvil, gateway, microservicios `festa-*` y componentes de `festa-infra`. |
+| `diagramas/ComponentesBooking.png` | C4 nivel 3: `festa-booking-service` (asistencia y QR de un solo uso). |
+| `diagramas/ComponentesPayment.png` | C4 nivel 3: `festa-payment-service` (cobro y split con Wompi). |
+| `diagramas/ComponentesAI.png` | C4 nivel 3: `festa-ai-service` (recomendaciones, descripciones y límite de uso). |
+| `diagramas/CompraBoleto.png` | Vista dinámica: compra de un boleto y generación del QR. |
+| `diagramas/DespliegueAzure.png` | Vista de despliegue propuesta en Azure. |
+| [`alcance.md`](./alcance.md) | Ficha de alcance del sistema, en el formato de [`dosw-lab4-example/scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md). |
+
+## Estado del modelo
+
+El modelo sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026) y el despliegue en Azure
+(decisión del 25-oct-2026). Lo marcado como **propuesto** depende de decisiones pendientes del equipo:
+la plataforma de despliegue (ADR 0001) y el almacén que usa cada servicio (ADR 0002). Las relaciones
+servicio-almacén, los componentes internos de los niveles 3 y los servicios de Azure son una propuesta
+de diseño, no código existente. Los repositorios solo tienen README al 25 de octubre.
+
+La versión anterior del modelo (Kong, Spring Boot, Admin Panel en React) quedó obsoleta y se reemplazó.
 
 ## Vistas definidas
 
-- **`ContextoFesta`** — C4 nivel 1 (Contexto). Muestra a Festa frente a sus
-  actores (persona interesada en eventos, comercio/organizador, administrador de
-  la plataforma) y a los sistemas externos: pasarela de pagos, servicio de
-  recomendaciones por IA, servicio de notificaciones y proveedor de identidad.
-- **`ContenedoresFesta`** — C4 nivel 2 (Contenedores). Descompone Festa en API
-  Gateway, Auth, User, Event, Booking, Payment, AI, Notification y Analytics
-  Service, Admin Panel y el Message Broker (RabbitMQ).
+- **`ContextoFesta`** (nivel 1): Festa frente a sus actores y a los sistemas externos (Wompi, Azure OpenAI, FCM/APNs, Google Identity y Mapbox).
+- **`ContenedoresFesta`** (nivel 2): `festa-mobile`, `festa-gateway`, los siete microservicios de negocio, RabbitMQ, PostgreSQL, MongoDB, Redis y Prometheus + Grafana.
+- **`ComponentesBooking`, `ComponentesPayment`, `ComponentesAI`** (nivel 3): componentes internos de los tres servicios con la lógica más crítica (RNF7, RF11 y RNF8).
+- **`CompraBoleto`** (dinámica): secuencia de compra, pago, evento en RabbitMQ y entrega del QR.
+- **`DespliegueAzure`**: Container Apps, PostgreSQL Flexible Server, Cosmos DB, Cache for Redis, Key Vault, Azure OpenAI y Notification Hubs.
 
 ## Cómo visualizar o exportar los diagramas
 
-**Opción A — Structurizr Lite (recomendada, con Docker):**
+**Opción A: Structurizr Lite (con Docker):**
 
 ```bash
 docker run -it --rm -p 8080:8080 \
@@ -33,17 +47,19 @@ docker run -it --rm -p 8080:8080 \
   structurizr/lite
 ```
 
-Luego abrir <http://localhost:8080>. Detecta `festa.dsl` automáticamente y
-recarga al guardar cambios.
+Luego abrir <http://localhost:8080>. Detecta `festa.dsl` y recarga al guardar.
 
-**Opción B — structurizr-cli (exportar a imágenes o PlantUML):**
+**Opción B: structurizr-cli y PlantUML (como se generaron las imágenes):**
 
 ```bash
-structurizr-cli export -workspace docs/arquitectura/festa.dsl -format plantuml
+structurizr-cli export -workspace docs/arquitectura/festa.dsl -format plantuml/structurizr -output salida
+java -jar plantuml.jar -tpng salida/*.puml
 ```
 
-**Opción C — sin instalar nada:** pegar el contenido de `festa.dsl` en
-<https://structurizr.com/dsl>.
+Si no hay Graphviz instalado, agregar `!pragma layout smetana` después de `@startuml` en cada `.puml`.
+Las imágenes `*-key.png` (leyendas) no se versionan.
+
+**Opción C: sin instalar nada:** pegar el contenido de `festa.dsl` en <https://structurizr.com/dsl>.
 
 ## Convención de cambios
 
