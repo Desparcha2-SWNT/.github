@@ -1053,3 +1053,34 @@ la arquitectura obsoleta (GCP, Supabase, Gemini).
 - **Resultado obtenido:** CLAUDE.md creado en la raíz con el stack en Azure, los RF/RNF por prioridad, los sprints con fechas, los identificadores de Jira y Lucid, las reglas del curso (evidencia de prompts, commits marcados) y las convenciones. Se verificó antes que no existía agents.md ni claude.md en la raíz (solo los del proyecto de video).
 - **Validación (riesgos):** Se buscó el archivo con una búsqueda sin distinguir mayúsculas antes de crearlo. Los datos sensibles o sin confirmar (nombres de los integrantes, costos) se dejaron fuera o marcados como pendientes de confirmar.
 - **Decisión de uso (propuesta):** Aceptado.
+
+
+## P37
+- **Fecha:** 2026-10-25 (hora aproximada, 18:40)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparación de fuentes) + Instrucción dirigida + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de software que mantiene alineados los artefactos del proyecto.
+CONTEXTO: El 24 de octubre el equipo de desarrollo creó 11 repositorios nuevos
+en la organización de GitHub (gateway, ocho servicios, app móvil y festa-infra
+con RabbitMQ, Postgres, Mongo, Redis y Prometheus/Grafana). La arquitectura de
+Lucid (3 servicios en Azure) y Jira (GCP/Azure, Monitor) no coincidían con
+esa estructura. El equipo decidió manejar todo según los repositorios nuevos
+y la observabilidad con Prometheus y Grafana.
+TAREA: Revisa la organización de GitHub y, si hace falta, modifica Lucid y
+Jira para que coincidan con lo planteado en los repositorios.
+FORMATO: Diagrama de arquitectura nuevo en Lucid, carriles del BPMN con los
+nombres de los servicios, y cambios en las historias y subtareas de Jira,
+con un resumen de lo que queda por definir.
+RIESGOS: No inventar decisiones que los repositorios no dicen (nube de
+despliegue, almacén por servicio, proveedor de LLM); no borrar la
+arquitectura anterior sin dejar rastro; no tocar los repositorios.
+```
+
+- **Resultado obtenido:** Página nueva "Arquitectura" en Lucid con el gateway, los ocho servicios, festa-mobile, festa-infra y los terceros (Google, Wompi, proveedor de LLM, FCM/APNs, Mapbox); la página anterior quedó como "Arquitectura Azure (anterior)". Carriles del BPMN renombrados con los repos. En Jira, 12 issues con los textos de GCP/Azure reemplazados, la infraestructura reescrita (SCRUM-14, 40 a 44) y etiquetas festa-* en 19 historias. Observabilidad con Prometheus y Grafana en SCRUM-16 y 47.
+- **Validación (riesgos):** Se leyeron los 11 repositorios con la CLI de GitHub (solo README, sin código) y el diagrama se contrastó con sus descripciones. Las piezas que los repos no definen se marcaron como "por definir" en el diagrama (plataforma de despliegue, almacén por servicio, proveedor de LLM). Se verificó cada diagrama con una exportación a imagen y cada cambio de Jira con la respuesta de la herramienta; una primera versión del diagrama tenía líneas cruzadas y se corrigió.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Queda pendiente que el equipo decida la plataforma de despliegue y los almacenes por servicio, asigne repo a RF13, RF14 y RF16-RF18, y revise la estimación del Sprint 1, que ahora incluye RabbitMQ, Mongo, Redis y el gateway.
