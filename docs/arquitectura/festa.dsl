@@ -71,9 +71,15 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
                 # festa-infra
                 broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (Container App)" "Queue"
-                postgres = container "PostgreSQL" "Eventos, comercios, usuarios, boletos y pagos, con consultas geoespaciales (propuesto, ADR 0002)." "Azure Database for PostgreSQL Flexible Server + PostGIS + PgBouncer" "Database"
-                mongo = container "MongoDB" "Datos documentales como conteos y registros de actividad (propuesto, ADR 0002)." "Azure Cosmos DB API para MongoDB" "Database"
-                redis = container "Redis" "Caché, rate limiting y validación rápida de QR (propuesto, ADR 0002)." "Azure Cache for Redis" "Database"
+                auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
+                booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
+                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
+                cache = container "Redis" "Caché efímera con llaves separadas por servicio: límites de solicitudes y validación rápida de QR (propuesto)." "Azure Cache for Redis" "Database"
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 
                 # Usuarios hacia la app
@@ -88,7 +94,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 gateway -> payment "Enruta peticiones" "REST"
                 gateway -> ai "Enruta peticiones" "REST"
                 gateway -> analytics "Enruta peticiones del panel" "REST"
-                gateway -> redis "Cuenta solicitudes por usuario" "TCP"
+                gateway -> cache "Cuenta solicitudes por usuario" "TCP"
 
                 # Mensajería
                 event -> broker "Publica eventos de dominio" "AMQP"
@@ -100,32 +106,33 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 broker -> booking "Entrega pagos aprobados" "AMQP"
 
                 # Datos (propuesto)
-                auth -> postgres "Lee y escribe credenciales" "SQL"
-                user -> postgres "Lee y escribe perfiles" "SQL"
-                event -> postgres "Lee y escribe eventos (PostGIS)" "SQL"
-                booking -> postgres "Lee y escribe asistencias y QR" "SQL"
-                payment -> postgres "Lee y escribe pagos" "SQL"
-                booking -> redis "Valida QR de un solo uso" "TCP"
-                ai -> redis "Controla límite de solicitudes" "TCP"
-                analytics -> mongo "Guarda conteos" "Protocolo MongoDB"
-                notification -> mongo "Guarda registros de envío" "Protocolo MongoDB"
+                auth -> auth_db "Lee y escribe credenciales y sesiones" "SQL"
+                user -> user_db "Lee y escribe perfiles" "SQL"
+                event -> event_db "Lee y escribe eventos (PostGIS)" "SQL"
+                booking -> booking_db "Lee y escribe asistencias y QR" "SQL"
+                payment -> payment_db "Lee y escribe pagos" "SQL"
+                booking -> cache "Valida QR de un solo uso" "TCP"
+                ai -> cache "Controla límite de solicitudes" "TCP"
+                ai -> ai_db "Guarda recomendaciones" "SQL"
+                analytics -> analytics_db "Guarda conteos" "Protocolo MongoDB"
+                notification -> notification_db "Guarda registros de envío" "Protocolo MongoDB"
 
                 # Observabilidad
                 observabilidad -> gateway "Recolecta métricas" "HTTP"
             }
         }
 
-        festa.booking.repo -> festa.postgres "Lee y escribe" "SQL"
-        festa.booking.validador -> festa.redis "Comprueba y bloquea el QR" "TCP"
+        festa.booking.repo -> festa.booking_db "Lee y escribe" "SQL"
+        festa.booking.validador -> festa.cache "Comprueba y bloquea el QR" "TCP"
         festa.booking.consumidor -> festa.broker "Consume pagos aprobados" "AMQP"
         festa.gateway -> festa.booking.api "Enruta peticiones" "REST"
-        festa.payment.repo -> festa.postgres "Lee y escribe" "SQL"
+        festa.payment.repo -> festa.payment_db "Lee y escribe" "SQL"
         festa.payment.wompi -> pagos "Crea el cobro con split" "HTTPS"
         pagos -> festa.payment.webhook "Confirma el pago" "HTTPS"
         festa.payment.publicador -> festa.broker "Publica eventos de pago" "AMQP"
         festa.gateway -> festa.payment.api "Enruta peticiones" "REST"
         festa.ai.cliente -> ia "Solicita generación" "HTTPS"
-        festa.ai.limitador -> festa.redis "Cuenta solicitudes" "TCP"
+        festa.ai.limitador -> festa.cache "Cuenta solicitudes" "TCP"
         festa.gateway -> festa.ai.api "Enruta peticiones" "REST"
 
         persona -> festa.mobile "Descubre eventos, confirma asistencia y muestra su QR"
