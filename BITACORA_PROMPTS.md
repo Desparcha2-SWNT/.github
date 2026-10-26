@@ -1147,3 +1147,23 @@ RIESGOS: Recortes que cortan actores o incluyen títulos; relaciones inventadas;
 - **Validación (riesgos):** Se revisó cada recorte a ojo y se limitaron los márgenes a los bordes de la imagen. Se mantuvo la semántica del usuario sobre las flechas.
 - **Decisión de uso (propuesta):** Aceptado con ajustes.
 
+## P41
+- **Fecha:** 2026-10-25
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de datos que diagrama por microservicio.
+CONTEXTO: Las clases y la base de datos no se harán en C4 sino en Lucid, en el mismo archivo principal, una página por microservicio con base propia. Los documentos de Lucid sueltos deben eliminarse.
+TAREA: Crear en el documento Festa un diagrama de clases y uno de base de datos por servicio (auth, user, event, booking, payment, ai) y pasar las hojas de los otros documentos al original.
+FORMATO: Seis páginas "Clases y BD · servicio" con clases UML y esquema entidad-relación.
+RIESGOS: Mezclar tablas de servicios distintos; dejar documentos huérfanos; esquemas que contradigan los requisitos.
+```
+
+- **Resultado obtenido:** Seis páginas en el documento principal. Tres documentos sueltos quedaron renombrados "[ELIMINAR]" porque el conector no permite borrarlos.
+- **Validación (riesgos):** Se exportó cada página a imagen para revisar solapamientos y títulos desbordados, que se corrigieron.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. El usuario debe borrar los tres documentos sueltos.
+
