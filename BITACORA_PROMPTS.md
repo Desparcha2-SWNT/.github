@@ -1107,3 +1107,23 @@ RIESGOS: No inventar decisiones que los repositorios no dicen; no cerrar el PR a
 - **Validación (riesgos):** Se validó el DSL con structurizr-cli y con el servidor oficial (que fue más estricto y obligó a declarar relaciones explícitas). Cada imagen se revisó tras exportarla. Se quitó la vista de despliegue porque ya vive en Lucid.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Lección: confirmar antes de borrar una rama con un PR abierto.
 
+## P39
+- **Fecha:** 2026-10-25
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Ingeniero DevSecOps que prepara la base de trabajo de la organización.
+CONTEXTO: La organización Desparcha2-SWNT tiene los repositorios con solo README y el profesor exige CI/CD, convenciones de ramas y evidencia de revisión semanal.
+TAREA: Preparar archivos base reutilizables: guía de contribución, política de seguridad, plantillas de PR e issues, flujo reutilizable de CI con análisis Trivy, plantillas de workflow, plantilla de CODEOWNERS y ADR.
+FORMATO: Rama chore/base-devsecops con archivos Markdown y YAML, y un PR.
+RIESGOS: No tocar los repositorios de los servicios; no incluir secretos; no imponer decisiones del equipo (motor de base de datos, plataforma) como definitivas.
+```
+
+- **Resultado obtenido:** PR #3 con CONTRIBUTING.md, SECURITY.md, plantillas, ci-reusable.yml, workflow-templates, ADR 0000 (plantilla) y el índice de ADR con 0001 y 0002 como pendientes.
+- **Validación (riesgos):** Se revisó la sintaxis de los YAML y que los ADR marcaran como pendiente lo que el equipo no ha decidido.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente que el equipo revise y fusione el PR.
+
