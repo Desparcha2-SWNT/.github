@@ -138,77 +138,6 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         festa.ai -> ia "Solicita descripciones y recomendaciones" "HTTPS"
         festa.notification -> notificaciones "Envía notificaciones push (vía Azure Notification Hubs)" "HTTPS"
         festa.auth -> identidad "Autentica usuarios" "OAuth2"
-
-        # Despliegue en Azure (propuesto, ADR 0001)
-        produccion = deploymentEnvironment "Produccion" {
-            telefono = deploymentNode "Dispositivo móvil" "Teléfono del usuario" "iOS / Android" {
-                containerInstance festa.mobile
-            }
-
-            azure = deploymentNode "Microsoft Azure" "Resource group rg-festa" "Azure" {
-                aca = deploymentNode "Azure Container Apps Environment" "Escala a cero" "Azure Container Apps" {
-                    gw = deploymentNode "Container App festa-gateway" "" "Azure Container Apps" {
-                        containerInstance festa.gateway
-                    }
-                    svcAuth = deploymentNode "Container App festa-auth-service" "" "Azure Container Apps" {
-                        containerInstance festa.auth
-                    }
-                    svcUser = deploymentNode "Container App festa-user-service" "" "Azure Container Apps" {
-                        containerInstance festa.user
-                    }
-                    svcEvent = deploymentNode "Container App festa-event-service" "" "Azure Container Apps" {
-                        containerInstance festa.event
-                    }
-                    svcBooking = deploymentNode "Container App festa-booking-service" "" "Azure Container Apps" {
-                        containerInstance festa.booking
-                    }
-                    svcPayment = deploymentNode "Container App festa-payment-service" "" "Azure Container Apps" {
-                        pagoInst = containerInstance festa.payment
-                    }
-                    svcAi = deploymentNode "Container App festa-ai-service" "" "Azure Container Apps" {
-                        containerInstance festa.ai
-                    }
-                    svcNotif = deploymentNode "Container App festa-notification-service" "Fase 2" "Azure Container Apps" {
-                        notifInst = containerInstance festa.notification
-                    }
-                    svcAnalytics = deploymentNode "Container App festa-analytics-service" "" "Azure Container Apps" {
-                        containerInstance festa.analytics
-                    }
-                    rabbit = deploymentNode "Container App RabbitMQ" "" "Azure Container Apps" {
-                        containerInstance festa.broker
-                    }
-                    obs = deploymentNode "Container App Prometheus + Grafana" "" "Azure Container Apps" {
-                        containerInstance festa.observabilidad
-                    }
-                }
-
-                pg = deploymentNode "Azure Database for PostgreSQL" "Flexible Server" "PostgreSQL + PostGIS" {
-                    containerInstance festa.postgres
-                }
-                cosmos = deploymentNode "Azure Cosmos DB" "API para MongoDB" "Cosmos DB" {
-                    containerInstance festa.mongo
-                }
-                cache = deploymentNode "Azure Cache for Redis" "" "Redis" {
-                    containerInstance festa.redis
-                }
-                keyvault = infrastructureNode "Azure Key Vault" "Secretos: llaves de Wompi, firma del JWT, cadenas de conexión." "Azure Key Vault"
-                notificationHubs = infrastructureNode "Azure Notification Hubs" "Entrega push a FCM y APNs (fase 2)." "Azure Notification Hubs"
-                openai = deploymentNode "Azure OpenAI" "Modelo para descripciones y recomendaciones" "Azure OpenAI" {
-                    softwareSystemInstance ia
-                }
-            }
-
-            terceros = deploymentNode "Servicios de terceros" "Fuera de Azure" "Internet" {
-                softwareSystemInstance pagos
-                softwareSystemInstance identidad
-                softwareSystemInstance mapas
-                fcm = softwareSystemInstance notificaciones
-            }
-
-            azure.aca.svcPayment.pagoInst -> azure.keyvault "Lee llaves de Wompi" "HTTPS"
-            azure.aca.svcNotif.notifInst -> azure.notificationHubs "Solicita envío de push" "HTTPS"
-            azure.notificationHubs -> terceros.fcm "Entrega la notificación" "HTTPS"
-        }
     }
 
     views {
@@ -249,11 +178,6 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
             festa.gateway -> festa.booking "Enruta la consulta"
             festa.booking -> festa.gateway "Devuelve el QR único generado"
             festa.gateway -> festa.mobile "Entrega el QR (la app lo guarda en caché local)"
-            autolayout lr
-        }
-
-        deployment festa "Produccion" "DespliegueAzure" "Despliegue propuesto en Azure (ADR 0001 y 0002 pendientes)." {
-            include *
             autolayout lr
         }
 

@@ -21,10 +21,8 @@ docs/
 │       │   ├── ComponentesBooking.png    ← C4 nivel 3
 │       │   ├── ComponentesPayment.png
 │       │   └── ComponentesAI.png
-│       ├── 04-dinamicas/
-│       │   └── CompraBoleto.png          ← vista dinámica
-│       └── 05-despliegue/
-│           └── DespliegueAzure.png       ← vista de despliegue
+│       └── 04-dinamicas/
+│           └── CompraBoleto.png          ← vista dinámica (complementaria)
 ├── requirements/
 │   └── alcance.md                        ← ficha de alcance (plantilla scope-template)
 └── adr/                                  ← decisiones de arquitectura (en el PR de DevSecOps)
@@ -44,14 +42,13 @@ la clave de su vista en `festa.dsl`.
 | 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: cobro y split con Wompi (RF11). |
 | 3. Componentes | `ComponentesAI` | [`03-componentes/ComponentesAI.png`](./diagramas/03-componentes/ComponentesAI.png) | `festa-ai-service`: recomendaciones, descripciones y límite de uso (RF8, RF9, RNF8). |
 | Dinámica | `CompraBoleto` | [`04-dinamicas/CompraBoleto.png`](./diagramas/04-dinamicas/CompraBoleto.png) | Secuencia de compra, pago, evento en RabbitMQ y entrega del QR (RF11, RF10). |
-| Despliegue | `DespliegueAzure` | [`05-despliegue/DespliegueAzure.png`](./diagramas/05-despliegue/DespliegueAzure.png) | Despliegue propuesto en Azure: Container Apps, PostgreSQL, Cosmos DB, Redis, Key Vault, Azure OpenAI y Notification Hubs. |
 
 La ficha de alcance del sistema, que sigue la plantilla
 [`scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md),
 está en [`../requirements/alcance.md`](../requirements/alcance.md) y usa el diagrama de contexto.
 
-Una versión de la arquitectura con los íconos oficiales de Azure está en la página
-"Arquitectura Azure" del documento de Lucid del proyecto.
+El despliegue en Azure no se modela aquí: está en la página "Arquitectura Azure" del documento de Lucid del proyecto,
+con los íconos oficiales de Azure.
 
 ## Estado del modelo
 
