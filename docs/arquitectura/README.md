@@ -11,6 +11,7 @@ Modelo de arquitectura de Festa escrito como código (*diagrams as code*) con
 docs/
 ├── arquitectura/
 │   ├── README.md                         ← este índice
+│   ├── alcance.md                        ← alcance del sistema y explicación de todos los diagramas
 │   ├── festa.dsl                         ← modelo C4 (fuente de verdad)
 │   └── diagramas/
 │       ├── 01-contexto/
@@ -21,10 +22,12 @@ docs/
 │       │   ├── ComponentesBooking.png    ← C4 nivel 3
 │       │   ├── ComponentesPayment.png
 │       │   └── ComponentesAI.png
-│       └── 04-dinamicas/
-│           └── CompraBoleto.png          ← vista dinámica (complementaria)
-├── requirements/
-│   └── alcance.md                        ← ficha de alcance (plantilla scope-template)
+│       ├── 04-dinamicas/
+│       │   └── CompraBoleto.png          ← vista dinámica (complementaria)
+│       ├── 05-clases/
+│       │   └── ClasesDominio.png         ← diagrama de clases (Lucid)
+│       └── 06-base-de-datos/
+│           └── ModeloDatos.png           ← ERD de PostgreSQL (Lucid)
 └── adr/                                  ← decisiones de arquitectura (en el PR de DevSecOps)
 ```
 
@@ -42,10 +45,13 @@ la clave de su vista en `festa.dsl`.
 | 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: cobro y split con Wompi (RF11). |
 | 3. Componentes | `ComponentesAI` | [`03-componentes/ComponentesAI.png`](./diagramas/03-componentes/ComponentesAI.png) | `festa-ai-service`: recomendaciones, descripciones y límite de uso (RF8, RF9, RNF8). |
 | Dinámica | `CompraBoleto` | [`04-dinamicas/CompraBoleto.png`](./diagramas/04-dinamicas/CompraBoleto.png) | Secuencia de compra, pago, evento en RabbitMQ y entrega del QR (RF11, RF10). |
+| Clases | (Lucid) | [`05-clases/ClasesDominio.png`](./diagramas/05-clases/ClasesDominio.png) | Clases del dominio con atributos, métodos, enumeraciones y multiplicidades. |
+| Base de datos | (Lucid) | [`06-base-de-datos/ModeloDatos.png`](./diagramas/06-base-de-datos/ModeloDatos.png) | ERD de PostgreSQL con un esquema por servicio. |
 
-La ficha de alcance del sistema, que sigue la plantilla
-[`scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md),
-está en [`../requirements/alcance.md`](../requirements/alcance.md) y usa el diagrama de contexto.
+El documento [`alcance.md`](./alcance.md) sigue la plantilla
+[`scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md)
+(sistema, problema, contexto, actores, sistemas externos y alcance) y la amplía: reúne y explica todos los
+diagramas de esta carpeta.
 
 El despliegue en Azure no se modela aquí: está en la página "Arquitectura Azure" del documento de Lucid del proyecto,
 con los íconos oficiales de Azure.
@@ -86,6 +92,6 @@ imágenes de `diagramas/`. Borrar la carpeta temporal al terminar.
 
 1. Editar **solo** `festa.dsl`.
 2. Re-exportar la imagen afectada y guardarla en la carpeta de su nivel, conservando el nombre de la vista.
-3. Si cambia el diagrama de contexto o los sistemas externos, revisar [`alcance.md`](../requirements/alcance.md).
+3. Si cambia el diagrama de contexto o los sistemas externos, revisar [`alcance.md`](./alcance.md).
 4. Registrar el prompt en [`BITACORA_PROMPTS.md`](../../BITACORA_PROMPTS.md) si el
    cambio fue asistido por IA.
