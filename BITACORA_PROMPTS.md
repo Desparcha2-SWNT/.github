@@ -1084,3 +1084,26 @@ arquitectura anterior sin dejar rastro; no tocar los repositorios.
 - **Resultado obtenido:** Página nueva "Arquitectura" en Lucid con el gateway, los ocho servicios, festa-mobile, festa-infra y los terceros (Google, Wompi, proveedor de LLM, FCM/APNs, Mapbox); la página anterior quedó como "Arquitectura Azure (anterior)". Carriles del BPMN renombrados con los repos. En Jira, 12 issues con los textos de GCP/Azure reemplazados, la infraestructura reescrita (SCRUM-14, 40 a 44) y etiquetas festa-* en 19 historias. Observabilidad con Prometheus y Grafana en SCRUM-16 y 47.
 - **Validación (riesgos):** Se leyeron los 11 repositorios con la CLI de GitHub (solo README, sin código) y el diagrama se contrastó con sus descripciones. Las piezas que los repos no definen se marcaron como "por definir" en el diagrama (plataforma de despliegue, almacén por servicio, proveedor de LLM). Se verificó cada diagrama con una exportación a imagen y cada cambio de Jira con la respuesta de la herramienta; una primera versión del diagrama tenía líneas cruzadas y se corrigió.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Queda pendiente que el equipo decida la plataforma de despliegue y los almacenes por servicio, asigne repo a RF13, RF14 y RF16-RF18, y revise la estimación del Sprint 1, que ahora incluye RabbitMQ, Mongo, Redis y el gateway.
+
+## Etapa 5 — Arquitectura, DevSecOps y retroalimentación del profesor (25 al 26 de octubre de 2026)
+
+## P38
+- **Fecha:** 2026-10-25
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de software que documenta con el modelo C4.
+CONTEXTO: El equipo desplegará en Azure y ya tiene la arquitectura en Lucid. El usuario pidió acoplar el diagrama de Azure con la estructura de los repositorios nuevos y generar los diagramas C4 con el DSL oficial de Structurizr, no con PlantUML.
+TAREA: Crear la rama docs/arquitectura-c4 con los diagramas de contexto, contenedores y componentes, un documento de alcance siguiendo la plantilla de referencia y la estructura de directorios organizada.
+FORMATO: festa.dsl, alcance.md, README.md e imágenes PNG exportadas con la imagen oficial de Docker de Structurizr.
+RIESGOS: No inventar decisiones que los repositorios no dicen; no cerrar el PR abierto al renombrar la rama; no usar un generador distinto al oficial.
+```
+
+- **Resultado obtenido:** Rama docs/arquitectura-c4 con el modelo en DSL, cuatro vistas exportadas, la vista dinámica de compra y el documento de alcance. La primera versión con PlantUML fue rechazada y se rehízo con Structurizr. Al renombrar la rama se cerró el PR #1 y hubo que abrir el PR #2.
+- **Validación (riesgos):** Se validó el DSL con structurizr-cli y con el servidor oficial (que fue más estricto y obligó a declarar relaciones explícitas). Cada imagen se revisó tras exportarla. Se quitó la vista de despliegue porque ya vive en Lucid.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Lección: confirmar antes de borrar una rama con un PR abierto.
+
