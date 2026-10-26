@@ -1167,3 +1167,23 @@ RIESGOS: Mezclar tablas de servicios distintos; dejar documentos huérfanos; esq
 - **Validación (riesgos):** Se exportó cada página a imagen para revisar solapamientos y títulos desbordados, que se corrigieron.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. El usuario debe borrar los tres documentos sueltos.
 
+## P42
+- **Fecha:** 2026-10-25
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que organiza el trabajo del equipo.
+CONTEXTO: Jira tiene el backlog cargado pero sin responsables. Los repositorios de la organización tienen descripciones heterogéneas y no tienen rama develop.
+TAREA: Asignar trabajo a los 6 integrantes en el Sprint 1; cambiar la descripción de los repositorios sin incluir RF y crear las ramas main y develop sin ningún otro cambio.
+FORMATO: Asignaciones en Jira y una comparación entre las descripciones antes y después, para que el usuario confirme antes de aplicar.
+RIESGOS: Asignar a personas equivocadas; modificar contenido de los repositorios; aplicar sin confirmación.
+```
+
+- **Resultado obtenido:** Cinco integrantes con tareas del Sprint 1 y un sexto sin tareas. Descripciones actualizadas y ramas develop creadas tras la confirmación del usuario.
+- **Validación (riesgos):** Los integrantes se leyeron de Jira (no se inventaron). Los cambios en los repositorios se aplicaron solo tras mostrar la comparativa y recibir el "aplícalo tal cual".
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Las asignaciones las hizo el agente y el equipo no las ha confirmado.
+
