@@ -50,6 +50,13 @@ está en [`../requirements/alcance.md`](../requirements/alcance.md) y usa el dia
 El despliegue en Azure no se modela aquí: está en la página "Arquitectura Azure" del documento de Lucid del proyecto,
 con los íconos oficiales de Azure.
 
+## Diagramas en Lucid
+
+Los diagramas que no son del modelo C4 están en Lucidchart (propuestos, pendientes de ADR 0002 en lo que toca a datos):
+
+- [Diagrama de clases del dominio](https://lucid.app/lucidchart/2de1f120-8e4d-4848-99a2-2da99f0cabba/edit): clases, atributos, métodos y enumeraciones del MVP, con el servicio dueño de cada clase.
+- [Modelo de base de datos PostgreSQL (ERD)](https://lucid.app/lucidchart/9c51e2ca-3b71-45e5-bf66-1a3566100774/edit): tablas, claves y relaciones, con un esquema por servicio.
+
 ## Estado del modelo
 
 El modelo sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026) y el despliegue en Azure
