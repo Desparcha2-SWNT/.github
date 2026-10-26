@@ -77,15 +77,15 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | Contenedor (repositorio) | Tecnología | Responsabilidad | Requisitos |
 |---|:---:|---|:---:|
 | `festa-mobile` | Flutter (iOS y Android) | App del usuario y vista de comercio: mapa, escáner y generador de QR, caché local del QR. | RF5, RF15, RNF10 |
-| `festa-gateway` | Azure Container Apps | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
-| `festa-auth-service` | Azure Container Apps | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
-| `festa-user-service` | Azure Container Apps | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
-| `festa-event-service` | Azure Container Apps | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
-| `festa-booking-service` | Azure Container Apps | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
-| `festa-payment-service` | Azure Container Apps | Boletería con Wompi y split de pago (comisión del 8 %). | RF11, RNF6 |
-| `festa-ai-service` | Azure Container Apps | Recomendaciones y descripciones con IA; límite de solicitudes por usuario. | RF8, RF9, RNF8 |
-| `festa-notification-service` | Azure Container Apps | Envío de notificaciones push (fase 2). | RF12 |
-| `festa-analytics-service` | Azure Container Apps | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
+| `festa-gateway` | Pod en AKS | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
+| `festa-auth-service` | Pod en AKS | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
+| `festa-user-service` | Pod en AKS | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
+| `festa-event-service` | Pod en AKS | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
+| `festa-booking-service` | Pod en AKS | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
+| `festa-payment-service` | Pod en AKS | Boletería con Wompi y split de pago (comisión del 8 %). | RF11, RNF6 |
+| `festa-ai-service` | Pod en AKS | Recomendaciones y descripciones con IA; límite de solicitudes por usuario. | RF8, RF9, RNF8 |
+| `festa-notification-service` | Pod en AKS | Envío de notificaciones push (fase 2). | RF12 |
+| `festa-analytics-service` | Pod en AKS | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
 | Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`, `ai_db`) y Cosmos DB API MongoDB (`analytics_db`, `notification_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: propuesta (ADR 0002). | RNF1 |
 | Redis | Azure Cache for Redis | Caché efímera con llaves separadas por servicio: límites de solicitudes y validación rápida de QR. | RNF1, RNF7, RNF8 |

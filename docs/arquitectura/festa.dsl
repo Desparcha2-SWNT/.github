@@ -21,11 +21,11 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
             festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa en tiempo real, con recomendaciones por IA y venta de boletería." {
                 mobile = container "festa-mobile" "App del usuario y vista de comercio (panel simple, RF15): mapa, escáner y generador de QR, caché local del QR." "Flutter (iOS y Android)" "Mobile"
-                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Azure Container Apps"
-                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Azure Container Apps"
-                user = container "festa-user-service" "RF2 y RF3: perfiles de usuario y comercio, preferencias, verificación manual de comercios." "Azure Container Apps"
-                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo." "Azure Container Apps"
-                booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Azure Container Apps" {
+                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Pod en Azure Kubernetes Service (AKS)"
+                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Pod en Azure Kubernetes Service (AKS)"
+                user = container "festa-user-service" "RF2 y RF3: perfiles de usuario y comercio, preferencias, verificación manual de comercios." "Pod en Azure Kubernetes Service (AKS)"
+                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo." "Pod en Azure Kubernetes Service (AKS)"
+                booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Pod en Azure Kubernetes Service (AKS)" {
                     api = component "API de asistencia y QR" "Endpoints REST: confirmar asistencia, obtener el QR y validarlo en la puerta." "REST"
                     asistencia = component "Gestor de asistencia" "Confirma la asistencia (RF7) y registra el ingreso al evento." "Servicio"
                     generador = component "Generador de QR" "Crea el token firmado de un solo uso para cada boleto (RF10)." "Servicio"
@@ -40,7 +40,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     generador -> repo "Guarda el boleto"
                     validador -> repo "Marca el QR como usado"
                 }
-                payment = container "festa-payment-service" "RF11: boletería con Wompi y split de pago (comisión del 8 %)." "Azure Container Apps" {
+                payment = container "festa-payment-service" "RF11: boletería con Wompi y split de pago (comisión del 8 %)." "Pod en Azure Kubernetes Service (AKS)" {
                     api = component "API de pagos" "Endpoints REST para iniciar la compra y consultar su estado." "REST"
                     cobro = component "Servicio de cobro" "Orquesta la compra de un boleto (RF11)." "Servicio"
                     split = component "Calculador de split" "Divide el valor: 8 % para Festa y 92 % para el organizador." "Servicio"
@@ -55,7 +55,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     webhook -> cobro "Actualiza el estado"
                     cobro -> publicador "Notifica el resultado"
                 }
-                ai = container "festa-ai-service" "RF8 y RF9: recomendaciones y descripciones con IA; límite de solicitudes por usuario (RNF8)." "Azure Container Apps" {
+                ai = container "festa-ai-service" "RF8 y RF9: recomendaciones y descripciones con IA; límite de solicitudes por usuario (RNF8)." "Pod en Azure Kubernetes Service (AKS)" {
                     api = component "API de IA" "Endpoints REST para pedir recomendaciones y descripciones." "REST"
                     limitador = component "Limitador de solicitudes" "Aplica el tope por usuario y por minuto (RNF8)." "Middleware"
                     orquestador = component "Orquestador de prompts" "Arma el prompt con contexto del evento y del usuario (RF8, RF9)." "Servicio"
@@ -66,11 +66,11 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     orquestador -> descripciones "Reutiliza o guarda descripciones"
                     orquestador -> cliente "Envía el prompt"
                 }
-                notification = container "festa-notification-service" "RF12: envío de notificaciones push (fase 2)." "Azure Container Apps"
-                analytics = container "festa-analytics-service" "RF15: conteos de asistentes y boletos vendidos para el panel de comercio." "Azure Container Apps"
+                notification = container "festa-notification-service" "RF12: envío de notificaciones push (fase 2)." "Pod en Azure Kubernetes Service (AKS)"
+                analytics = container "festa-analytics-service" "RF15: conteos de asistentes y boletos vendidos para el panel de comercio." "Pod en Azure Kubernetes Service (AKS)"
 
                 # festa-infra
-                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (Container App)" "Queue"
+                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (pod en AKS)" "Queue"
                 auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
                 user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
                 event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
