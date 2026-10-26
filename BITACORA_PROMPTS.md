@@ -5,7 +5,7 @@ siguiendo los lineamientos del curso sobre uso documentado de IA en el
 desarrollo de software.
 
 Cada prompt de contenido del proyecto que se ejecute con la IA se registra
-como una nueva entrada, usando la plantilla a continuación. El prompt se copia tal como se escribió.
+como una nueva entrada, usando la plantilla a continuación. Cada entrada registra el prompt refinado con la técnica aplicada.
 
 ---
 
@@ -20,8 +20,9 @@ como una nueva entrada, usando la plantilla a continuación. El prompt se copia 
 - **Técnica de prompting utilizada:** (Zero-shot / Few-shot / Chain-of-Thought /
   Delimitadores / System Persona / Role-play adversarial / Instrucción
   dirigida / etc.)
-- **Prompt utilizado:** (texto tal como lo escribió el autor, sin
-  reformular ni reordenar; no existe una estructura obligatoria)
+- **Prompt refinado (técnica aplicada):** (versión mejorada con la técnica
+  más adecuada a la tarea; la forma depende de la técnica y no hay una
+  estructura obligatoria)
 
 ​```
 ...
@@ -1089,7 +1090,7 @@ arquitectura anterior sin dejar rastro; no tocar los repositorios.
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Diseño
 - **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Arquitecto de software que documenta con el modelo C4.
@@ -1109,7 +1110,7 @@ RIESGOS: No inventar decisiones que los repositorios no dicen; no cerrar el PR a
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Implementación
 - **Técnica de prompting utilizada:** Instrucción dirigida
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Ingeniero DevSecOps que prepara la base de trabajo de la organización.
@@ -1129,7 +1130,7 @@ RIESGOS: No tocar los repositorios de los servicios; no incluir secretos; no imp
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Análisis
 - **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Analista que mantiene los casos de uso alineados con los requisitos.
@@ -1149,7 +1150,7 @@ RIESGOS: Recortes que cortan actores o incluyen títulos; relaciones inventadas;
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Diseño
 - **Técnica de prompting utilizada:** Instrucción dirigida
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Arquitecto de datos que diagrama por microservicio.
@@ -1169,7 +1170,7 @@ RIESGOS: Mezclar tablas de servicios distintos; dejar documentos huérfanos; esq
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Análisis
 - **Técnica de prompting utilizada:** Instrucción dirigida
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Líder técnico que organiza el trabajo del equipo.
@@ -1189,7 +1190,7 @@ RIESGOS: Asignar a personas equivocadas; modificar contenido de los repositorios
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Análisis
 - **Técnica de prompting utilizada:** Chain-of-Thought (comparación de fuentes)
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Analista de producto que estudia la competencia.
@@ -1209,7 +1210,7 @@ RIESGOS: Atribuir a una persona una cuenta de GitHub equivocada; sacar conclusio
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Análisis
 - **Técnica de prompting utilizada:** Instrucción dirigida
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Asistente que procesa la retroalimentación de la sustentación.
@@ -1229,7 +1230,7 @@ RIESGOS: Atribuir al profesor algo que no dijo; mezclar la retroalimentación de
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Diseño
 - **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Arquitecto de software que aplica la retroalimentación del profesor.
@@ -1249,7 +1250,7 @@ RIESGOS: Dejar diagramas que se contradigan entre sí; presentar como decidido e
 - **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
 - **Fase del SDLC:** Análisis
 - **Técnica de prompting utilizada:** Instrucción dirigida
-- **Prompt utilizado:**
+- **Prompt refinado (técnica aplicada):**
 
 ```
 ROL: Líder técnico que mantiene el backlog coherente con las decisiones.
