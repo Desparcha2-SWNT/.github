@@ -41,7 +41,7 @@ la clave de su vista en `festa.dsl`.
 | Nivel | Vista (`festa.dsl`) | Imagen | Qué muestra |
 | --- | --- | --- | --- |
 | 1. Contexto | `ContextoFesta` | [`01-contexto/ContextoFesta.png`](./diagramas/01-contexto/ContextoFesta.png) | Festa frente a sus actores y a los sistemas externos (Wompi, Azure OpenAI, FCM/APNs, Google Identity y Mapbox). |
-| 2. Contenedores | `ContenedoresFesta` | [`02-contenedores/ContenedoresFesta.png`](./diagramas/02-contenedores/ContenedoresFesta.png) | `festa-mobile`, `festa-gateway`, los siete microservicios de negocio, RabbitMQ, PostgreSQL, MongoDB, Redis y Prometheus + Grafana. |
+| 2. Contenedores | `ContenedoresFesta` | [`02-contenedores/ContenedoresFesta.png`](./diagramas/02-contenedores/ContenedoresFesta.png) | `festa-mobile`, `festa-gateway`, los siete microservicios de negocio, RabbitMQ, la base de datos propia de cada servicio (PostgreSQL o MongoDB), Redis y Prometheus + Grafana. |
 | 3. Componentes | `ComponentesBooking` | [`03-componentes/ComponentesBooking.png`](./diagramas/03-componentes/ComponentesBooking.png) | `festa-booking-service`: asistencia y QR de un solo uso (RF7, RF10, RNF7). |
 | 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: cobro y split con Wompi (RF11). |
 | 3. Componentes | `ComponentesAI` | [`03-componentes/ComponentesAI.png`](./diagramas/03-componentes/ComponentesAI.png) | `festa-ai-service`: recomendaciones, descripciones y límite de uso (RF8, RF9, RNF8). |

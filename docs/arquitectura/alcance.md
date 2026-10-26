@@ -87,7 +87,8 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | `festa-notification-service` | Azure Container Apps | Envío de notificaciones push (fase 2). | RF12 |
 | `festa-analytics-service` | Azure Container Apps | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
-| PostgreSQL, MongoDB, Redis | Azure Database for PostgreSQL + PostGIS, Cosmos DB (API MongoDB), Cache for Redis | Datos relacionales y geoespaciales, datos documentales, caché y límites de uso (propuesto, ADR 0002). | RNF1 |
+| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`, `ai_db`) y Cosmos DB API MongoDB (`analytics_db`, `notification_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: propuesta (ADR 0002). | RNF1 |
+| Redis | Azure Cache for Redis | Caché efímera con llaves separadas por servicio: límites de solicitudes y validación rápida de QR. | RNF1, RNF7, RNF8 |
 | Prometheus + Grafana | Prometheus y Grafana | Métricas, tableros y alertas de los servicios. | RNF3 |
 
 ### 5.3 Relaciones principales
@@ -204,7 +205,7 @@ Historial de recomendaciones y el límite de solicitudes por usuario, que vive e
 
 ## 9. Modelos de Base de Datos por Microservicio
 
-Cada servicio es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`, `ia`) y es el único que lo modifica. PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
+Cada servicio tiene su propia base de datos y es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`, `ia`) y es el único que lo modifica. PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
 
 ### 9.1 `festa-auth-service`
 
@@ -251,7 +252,7 @@ Los diagramas editables están en el documento de Lucid del proyecto, páginas "
 | Tema | Estado |
 |---|---|
 | Plataforma de despliegue: el equipo decidió Azure; la lista exacta de servicios (ADR 0001) sigue pendiente. | Propuesta en Lucid, página "Arquitectura Azure" |
-| Almacén de datos de cada servicio (ADR 0002). | Pendiente |
+| Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Falta confirmar el motor de cada una (ADR 0002). | Decidido el aislamiento; motor pendiente |
 | Proveedor de LLM: se propone Azure OpenAI (ADR 0003). | Pendiente |
 | Contratos de mensajes de RabbitMQ (ADR 0004). | Pendiente |
 | RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
