@@ -39,25 +39,16 @@ La versión anterior del modelo (Kong, Spring Boot, Admin Panel en React) quedó
 
 ## Cómo visualizar o exportar los diagramas
 
-**Opción A: Structurizr Lite (con Docker):**
+**Con Structurizr (Docker):** la imagen oficial `structurizr/structurizr` busca un archivo llamado `workspace.dsl`,
+así que se monta una carpeta temporal con una copia de `festa.dsl` renombrada:
 
 ```bash
-docker run -it --rm -p 8080:8080 \
-  -v "$(pwd)/docs/arquitectura:/usr/local/structurizr" \
-  structurizr/lite
+mkdir tmp-structurizr && cp docs/arquitectura/festa.dsl tmp-structurizr/workspace.dsl
+docker run --rm -p 8080:8080 -v "$(pwd)/tmp-structurizr:/usr/local/structurizr" structurizr/structurizr local
 ```
 
-Luego abrir <http://localhost:8080>. Detecta `festa.dsl` y recarga al guardar.
-
-**Opción B: structurizr-cli y PlantUML (como se generaron las imágenes):**
-
-```bash
-structurizr-cli export -workspace docs/arquitectura/festa.dsl -format plantuml/structurizr -output salida
-java -jar plantuml.jar -tpng salida/*.puml
-```
-
-Si no hay Graphviz instalado, agregar `!pragma layout smetana` después de `@startuml` en cada `.puml`.
-Las imágenes `*-key.png` (leyendas) no se versionan.
+Luego abrir <http://localhost:8080>, elegir la vista y exportarla a PNG con el botón de exportar. Así se generaron las
+imágenes de `diagramas/`. Borrar la carpeta temporal al terminar.
 
 **Opción C: sin instalar nada:** pegar el contenido de `festa.dsl` en <https://structurizr.com/dsl>.
 

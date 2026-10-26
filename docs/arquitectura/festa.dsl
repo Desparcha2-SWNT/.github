@@ -97,6 +97,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 ai -> broker "Consume y publica mensajes" "AMQP"
                 broker -> notification "Entrega eventos a notificar" "AMQP"
                 broker -> analytics "Entrega eventos para métricas" "AMQP"
+                broker -> booking "Entrega pagos aprobados" "AMQP"
 
                 # Datos (propuesto)
                 auth -> postgres "Lee y escribe credenciales" "SQL"
@@ -162,13 +163,13 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                         containerInstance festa.booking
                     }
                     svcPayment = deploymentNode "Container App festa-payment-service" "" "Azure Container Apps" {
-                        containerInstance festa.payment
+                        pagoInst = containerInstance festa.payment
                     }
                     svcAi = deploymentNode "Container App festa-ai-service" "" "Azure Container Apps" {
                         containerInstance festa.ai
                     }
                     svcNotif = deploymentNode "Container App festa-notification-service" "Fase 2" "Azure Container Apps" {
-                        containerInstance festa.notification
+                        notifInst = containerInstance festa.notification
                     }
                     svcAnalytics = deploymentNode "Container App festa-analytics-service" "" "Azure Container Apps" {
                         containerInstance festa.analytics
@@ -204,8 +205,8 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 fcm = softwareSystemInstance notificaciones
             }
 
-            azure.aca.svcPayment -> azure.keyvault "Lee llaves de Wompi" "HTTPS"
-            azure.aca.svcNotif -> azure.notificationHubs "Solicita envío de push" "HTTPS"
+            azure.aca.svcPayment.pagoInst -> azure.keyvault "Lee llaves de Wompi" "HTTPS"
+            azure.aca.svcNotif.notifInst -> azure.notificationHubs "Solicita envío de push" "HTTPS"
             azure.notificationHubs -> terceros.fcm "Entrega la notificación" "HTTPS"
         }
     }
