@@ -1,6 +1,6 @@
 # 📄 Alcance del Sistema — Festa
 
-Basado en `Requerimientos.docx`, en [`requirements.md`](../requirements/requirements.md) y en el modelo C4 de [`festa.dsl`](./festa.dsl). Este documento reúne y explica todos los diagramas de arquitectura de Festa: contexto, contenedores, componentes, vista dinámica, clases y base de datos. Plantilla base: [`dosw-lab4-example/scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md).
+Basado en `Requerimientos.docx`, en [`requirements.md`](../requirements/requirements.md) y en el modelo C4 de [`festa.dsl`](./festa.dsl). Este documento reúne y explica todos los diagramas de arquitectura de Festa: contexto, contenedores, componentes, vista dinámica, clases y base de datos.
 
 > **Estado:** la arquitectura sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026), que al 25 de octubre solo tienen README, y el despliegue en Azure decidido por el equipo el 25-oct-2026. Los componentes internos, las clases y las tablas son una **propuesta de diseño**; lo que depende del almacén de datos de cada servicio queda pendiente del ADR 0002.
 

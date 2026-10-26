@@ -49,10 +49,7 @@ la clave de su vista en `festa.dsl`.
 | Clases | (Lucid) | [`05-clases/`](./diagramas/05-clases/) | Un diagrama de clases por microservicio (auth, user, event, booking, payment y ai). |
 | Base de datos | (Lucid) | [`06-base-de-datos/`](./diagramas/06-base-de-datos/) | Un ERD de PostgreSQL por microservicio, con su propio esquema. |
 
-El documento [`alcance.md`](./alcance.md) sigue la plantilla
-[`scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md)
-(sistema, problema, contexto, actores, sistemas externos y alcance) y la amplía: reúne y explica todos los
-diagramas de esta carpeta.
+El documento [`alcance.md`](./alcance.md) describe el sistema, su problema, su contexto, actores y sistemas externos y su alcance, y reúne y explica todos los diagramas de esta carpeta.
 
 El despliegue en Azure no se modela aquí: está en la página "Arquitectura Azure" del documento de Lucid del proyecto,
 con los íconos oficiales de Azure.
