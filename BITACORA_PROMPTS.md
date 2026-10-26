@@ -23,9 +23,9 @@ como una nueva entrada, usando la plantilla a continuación. El prompt se copia 
 - **Prompt utilizado:** (texto tal como lo escribió el autor, sin
   reformular ni reordenar; no existe una estructura obligatoria)
 
-```
+​```
 ...
-```
+​```
 
 - **Resultado obtenido:** (resumen o fragmento más representativo)
 - **Validación (riesgos):** (qué riesgo mitiga esta técnica específica —
