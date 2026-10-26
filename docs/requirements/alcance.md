@@ -1,6 +1,6 @@
 # 📄 Alcance del Sistema — Festa
 
-Basado en `Requerimientos.docx`, el modelo C4 en [`festa.dsl`](./festa.dsl) y su vista de contexto exportada en [`diagramas/ContextoFesta.png`](./diagramas/ContextoFesta.png). Plantilla base: [`dosw-lab4-example/scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md).
+Basado en `Requerimientos.docx`, el modelo C4 en [`festa.dsl`](../arquitectura/festa.dsl) y su vista de contexto exportada en [`diagramas/01-contexto/ContextoFesta.png`](../arquitectura/diagramas/01-contexto/ContextoFesta.png). Plantilla base: [`dosw-lab4-example/scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md).
 
 ## 1. Sistema
 
@@ -15,9 +15,9 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 ### 3.1 Diagrama
 
-![Diagrama de Contexto de Festa (C4 nivel 1)](./diagramas/ContextoFesta.png)
+![Diagrama de Contexto de Festa (C4 nivel 1)](../arquitectura/diagramas/01-contexto/ContextoFesta.png)
 
-*Generado a partir de la vista `ContextoFesta` definida en [`festa.dsl`](./festa.dsl) (ver sección "Cómo visualizar o exportar los diagramas" en el [README](./README.md)).*
+*Generado a partir de la vista `ContextoFesta` definida en [`festa.dsl`](../arquitectura/festa.dsl) (ver sección "Cómo visualizar o exportar los diagramas" en el [README](../arquitectura/README.md)).*
 
 ### 3.2 Actores
 
@@ -31,10 +31,11 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 | Sistema | Descripción |
 |---|:---:|
-| Pasarela de pagos | Servicio externo (Wompi) que procesa el cobro de boletos y distribuye la comisión entre el organizador y Festa (split payment). |
-| Servicio de recomendaciones por IA | Servicio externo (modelo de IA Generativa) que genera descripciones de eventos y recomendaciones personalizadas conversacionales. |
-| Servicio de notificaciones | Servicio externo (Firebase Cloud Messaging) que entrega notificaciones push al dispositivo del usuario. |
-| Proveedor de identidad | Servicio externo (Google OAuth2) de autenticación federada para iniciar sesión. |
+| Wompi (pasarela de pagos) | Servicio externo que procesa el cobro de boletos y distribuye la comisión entre el organizador (92 %) y Festa (8 %) mediante split payment. |
+| Azure OpenAI | Servicio gestionado de IA generativa (proveedor propuesto) que genera descripciones de eventos y recomendaciones personalizadas. |
+| FCM / APNs | Servicios de Google y Apple que entregan las notificaciones push al dispositivo; Festa los usa a través de Azure Notification Hubs (fase 2). |
+| Google Identity | Proveedor externo (OAuth2) de autenticación federada para iniciar sesión. |
+| Mapbox | Servicio externo de mapas que usa la app para mostrar eventos y clústeres. |
 
 ## 4. Alcance del sistema
 
