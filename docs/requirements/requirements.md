@@ -1,6 +1,6 @@
 # 📄 Requerimientos del Sistema
 
-Fuente: `Requerimientos.docx` (especificación completa, con priorización MoSCoW). Plantilla base: [`dosw-lab4-example/requirement-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/requirement-template.md).
+Fuente: `Requerimientos.docx` (especificación completa, con priorización MoSCoW).
 
 ## 1. Lista general de requerimientos
 
@@ -59,7 +59,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y disponible. |
 | **Actor** | Usuario, Comercio/Organizador |
 | **Flujo principal** | 1. El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".<br>2. Para registrarse, el actor consulta el aviso de privacidad y autoriza el tratamiento de sus datos personales conforme a la Ley 1581 de 2012.<br>3. El actor elige el método: correo/contraseña o Google.<br>4. El sistema valida las credenciales (o el token de Google).<br>5. El sistema genera un token JWT de sesión.<br>6. El sistema redirige al actor a su pantalla principal. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-01](./casos-de-uso/RF01.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-01](./casos-de-uso/RF01.png) |
 | **Poscondiciones** | Se espera como resultado que el actor quede autenticado con una sesión válida (JWT) y pueda acceder a las funcionalidades según su rol. |
 
 ### 2.2 Requerimiento Funcional 2
@@ -72,7 +72,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario registrado e identificado (RF-01). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor accede a "Mi perfil".<br>2. El sistema muestra las categorías de interés disponibles.<br>3. El actor selecciona una o varias categorías.<br>4. El sistema persiste las preferencias asociadas al usuario. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-02](./casos-de-uso/RF02.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-02](./casos-de-uso/RF02.png) |
 | **Poscondiciones** | Se espera como resultado que el perfil quede actualizado con los intereses del usuario, disponibles para el motor de recomendaciones de IA (RF-08). |
 
 ### 2.3 Requerimiento Funcional 3
@@ -85,7 +85,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio registrado e identificado (RF-01). |
 | **Actor** | Comercio/Organizador, Equipo Festa (revisor manual) |
 | **Flujo principal** | 1. El actor accede a "Crear perfil de comercio".<br>2. El actor ingresa nombre, ubicación, categoría y descripción del negocio.<br>3. El sistema guarda el perfil con estado "pendiente de verificación".<br>4. El equipo Festa revisa manualmente la solicitud.<br>5. El sistema notifica al actor el resultado (aprobado/rechazado). |
-| **Diagrama de caso de uso** | ![Caso de uso RF-03](./casos-de-uso/RF03.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-03](./casos-de-uso/RF03.png) |
 | **Poscondiciones** | Se espera como resultado que el comercio quede con un perfil verificado (o pendiente/rechazado) que determina si puede publicar eventos (RF-04). |
 
 ### 2.4 Requerimiento Funcional 4
@@ -98,7 +98,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y, si es comercio, con perfil verificado (RF-03). |
 | **Actor** | Usuario, Comercio/Organizador |
 | **Flujo principal** | 1. El actor selecciona "Crear evento".<br>2. El actor ingresa título, fecha/hora, lugar, categoría, cupo y descripción (opcionalmente generada por IA, RF-09).<br>3. El sistema valida los datos obligatorios.<br>4. El sistema guarda el evento y lo publica en el mapa (RF-05). |
-| **Diagrama de caso de uso** | ![Caso de uso RF-04](./casos-de-uso/RF04.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-04](./casos-de-uso/RF04.png) |
 | **Poscondiciones** | Se espera como resultado que el evento quede creado, actualizado o cancelado, y visible (o no) en el mapa según corresponda. |
 
 ### 2.5 Requerimiento Funcional 5
@@ -111,7 +111,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado su consentimiento explícito antes de acceder a la ubicación del dispositivo (RNF5). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor abre la pantalla principal (mapa).<br>2. Si el actor consiente, el sistema obtiene la ubicación del dispositivo; si la rechaza o no está disponible, informa y usa la ubicación predeterminada del piloto ECI.<br>3. El sistema consulta los eventos activos/próximos cercanos.<br>4. El sistema agrupa eventos cercanos en clústeres y los renderiza.<br>5. El actor puede hacer zoom/pan; el sistema recalcula clústeres. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-05](./casos-de-uso/RF05.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-05](./casos-de-uso/RF05.png) |
 | **Poscondiciones** | Se espera como resultado que el actor visualice los eventos activos y próximos cercanos, organizados por clústeres, en menos de 2 segundos. |
 
 ### 2.6 Requerimiento Funcional 6
@@ -124,7 +124,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor en la pantalla del mapa o listado de eventos (RF-05). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor abre el panel de filtros/búsqueda.<br>2. El actor ingresa texto libre y/o selecciona categoría, zona, rango de fechas.<br>3. El sistema consulta los eventos que cumplen los criterios.<br>4. El sistema actualiza el mapa/listado con los resultados filtrados. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-06](./casos-de-uso/RF06.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-06](./casos-de-uso/RF06.png) |
 | **Poscondiciones** | Se espera como resultado que el actor visualice únicamente los eventos que cumplen los criterios seleccionados. |
 
 ### 2.7 Requerimiento Funcional 7
@@ -137,7 +137,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y visualizando el detalle de un evento (RF-05). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor abre el detalle de un evento.<br>2. El actor selecciona "Confirmar asistencia".<br>3. El sistema registra la confirmación asociada al actor y al evento.<br>4. El sistema actualiza el conteo de asistentes visible. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-07](./casos-de-uso/RF07.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-07](./casos-de-uso/RF07.png) |
 | **Poscondiciones** | Se espera como resultado que el actor quede registrado como asistente confirmado y el conteo público se actualice. |
 
 ### 2.8 Requerimiento Funcional 8
@@ -150,7 +150,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado, idealmente con intereses configurados (RF-02). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor escribe qué tipo de plan busca.<br>2. El sistema envía el mensaje, los intereses del actor y los eventos disponibles al modelo de IA Generativa.<br>3. El modelo genera una respuesta conversacional recomendando eventos específicos.<br>4. El sistema muestra la respuesta con enlaces directos a los eventos recomendados.<br>5. El actor puede seguir conversando para refinar la recomendación. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-08](./casos-de-uso/RF08.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-08](./casos-de-uso/RF08.png) |
 | **Poscondiciones** | Se espera como resultado que el actor reciba una recomendación personalizada en lenguaje natural, con eventos concretos que puede explorar o confirmar. |
 
 ### 2.9 Requerimiento Funcional 9
@@ -163,7 +163,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio creando un evento con los datos básicos ya ingresados (RF-04). |
 | **Actor** | Comercio/Organizador |
 | **Flujo principal** | 1. El actor ingresa nombre, ubicación y tipo de actividad del evento.<br>2. El actor selecciona "Generar descripción con IA".<br>3. El sistema envía los datos básicos al modelo de IA Generativa.<br>4. El modelo genera una descripción atractiva.<br>5. El sistema muestra la descripción para revisión del actor.<br>6. El actor acepta o edita la descripción.<br>7. El sistema persiste la descripción final (no se regenera en visualizaciones futuras). |
-| **Diagrama de caso de uso** | ![Caso de uso RF-09](./casos-de-uso/RF09.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-09](./casos-de-uso/RF09.png) |
 | **Poscondiciones** | Se espera como resultado que el evento quede con una descripción atractiva generada (o editada) por IA, lista para publicarse. |
 
 ### 2.10 Requerimiento Funcional 10
@@ -176,7 +176,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor con una confirmación de asistencia o boleto para el evento (RF-07 o RF-11). |
 | **Actor** | Usuario (presenta el QR), Comercio/Organizador (escanea el QR) |
 | **Flujo principal** | 1. El sistema genera un código QR único cuando el usuario confirma asistencia a un evento gratuito (RF-07) o cuando se completa la compra de una entrada para un evento pago (RF-11).<br>2. El actor presenta el QR al ingreso del evento.<br>3. El comercio escanea el QR con la app.<br>4. El sistema valida que el QR sea auténtico, corresponda al evento y no haya sido usado antes.<br>5. El sistema marca el QR como usado y registra el check-in. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-10](./casos-de-uso/RF10.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-10](./casos-de-uso/RF10.png) |
 | **Poscondiciones** | Se espera como resultado que el check-in quede registrado de forma única e irrepetible, visible en tiempo real para el organizador. |
 
 ### 2.11 Requerimiento Funcional 11
@@ -189,7 +189,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y un evento de pago con cupo disponible. |
 | **Actor** | Usuario (comprador) |
 | **Flujo principal** | 1. El actor abre el detalle de un evento de pago y selecciona "Comprar entrada".<br>2. El sistema inicia el pago con Wompi, indicando el split entre organizador y comisión Festa.<br>3. El actor completa el pago.<br>4. Wompi confirma el pago al sistema.<br>5. El sistema distribuye el pago automáticamente.<br>6. El sistema genera el boleto con su QR (RF-10) y descuenta el cupo. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-11](./casos-de-uso/RF11.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-11](./casos-de-uso/RF11.png) |
 | **Poscondiciones** | Se espera como resultado que el actor quede con un boleto válido (con QR) y el pago distribuido entre el organizador y Festa según la comisión acordada. |
 
 ### 2.12 Requerimiento Funcional 12
@@ -202,7 +202,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y con permiso de notificaciones otorgado en el dispositivo. |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. Ocurre un evento relevante en el sistema (evento nuevo cercano, o recordatorio de un evento confirmado).<br>2. El sistema encola la notificación correspondiente.<br>3. El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging (Android) o APNs (iOS).<br>4. El actor recibe la notificación y puede tocarla para ir al detalle del evento. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-12](./casos-de-uso/RF12.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-12](./casos-de-uso/RF12.png) |
 | **Poscondiciones** | Se espera como resultado que el actor reciba oportunamente notificaciones sobre eventos relevantes cercanos y recordatorios de eventos confirmados. |
 
 ### 2.13 Requerimiento Funcional 13
@@ -215,7 +215,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el evento publicado y visible (RF-04). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor abre el detalle de un evento.<br>2. El actor selecciona "Compartir".<br>3. El sistema invoca el mecanismo nativo de compartir del sistema operativo con un enlace al evento.<br>4. El actor elige el destino (red social, chat, etc.) y envía. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-13](./casos-de-uso/RF13.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-13](./casos-de-uso/RF13.png) |
 | **Poscondiciones** | Se espera como resultado que se genere y envíe un enlace público al evento hacia el destino elegido por el actor. |
 
 ### 2.14 Requerimiento Funcional 14
@@ -228,7 +228,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y visualizando el evento o usuario a reportar. |
 | **Actor** | Usuario, Equipo Festa (revisor manual) |
 | **Flujo principal** | 1. El actor selecciona "Reportar" sobre un evento o usuario.<br>2. El actor indica el motivo del reporte.<br>3. El sistema registra el reporte y lo pone en cola de revisión.<br>4. El equipo Festa revisa manualmente el reporte y toma una acción (advertencia, retiro del contenido, ninguna acción). |
-| **Diagrama de caso de uso** | ![Caso de uso RF-14](./casos-de-uso/RF14.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-14](./casos-de-uso/RF14.png) |
 | **Poscondiciones** | Se espera como resultado que el reporte quede registrado y, si aplica, se tome una acción de moderación sobre el evento o usuario reportado. |
 
 ### 2.15 Requerimiento Funcional 15
@@ -241,7 +241,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio identificado y con al menos un evento publicado. |
 | **Actor** | Comercio/Organizador |
 | **Flujo principal** | 1. El actor accede a "Mi panel".<br>2. El sistema consulta los eventos del comercio y sus métricas (asistentes confirmados, boletos vendidos).<br>3. El sistema muestra los conteos por evento. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-15](./casos-de-uso/RF15.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-15](./casos-de-uso/RF15.png) |
 | **Poscondiciones** | Se espera como resultado que el comercio pueda ver el retorno (asistencia y ventas) atribuible a sus eventos publicados. |
 
 ### 2.16 Requerimiento Funcional 16
@@ -254,7 +254,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente definido un sistema de reglas de puntuación configurable. |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor realiza una acción elegible (asistir, crear o promocionar un evento).<br>2. El sistema evalúa la acción contra las reglas configurables.<br>3. El sistema otorga la XP correspondiente al actor. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-16](./casos-de-uso/RF16.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") (roadmap futuro, fuera del MVP) |
+| **Diagrama de caso de uso** | ![Caso de uso RF-16](./casos-de-uso/RF16.png) |
 | **Poscondiciones** | Se espera como resultado que el actor acumule XP visible en su perfil, según las reglas vigentes. |
 
 ### 2.17 Requerimiento Funcional 17
@@ -267,7 +267,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor con puntos acumulados (RF-16) y comercios aliados configurados. |
 | **Actor** | Usuario, Comercio aliado |
 | **Flujo principal** | 1. El actor selecciona un descuento disponible para canjear.<br>2. El sistema valida que el actor tenga puntos suficientes.<br>3. El sistema genera un cupón y descuenta los puntos.<br>4. El actor redime el cupón en el comercio aliado. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-17](./casos-de-uso/RF17.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") (roadmap futuro, fuera del MVP) |
+| **Diagrama de caso de uso** | ![Caso de uso RF-17](./casos-de-uso/RF17.png) |
 | **Poscondiciones** | Se espera como resultado que el actor obtenga un cupón válido y sus puntos se descuenten en consecuencia. |
 
 ### 2.18 Requerimiento Funcional 18
@@ -280,7 +280,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente un historial de eventos creados y su desempeño (asistencia, calificaciones). |
 | **Actor** | Comercio/Organizador |
 | **Flujo principal** | 1. El sistema calcula la reputación del actor a partir de su historial de eventos.<br>2. El sistema asigna insignias y posición en el ranking según reglas definidas.<br>3. El sistema aumenta la visibilidad en el mapa de los actores con mejor reputación. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-18](./casos-de-uso/RF18.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") (roadmap futuro, fuera del MVP) |
+| **Diagrama de caso de uso** | ![Caso de uso RF-18](./casos-de-uso/RF18.png) |
 | **Poscondiciones** | Se espera como resultado que los organizadores con mejor desempeño obtengan mayor visibilidad e insignias visibles en su perfil. |
 
 ### 2.19 Requerimiento Funcional 19
@@ -293,7 +293,7 @@ El sistema de Festa debe tener:
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado. |
 | **Actor** | Usuario, Comercio/Organizador |
 | **Flujo principal** | 1. El actor crea un "Parche en Vivo" indicando lugar, hora de inicio (dentro de las próximas 2 horas) y descripción breve.<br>2. El sistema publica el evento inmediatamente en el mapa, marcado como "en vivo".<br>3. El sistema expira automáticamente el evento al cumplirse su ventana de tiempo. |
-| **Diagrama de caso de uso** | ![Caso de uso RF-19](./casos-de-uso/RF19.png)<br>[Editar en Lucid](https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/edit) (página "Casos de uso") |
+| **Diagrama de caso de uso** | ![Caso de uso RF-19](./casos-de-uso/RF19.png) |
 | **Poscondiciones** | Se espera como resultado que el parche quede visible en el mapa mientras esté vigente, y desaparezca automáticamente al expirar. |
 
 ## 3. Preguntas
