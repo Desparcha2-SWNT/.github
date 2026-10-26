@@ -160,56 +160,91 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 | 6 | App → gateway → booking | La app consulta su boleto. |
 | 7 | booking → gateway → app | Se devuelve el QR único; la app lo guarda en caché local. |
 
-## 8. Diagrama de Clases
+## 8. Diagramas de Clases por Microservicio
 
-### 8.1 Diagrama
+Cada microservicio tiene su propio diagrama de clases (no hay uno único para todo el proyecto). Las clases muestran atributos y métodos; las líneas llevan multiplicidad; en amarillo van las enumeraciones. Las referencias a datos de otro servicio (por ejemplo `cuentaId`) son identificadores, no relaciones directas. Son una propuesta de diseño.
 
-![Diagrama de clases del dominio de Festa](./diagramas/05-clases/ClasesDominio.png)
+### 8.1 `festa-auth-service` (RF1)
 
-*Editable en Lucidchart: [Diagrama de clases del dominio](https://lucid.app/lucidchart/2de1f120-8e4d-4848-99a2-2da99f0cabba/edit).*
+![Diagrama de clases de festa-auth-service](./diagramas/05-clases/auth-service.png)
 
-**Cómo leerlo.** Muestra las clases del MVP con sus atributos y métodos, y entre paréntesis el servicio dueño de cada una. Las líneas llevan la multiplicidad (por ejemplo "1 posee \*"). En amarillo van las enumeraciones.
+Cuenta de acceso con proveedor (correo o Google) y rol, y las sesiones que se abren con el JWT y el token de renovación.
 
-### 8.2 Clases
+### 8.2 `festa-user-service` (RF2, RF3)
 
-| Clase (servicio) | Qué representa | Relaciones clave |
-|---|---|---|
-| Cuenta (auth) | Identidad de quien entra a la app, con proveedor (correo o Google) y rol. | Tiene un perfil y, si es comercio, un comercio; organiza eventos, confirma asistencias y posee boletos. |
-| PerfilUsuario (user) | Datos del usuario y consentimientos de datos y ubicación (Ley 1581, RNF5). | Elige categorías de interés. |
-| Comercio (user) | Negocio con ubicación y estado de verificación manual (RF3). | Publica eventos; solo puede publicar si está verificado. |
-| Categoria (event) | Clasificación de eventos, comercios e intereses. | Agrupa eventos y comercios. |
-| Evento (event) | Plan con fecha, lugar, cupo, precio y estado; incluye Parches en Vivo que expiran. | Tiene una descripción de IA, asistencias y boletos. |
-| DescripcionIA (event) | Texto generado una sola vez y guardado (RNF8). | Pertenece a un evento. |
-| Asistencia (booking) | Confirmación de asistencia de una cuenta a un evento (RF7). | Une cuenta y evento. |
-| Boleto (booking) | Derecho de acceso a un evento. | Tiene un código QR y, si es de pago, un pago. |
-| CodigoQR (booking) | Token de un solo uso (solo se guarda su hash). | Valida un boleto; se consume al escanearlo (RNF7). |
-| Pago (payment) | Cobro con el reparto de comisión y la referencia de Wompi. | Cobra un boleto. |
-| Recomendacion (ai) | Consulta del usuario y respuesta de la IA. | Pertenece a una cuenta. |
+![Diagrama de clases de festa-user-service](./diagramas/05-clases/user-service.png)
 
-Las enumeraciones son `RolCuenta`, `ProveedorAuth`, `EstadoVerificacion`, `EstadoEvento`, `EstadoBoleto` y `EstadoPago`.
+Perfil del usuario con sus intereses y consentimientos (Ley 1581, RNF5), y el comercio con su estado de verificación manual.
 
-## 9. Modelo de Base de Datos
+### 8.3 `festa-event-service` (RF4, RF5, RF6, RF9, RF19)
 
-### 9.1 Diagrama
+![Diagrama de clases de festa-event-service](./diagramas/05-clases/event-service.png)
 
-![Modelo de base de datos PostgreSQL de Festa](./diagramas/06-base-de-datos/ModeloDatos.png)
+Categorías y eventos (con Parches en Vivo que expiran) y la descripción generada por IA, que se guarda una sola vez (RNF8).
 
-*Editable en Lucidchart: [Modelo de base de datos PostgreSQL](https://lucid.app/lucidchart/9c51e2ca-3b71-45e5-bf66-1a3566100774/edit).*
+### 8.4 `festa-booking-service` (RF7, RF10)
 
-**Cómo leerlo.** Es un diagrama entidad-relación de las tablas relacionales. El prefijo de cada tabla es el esquema, uno por servicio, para ver quién es dueño de qué. PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
+![Diagrama de clases de festa-booking-service](./diagramas/05-clases/booking-service.png)
 
-### 9.2 Tablas por servicio
+Confirmación de asistencia y boletos, cada uno con su código QR de un solo uso (RNF7).
 
-| Esquema (servicio) | Tablas | Notas |
-|---|---|---|
-| `auth` | `cuentas` | Correo único, hash de contraseña (nulo si entra con Google), proveedor y rol. |
-| `usuarios` | `perfiles_usuario`, `intereses_usuario`, `comercios` | Consentimientos con fecha; ubicación del comercio como `geography(Point)`; estado de verificación. |
-| `eventos` | `categorias`, `eventos`, `descripciones_ia` | Ubicación como `geography(Point)` para el mapa y los clústeres (PostGIS); `es_parche_en_vivo` y `expira_en` para RF19. |
-| `reservas` | `asistencias`, `boletos`, `codigos_qr` | `codigos_qr.token_hash` único y bandera `usado` para el QR de un solo uso. |
-| `pagos` | `pagos` | Monto, comisión de Festa, monto del organizador y referencia única de Wompi. |
-| `ia` | `recomendaciones` | Historial de consultas y respuestas. |
+### 8.5 `festa-payment-service` (RF11)
 
-**Nota sobre las claves entre servicios.** Si cada servicio termina con su propia base de datos, las claves foráneas que cruzan esquemas (por ejemplo `reservas.boletos.evento_id`) serán lógicas y se validarán en el código. Esto, junto con el uso de MongoDB y Redis, se decide en el ADR 0002.
+![Diagrama de clases de festa-payment-service](./diagramas/05-clases/payment-service.png)
+
+Pago con el reparto de comisión (8 % Festa, 92 % organizador) y los eventos de webhook recibidos de Wompi.
+
+### 8.6 `festa-ai-service` (RF8)
+
+![Diagrama de clases de festa-ai-service](./diagramas/05-clases/ai-service.png)
+
+Historial de recomendaciones y el límite de solicitudes por usuario, que vive en Redis y no en PostgreSQL (RNF8).
+
+`festa-notification-service` (RF12, fase 2) y `festa-analytics-service` (RF15) no tienen todavía un modelo propio definido: el primero solo reenvía avisos y el segundo se alimenta de los eventos de RabbitMQ. Se modelarán cuando se decida su almacén (ADR 0002).
+
+## 9. Modelos de Base de Datos por Microservicio
+
+Cada servicio es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`, `ia`) y es el único que lo modifica. PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
+
+### 9.1 `festa-auth-service`
+
+![Modelo de base de datos de festa-auth-service](./diagramas/06-base-de-datos/auth-service.png)
+
+La tabla `auth.sesiones` guarda solo el hash del token de renovación y si fue revocado.
+
+### 9.2 `festa-user-service`
+
+![Modelo de base de datos de festa-user-service](./diagramas/06-base-de-datos/user-service.png)
+
+`usuarios.intereses_usuario` es la tabla puente entre el perfil y las categorías, que pertenecen al servicio de eventos.
+
+### 9.3 `festa-event-service`
+
+![Modelo de base de datos de festa-event-service](./diagramas/06-base-de-datos/event-service.png)
+
+`eventos.eventos.ubicacion` es un `geography(Point)` para el mapa y los clústeres con PostGIS.
+
+### 9.4 `festa-booking-service`
+
+![Modelo de base de datos de festa-booking-service](./diagramas/06-base-de-datos/booking-service.png)
+
+Solo se guarda el hash del token del QR (`token_hash` único) y la bandera `usado`.
+
+### 9.5 `festa-payment-service`
+
+![Modelo de base de datos de festa-payment-service](./diagramas/06-base-de-datos/payment-service.png)
+
+`pagos.webhooks_recibidos.evento_wompi_id` es único para no procesar dos veces el mismo aviso.
+
+### 9.6 `festa-ai-service`
+
+![Modelo de base de datos de festa-ai-service](./diagramas/06-base-de-datos/ai-service.png)
+
+Las descripciones de eventos (RF9) se guardan en el servicio de eventos, no aquí.
+
+**Nota sobre las claves entre servicios.** Las referencias de un esquema a otro (por ejemplo `reservas.boletos.evento_id`) son lógicas, sin clave foránea, y se validan en el código o con eventos de RabbitMQ. Esto, junto con el uso de MongoDB y Redis, se decide en el ADR 0002.
+
+Los diagramas editables están en el documento de Lucid del proyecto, páginas "Clases y BD · …" de cada servicio.
 
 ## 10. Decisiones pendientes y supuestos
 

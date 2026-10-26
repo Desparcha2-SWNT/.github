@@ -24,10 +24,11 @@ docs/
 │       │   └── ComponentesAI.png
 │       ├── 04-dinamicas/
 │       │   └── CompraBoleto.png          ← vista dinámica (complementaria)
-│       ├── 05-clases/
-│       │   └── ClasesDominio.png         ← diagrama de clases (Lucid)
-│       └── 06-base-de-datos/
-│           └── ModeloDatos.png           ← ERD de PostgreSQL (Lucid)
+│       ├── 05-clases/                    ← un diagrama de clases por microservicio (Lucid)
+│       │   └── auth-service.png, user-service.png, event-service.png,
+│       │       booking-service.png, payment-service.png, ai-service.png
+│       └── 06-base-de-datos/             ← un ERD de PostgreSQL por microservicio (Lucid)
+│           └── auth-service.png, user-service.png, … (los mismos seis)
 └── adr/                                  ← decisiones de arquitectura (en el PR de DevSecOps)
 ```
 
@@ -45,8 +46,8 @@ la clave de su vista en `festa.dsl`.
 | 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: cobro y split con Wompi (RF11). |
 | 3. Componentes | `ComponentesAI` | [`03-componentes/ComponentesAI.png`](./diagramas/03-componentes/ComponentesAI.png) | `festa-ai-service`: recomendaciones, descripciones y límite de uso (RF8, RF9, RNF8). |
 | Dinámica | `CompraBoleto` | [`04-dinamicas/CompraBoleto.png`](./diagramas/04-dinamicas/CompraBoleto.png) | Secuencia de compra, pago, evento en RabbitMQ y entrega del QR (RF11, RF10). |
-| Clases | (Lucid) | [`05-clases/ClasesDominio.png`](./diagramas/05-clases/ClasesDominio.png) | Clases del dominio con atributos, métodos, enumeraciones y multiplicidades. |
-| Base de datos | (Lucid) | [`06-base-de-datos/ModeloDatos.png`](./diagramas/06-base-de-datos/ModeloDatos.png) | ERD de PostgreSQL con un esquema por servicio. |
+| Clases | (Lucid) | [`05-clases/`](./diagramas/05-clases/) | Un diagrama de clases por microservicio (auth, user, event, booking, payment y ai). |
+| Base de datos | (Lucid) | [`06-base-de-datos/`](./diagramas/06-base-de-datos/) | Un ERD de PostgreSQL por microservicio, con su propio esquema. |
 
 El documento [`alcance.md`](./alcance.md) sigue la plantilla
 [`scope-template.md`](https://github.com/lauherrerac/dosw-lab4-example/blob/main/docs/requirements/scope-template.md)
@@ -58,10 +59,7 @@ con los íconos oficiales de Azure.
 
 ## Diagramas en Lucid
 
-Los diagramas que no son del modelo C4 están en Lucidchart (propuestos, pendientes de ADR 0002 en lo que toca a datos):
-
-- [Diagrama de clases del dominio](https://lucid.app/lucidchart/2de1f120-8e4d-4848-99a2-2da99f0cabba/edit): clases, atributos, métodos y enumeraciones del MVP, con el servicio dueño de cada clase.
-- [Modelo de base de datos PostgreSQL (ERD)](https://lucid.app/lucidchart/9c51e2ca-3b71-45e5-bf66-1a3566100774/edit): tablas, claves y relaciones, con un esquema por servicio.
+Todos los diagramas de Lucid están en el mismo documento del proyecto. Las páginas "Clases y BD · auth-service", "… user-service", "… event-service", "… booking-service", "… payment-service" y "… ai-service" tienen el diagrama de clases y el modelo de base de datos de cada microservicio. Son una propuesta, pendiente del ADR 0002.
 
 ## Estado del modelo
 
