@@ -1127,3 +1127,23 @@ RIESGOS: No tocar los repositorios de los servicios; no incluir secretos; no imp
 - **Validación (riesgos):** Se revisó la sintaxis de los YAML y que los ADR marcaran como pendiente lo que el equipo no ha decidido.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Pendiente que el equipo revise y fusione el PR.
 
+## P40
+- **Fecha:** 2026-10-25
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Analista que mantiene los casos de uso alineados con los requisitos.
+CONTEXTO: Los 19 casos de uso están en Lucid y requirements.md debe mostrar cada uno. El usuario quiere solo el diagrama, sin título de RF, sin include ni extend, sin el enlace "Editar en Lucid" ni "Plantilla base".
+TAREA: Actualizar los diagramas de caso de uso en Lucid, exportarlos y enlazar cada imagen en la ficha del RF correspondiente en la rama docs/requisitos-priorizados.
+FORMATO: PNG por RF en docs/requirements/casos-de-uso/ y una sola imagen por ficha en requirements.md.
+RIESGOS: Recortes que cortan actores o incluyen títulos; relaciones inventadas; perder la información de las fichas.
+```
+
+- **Resultado obtenido:** Diagramas RF01 a RF19 recortados y enlazados. Se necesitaron varias iteraciones porque los recortes tenían barras negras, cortaban etiquetas de actores o incluían el título. El usuario corrigió además la lectura de las flechas entre actores.
+- **Validación (riesgos):** Se revisó cada recorte a ojo y se limitaron los márgenes a los bordes de la imagen. Se mantuvo la semántica del usuario sobre las flechas.
+- **Decisión de uso (propuesta):** Aceptado con ajustes.
+
