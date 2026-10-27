@@ -1264,3 +1264,22 @@ RIESGOS: Reescribir historias cerradas; asignar responsables sin consultar.
 - **Validación (riesgos):** Primero se buscó en Jira qué incidencias mencionaban bases de datos; la respuesta de cada edición confirmó el cambio. Las tareas nuevas quedaron sin responsable.
 - **Decisión de uso (propuesta):** Aceptado. Queda pendiente repartir las tareas nuevas en el planning del equipo.
 
+## P47
+- **Fecha:** 2026-10-27
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Planeación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Descomposición de tareas
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Scrum Master que planifica por ruta crítica con prácticas DevSecOps.
+CONTEXTO: Los sprints duran una semana (miércoles a miércoles), el Sprint 1 empezó el 21 de octubre y no se alarga. La app y el servicio de usuarios no tienen código. Cada sprint debe entregar valor y cada integrante debe aportar código con esfuerzo parejo.
+TAREA: Definir qué tareas dependen de cuáles, fijar fechas de vencimiento en Jira para que cada persona sepa cuándo debe estar lista la parte de otra, y reacomodar historias entre sprints si hace falta.
+FORMATO: Historias movidas de sprint, subtareas con responsable y fecha, vínculos "bloquea" en Jira y docs/sprints actualizados.
+RIESGOS: Dependencias inventadas; cargas desiguales; prometer un Sprint 1 que no se puede cumplir.
+```
+
+- **Resultado obtenido:** RF2 y RF3 pasan al Sprint 2 y RF5 y RF6 al Sprint 3. Reparto de 18, 20 y 16 subtareas con 3 a 4 por persona, fechas de vencimiento por dependencias y unos 60 vínculos "bloquea" en Jira. Metas del Sprint 2 y 3 actualizadas y docs/sprints al día.
+- **Validación (riesgos):** Se comprobó en Jira, tarea por tarea, que el responsable y la fecha quedaran aplicados y que ninguna tarea venza antes que la que la bloquea. Los puntos de historia siguen sin estimar.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. El equipo debe confirmar el reparto y decidir qué pasa con el Sprint 1 si la app no alcanza.
