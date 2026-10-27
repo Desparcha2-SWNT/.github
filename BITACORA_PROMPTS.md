@@ -1299,3 +1299,24 @@ Entradas P48 a P74 (27 oct a 23 nov). Los prompts son reconstrucciones a partir 
 Lección transversal: en varias entradas el orden real fue código primero y documentación después. Las entradas lo registran tal cual y lo marcan en «Validación». Lo que el equipo debe seguir para el resto del proyecto es diagramar antes de programar.
 
 ---
+
+---
+
+## P48
+- **Fecha:** 2026-10-27
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Persona (DevSecOps) + Zero-shot con restricción de alcance
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Ingeniero DevSecOps del repositorio .github de Festa.
+TAREA: Actualízate con el estado real de los repositorios, ya que el equipo subió lo que tenía. Alinea el CI reutilizable con la versión de Trivy que indica el mensaje de revisión pegado (verificar la versión y quién lo envió) y deja los repositorios públicos alineados con la decisión del equipo. Haz push de la rama y abre el PR.
+RESTRICCIONES: No cambies ramas de otros integrantes ni las reglas de protección de develop. No agregues secretos.
+FORMATO: Un commit convencional por tipo de cambio y una descripción de PR con el motivo de cada cambio.
+```
+
+- **Resultado obtenido:** `.github` #3 (base DevSecOps: ramas, plantillas, CI reutilizable y ADR) y #4 (detalle de los sprints 1 a 4) fusionados el 28 de octubre.
+- **Validación (riesgos):** Se verificó en GitHub la fecha de fusión de ambos PR. El riesgo mitigado es una versión de Trivy distinta a la del equipo.
+- **Decisión de uso:** [confirmar con el autor]
