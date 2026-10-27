@@ -47,7 +47,41 @@ Los prompts que cambien una decisión o generen código importante se registran 
 - Son pequeños: idealmente menos de 400 líneas cambiadas.
 - Se mezclan con *squash* para dejar un historial legible.
 
-## 4. Definition of Done
+## 4. Cómo escribir una historia o tarea en Jira
+
+Toda historia, tarea o subtarea tiene que poder entenderse y comprobarse sin preguntarle a quien la escribió. Usa este formato en la descripción:
+
+```
+**Como** <quién necesita esto>, **quiero** <qué necesita>, **para** <qué gana con eso>.
+
+**Criterios de aceptación**
+* <condición que se puede comprobar>
+* <condición que se puede comprobar>
+* <caso de error o límite>
+```
+
+Buenas prácticas para los criterios:
+- Cada criterio es **verificable**: otra persona puede decir "se cumple" o "no se cumple" sin interpretar.
+- Una sola condición por línea, escrita en presente ("Puedo…", "El sistema muestra…").
+- Incluye al menos un **caso de error** (dato inválido, sin conexión, permiso negado).
+- Menciona el requisito que cubre (RF o RNF) cuando aplique.
+- No inventes números ni umbrales. Si falta una decisión del equipo, escríbela como pendiente y enlaza la tarea o el ADR que la resuelve.
+- Una subtarea hereda el contexto de su historia: describe solo lo que ella aporta y sus criterios propios.
+
+Ejemplo, subtarea SCRUM-50 «Pantalla de registro (correo y contraseña)»:
+
+```
+**Como** persona interesada en eventos, **quiero** una pantalla para registrarme con mi correo y una contraseña, **para** crear mi cuenta en Festa.
+
+**Criterios de aceptación**
+* Puedo ingresar correo y contraseña y enviar el formulario.
+* Antes de crear la cuenta se me muestra el aviso de privacidad y debo autorizar el tratamiento de mis datos (Ley 1581).
+* Si el correo ya está registrado o el formato es inválido, veo un mensaje claro y no se crea la cuenta.
+* Si no hay conexión, la pantalla me avisa y no pierdo lo que escribí.
+* La pantalla se conecta al gateway y la cuenta queda creada por festa-auth-service (RF1).
+```
+
+## 5. Definition of Done
 
 Una historia está terminada cuando:
 - [ ] Cumple los criterios de aceptación de Jira.
@@ -58,7 +92,7 @@ Una historia está terminada cuando:
 - [ ] Está desplegada en el entorno de pruebas y se puede demostrar.
 - [ ] Los commits con IA están marcados y, si aplica, hay entrada en la bitácora.
 
-## 5. Seguridad básica (DevSecOps)
+## 6. Seguridad básica (DevSecOps)
 
 - **Nunca** subas secretos, llaves ni contraseñas. Usa variables de entorno y un `.env.example` sin valores reales.
 - Wompi y cualquier pasarela se usan solo con llaves de **sandbox** hasta la demostración.
@@ -66,10 +100,10 @@ Una historia está terminada cuando:
 - Los datos personales se tratan según la Ley 1581 de 2012 (consentimiento y política de privacidad).
 - Si encuentras una vulnerabilidad, sigue [SECURITY.md](SECURITY.md); no abras un issue público.
 
-## 6. Decisiones de arquitectura
+## 7. Decisiones de arquitectura
 
 Las decisiones importantes (nube de despliegue, almacén de datos por servicio, proveedor de LLM, etc.) se registran como ADR en `docs/adr/`, con la plantilla `0000-plantilla.md`.
 
-## 7. Aporte equitativo
+## 8. Aporte equitativo
 
 El profesor revisa los repositorios cada semana y pide informes individuales. Por eso: commits propios y de tamaño razonable, historias asignadas a una persona y revisiones repartidas entre todos.
