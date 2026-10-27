@@ -77,8 +77,8 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | Contenedor (repositorio) | Tecnología | Responsabilidad | Requisitos |
 |---|:---:|---|:---:|
 | `festa-mobile` | Flutter (iOS y Android) | App del usuario y vista de comercio: mapa, escáner y generador de QR, caché local del QR. | RF5, RF15, RNF10 |
-| `festa-gateway` | Pod en AKS | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
-| `festa-auth-service` | Pod en AKS | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
+| `festa-gateway` | Kong 3.9 DB-less (pod en AKS) | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
+| `festa-auth-service` | Spring Boot 3.5 (pod en AKS) | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
 | `festa-user-service` | Pod en AKS | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
 | `festa-event-service` | Pod en AKS | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
 | `festa-booking-service` | Pod en AKS | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
@@ -87,8 +87,8 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | `festa-notification-service` | Pod en AKS | Envío de notificaciones push (fase 2). | RF12 |
 | `festa-analytics-service` | Pod en AKS | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
-| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`, `ai_db`) y Cosmos DB API MongoDB (`analytics_db`, `notification_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: propuesta (ADR 0002). | RNF1 |
-| Redis | Azure Cache for Redis | Caché efímera con llaves separadas por servicio: límites de solicitudes y validación rápida de QR. | RNF1, RNF7, RNF8 |
+| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB / Cosmos DB API MongoDB (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `feat/fase-0-infra-contratos`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
+| Redis | Azure Cache for Redis (una instancia) | Bases lógicas separadas: caché del mapa de `festa-event-service` y límite de solicitudes de `festa-ai-service`. La validación rápida de QR de booking es una propuesta. El rate limit del gateway lo lleva Kong. | RNF1, RNF7, RNF8 |
 | Prometheus + Grafana | Prometheus y Grafana | Métricas, tableros y alertas de los servicios. | RNF3 |
 
 ### 5.3 Relaciones principales
@@ -199,13 +199,13 @@ Pago con el reparto de comisión (8 % Festa, 92 % organizador) y los eventos de 
 
 ![Diagrama de clases de festa-ai-service](./diagramas/05-clases/ai-service.png)
 
-Historial de recomendaciones y el límite de solicitudes por usuario, que vive en Redis y no en PostgreSQL (RNF8).
+Historial de recomendaciones y el límite de solicitudes por usuario, que vive en Redis y no en MongoDB (RNF8). Su base `ai_db` es MongoDB, según `festa-infra`.
 
-`festa-notification-service` (RF12, fase 2) y `festa-analytics-service` (RF15) no tienen todavía un modelo propio definido: el primero solo reenvía avisos y el segundo se alimenta de los eventos de RabbitMQ. Se modelarán cuando se decida su almacén (ADR 0002).
+`festa-notification-service` (RF12, fase 2) y `festa-analytics-service` (RF15) no tienen todavía un modelo propio definido: el primero solo reenvía avisos y el segundo se alimenta de los eventos de RabbitMQ. Ambos usan MongoDB según `festa-infra` y se modelarán cuando tengan código.
 
 ## 9. Modelos de Base de Datos por Microservicio
 
-Cada servicio tiene su propia base de datos y es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`, `ia`) y es el único que lo modifica. PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
+Cada servicio tiene su propia base de datos y es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`) y es el único que lo modifica. `festa-ai-service`, `festa-notification-service` y `festa-analytics-service` usan MongoDB (colecciones). PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
 
 ### 9.1 `festa-auth-service`
 
@@ -241,7 +241,7 @@ Solo se guarda el hash del token del QR (`token_hash` único) y la bandera `usad
 
 ![Modelo de base de datos de festa-ai-service](./diagramas/06-base-de-datos/ai-service.png)
 
-Las descripciones de eventos (RF9) se guardan en el servicio de eventos, no aquí.
+Es una colección de MongoDB (`ai_db.recomendaciones`) y el esquema es una propuesta, porque `festa-ai-service` todavía no tiene código. Las descripciones de eventos (RF9) se guardan en el servicio de eventos, no aquí.
 
 **Nota sobre las claves entre servicios.** Las referencias de un esquema a otro (por ejemplo `reservas.boletos.evento_id`) son lógicas, sin clave foránea, y se validan en el código o con eventos de RabbitMQ. Esto, junto con el uso de MongoDB y Redis, se decide en el ADR 0002.
 
@@ -252,9 +252,21 @@ Los diagramas editables están en el documento de Lucid del proyecto, páginas "
 | Tema | Estado |
 |---|---|
 | Plataforma de despliegue: el equipo decidió Azure; la lista exacta de servicios (ADR 0001) sigue pendiente. | Propuesta en Lucid, página "Arquitectura Azure" |
-| Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Falta confirmar el motor de cada una (ADR 0002). | Decidido el aislamiento; motor pendiente |
+| Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Los motores actuales son los de `festa-infra`; falta confirmarlos con el equipo (ADR 0002). | Decidido el aislamiento; motor por confirmar |
 | Proveedor de LLM: se propone Azure OpenAI (ADR 0003). | Pendiente |
-| Contratos de mensajes de RabbitMQ (ADR 0004). | Pendiente |
+| Contratos de mensajes de RabbitMQ (ADR 0004). | Hechos en `festa-infra` (38 eventos, rama `feat/fase-0-infra-contratos`); falta fusionarlos y registrar el ADR |
 | RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
 
 El despliegue en Azure con los íconos oficiales está en el documento de Lucid del proyecto, página "Arquitectura Azure"; no se modela en C4.
+
+### 10.1 Estado de los repositorios (27-oct-2026)
+
+El trabajo de Carlos está en ramas `feat/*` de tres repositorios, sin PR todavía. Los otros ocho solo tienen el README.
+
+| Repositorio | Rama | Qué incluye |
+|---|---|---|
+| `festa-infra` | `feat/fase-0-infra-contratos` | Docker Compose local: PostgreSQL con PostGIS (auth, user, event, booking y payment), MongoDB (ai, notification y analytics), Redis, RabbitMQ con su topología, Prometheus y Grafana. Contratos de 38 eventos con validador. |
+| `festa-auth-service` | `feat/fase-1-auth-service` | RF1: registro, login con correo y Google, refresh y logout, JWT RS256 y JWKS, borrado de cuenta (Ley 1581), cifrado de datos personales, outbox y pruebas. Spring Boot 3.5. |
+| `festa-gateway` | `feat/fase-2-gateway` | Kong 3.9 DB-less con validación de JWT, límite de peticiones por ruta, correlation-id y cabeceras de seguridad. |
+
+Hoy todo corre en Docker Compose local. El despliegue en la nube (AKS u otra) y sus scripts siguen pendientes.

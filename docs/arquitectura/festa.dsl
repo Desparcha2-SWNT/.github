@@ -21,8 +21,8 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
             festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa en tiempo real, con recomendaciones por IA y venta de boletería." {
                 mobile = container "festa-mobile" "App del usuario y vista de comercio (panel simple, RF15): mapa, escáner y generador de QR, caché local del QR." "Flutter (iOS y Android)" "Mobile"
-                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Pod en Azure Kubernetes Service (AKS)"
-                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Pod en Azure Kubernetes Service (AKS)"
+                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Kong 3.9 DB-less (pod en AKS)"
+                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (pod en AKS)"
                 user = container "festa-user-service" "RF2 y RF3: perfiles de usuario y comercio, preferencias, verificación manual de comercios." "Pod en Azure Kubernetes Service (AKS)"
                 event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo." "Pod en Azure Kubernetes Service (AKS)"
                 booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Pod en Azure Kubernetes Service (AKS)" {
@@ -76,10 +76,10 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
                 booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
                 payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
                 analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
                 notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
-                cache = container "Redis" "Caché efímera con llaves separadas por servicio: límites de solicitudes y validación rápida de QR (propuesto)." "Azure Cache for Redis" "Database"
+                cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Azure Cache for Redis" "Database"
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 
                 # Usuarios hacia la app
@@ -94,7 +94,6 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 gateway -> payment "Enruta peticiones" "REST"
                 gateway -> ai "Enruta peticiones" "REST"
                 gateway -> analytics "Enruta peticiones del panel" "REST"
-                gateway -> cache "Cuenta solicitudes por usuario" "TCP"
 
                 # Mensajería
                 event -> broker "Publica eventos de dominio" "AMQP"
@@ -111,9 +110,10 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 event -> event_db "Lee y escribe eventos (PostGIS)" "SQL"
                 booking -> booking_db "Lee y escribe asistencias y QR" "SQL"
                 payment -> payment_db "Lee y escribe pagos" "SQL"
-                booking -> cache "Valida QR de un solo uso" "TCP"
+                booking -> cache "Valida QR de un solo uso (propuesto)" "TCP"
+                event -> cache "Cachea consultas del mapa" "TCP"
                 ai -> cache "Controla límite de solicitudes" "TCP"
-                ai -> ai_db "Guarda recomendaciones" "SQL"
+                ai -> ai_db "Guarda recomendaciones" "Protocolo MongoDB"
                 analytics -> analytics_db "Guarda conteos" "Protocolo MongoDB"
                 notification -> notification_db "Guarda registros de envío" "Protocolo MongoDB"
 
