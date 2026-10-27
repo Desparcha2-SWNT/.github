@@ -1187,3 +1187,23 @@ RIESGOS: Asignar a personas equivocadas; modificar contenido de los repositorios
 - **Validación (riesgos):** Los integrantes se leyeron de Jira (no se inventaron). Los cambios en los repositorios se aplicaron solo tras mostrar la comparativa y recibir el "aplícalo tal cual".
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Las asignaciones las hizo el agente y el equipo no las ha confirmado.
 
+## P43
+- **Fecha:** 2026-10-26
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparación de fuentes)
+- **Prompt utilizado:**
+
+```
+ROL: Analista de producto que estudia la competencia.
+CONTEXTO: El usuario listó 17 proyectos de la misma materia y organizaciones de GitHub de equipos con ideas parecidas (PAY-CHECK, DiNNo, TRUCKCAR, TendIA, OmniTask).
+TAREA: Hacer una revisión exhaustiva de los repositorios de la competencia directa y buscar a los miembros de cada equipo en GitHub.
+FORMATO: Informe comparativo por proyecto: estructura, actividad, madurez y equipo.
+RIESGOS: Atribuir a una persona una cuenta de GitHub equivocada; sacar conclusiones de repositorios casi vacíos.
+```
+
+- **Resultado obtenido:** Inventario de organizaciones, composición de repositorios, actividad y patrones de equipo, con los miembros encontrados y los que no se pudieron verificar.
+- **Validación (riesgos):** Los datos salieron de la CLI de GitHub y no se completó ninguna cuenta sin coincidencia clara.
+- **Decisión de uso (propuesta):** Aceptado. Información para uso interno del equipo.
+
