@@ -1220,7 +1220,7 @@ FORMATO: Texto listo para copiar, con puntos accionables.
 RIESGOS: Atribuir al profesor algo que no dijo; mezclar la retroalimentación de otros grupos con la de Festa.
 ```
 
-- **Resultado obtenido:** Transcripción local con faster-whisper y un resumen con los puntos del profesor: una base de datos por microservicio, stateless y autoescalado visibles, caché local del QR, modelo de costos, microservicios frente a monolito, distribución del APK por QR, créditos de Azure y scripts de despliegue.
+- **Resultado obtenido:** Transcripción local con faster-whisper y un resumen con los puntos del profesor: una base de datos por microservicio, stateless y autoescalado visibles, caché local del QR, modelo de costos, microservicios frente a monolito, distribución del APK por QR, créditos de AWS y scripts de despliegue.
 - **Validación (riesgos):** La transcripción se revisó contra el audio en los pasajes sobre Festa. El mp3 se convirtió con ffmpeg porque el lector fallaba con su encabezado.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Una transcripción automática puede tener errores de nombres.
 
@@ -1242,7 +1242,7 @@ RIESGOS: Dejar diagramas que se contradigan entre sí; presentar como decidido e
 
 - **Resultado obtenido:** Las dos páginas de Lucid presentadas ahora muestran una base propia por servicio y Redis como caché efímera; el C4 y la documentación se alinearon. El ADR 0002 registra el aislamiento como decidido y el motor como pendiente.
 - **Validación (riesgos):** Se exportaron las imágenes de Lucid y de Structurizr para comprobar que no quedaran bases compartidas. Se buscó en los textos cualquier mención de PostgreSQL o MongoDB compartidos.
-- **Decisión de uso (propuesta):** Aceptado con ajustes. Quedan pendientes las correcciones que dependen de datos del equipo (costos, créditos de Azure).
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Quedan pendientes las correcciones que dependen de datos del equipo (costos, créditos de AWS).
 
 ## P46
 - **Fecha:** 2026-10-26
@@ -1260,7 +1260,7 @@ FORMATO: Historias editadas y tareas nuevas con etiquetas festa-*, sin responsab
 RIESGOS: Reescribir historias cerradas; asignar responsables sin consultar.
 ```
 
-- **Resultado obtenido:** SCRUM-14 y SCRUM-40 reescritos; comentario de la decisión en SCRUM-121 (cerrada); tareas nuevas SCRUM-130 a 135 (motor de cada base, costos, microservicios frente a monolito, APK por QR, créditos de Azure y escalado).
+- **Resultado obtenido:** SCRUM-14 y SCRUM-40 reescritos; comentario de la decisión en SCRUM-121 (cerrada); tareas nuevas SCRUM-130 a 135 (motor de cada base, costos, microservicios frente a monolito, APK por QR, créditos de AWS y escalado).
 - **Validación (riesgos):** Primero se buscó en Jira qué incidencias mencionaban bases de datos; la respuesta de cada edición confirmó el cambio. Las tareas nuevas quedaron sin responsable.
 - **Decisión de uso (propuesta):** Aceptado. Queda pendiente repartir las tareas nuevas en el planning del equipo.
 
