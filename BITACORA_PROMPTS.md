@@ -1227,3 +1227,23 @@ RIESGOS: Atribuir al profesor algo que no dijo; mezclar la retroalimentación de
 - **Validación (riesgos):** La transcripción se revisó contra el audio en los pasajes sobre Festa. El mp3 se convirtió con ffmpeg porque el lector fallaba con su encabezado.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Una transcripción automática puede tener errores de nombres.
 
+## P45
+- **Fecha:** 2026-10-26
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Instrucción dirigida + Iterative Refinement
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de software que aplica la retroalimentación del profesor.
+CONTEXTO: El profesor pidió que cada microservicio tenga su propia base de datos. En la exposición solo se mostraron el diagrama de arquitectura anterior y el nuevo de Azure en Lucid, no los C4.
+TAREA: Corregir todo según la retroalimentación: diagramas de Lucid, C4, documentos de alcance y ADR.
+FORMATO: Páginas de Lucid actualizadas, festa.dsl con una base por servicio, imágenes C4 reexportadas y documentos al día.
+RIESGOS: Dejar diagramas que se contradigan entre sí; presentar como decidido el motor de cada base, que sigue pendiente.
+```
+
+- **Resultado obtenido:** Las dos páginas de Lucid presentadas ahora muestran una base propia por servicio y Redis como caché efímera; el C4 y la documentación se alinearon. El ADR 0002 registra el aislamiento como decidido y el motor como pendiente.
+- **Validación (riesgos):** Se exportaron las imágenes de Lucid y de Structurizr para comprobar que no quedaran bases compartidas. Se buscó en los textos cualquier mención de PostgreSQL o MongoDB compartidos.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Quedan pendientes las correcciones que dependen de datos del equipo (costos, créditos de Azure).
+
