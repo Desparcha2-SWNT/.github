@@ -1207,3 +1207,23 @@ RIESGOS: Atribuir a una persona una cuenta de GitHub equivocada; sacar conclusio
 - **Validación (riesgos):** Los datos salieron de la CLI de GitHub y no se completó ninguna cuenta sin coincidencia clara.
 - **Decisión de uso (propuesta):** Aceptado. Información para uso interno del equipo.
 
+## P44
+- **Fecha:** 2026-10-26
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Asistente que procesa la retroalimentación de la sustentación.
+CONTEXTO: El profesor dio retroalimentación en audio a todos los grupos; la del proyecto del usuario fue la última. El audio dura unos 73 minutos.
+TAREA: Transcribir el audio, dar la retroalimentación completa (general y la específica de Festa) y redactarla para enviar al grupo de WhatsApp.
+FORMATO: Texto listo para copiar, con puntos accionables.
+RIESGOS: Atribuir al profesor algo que no dijo; mezclar la retroalimentación de otros grupos con la de Festa.
+```
+
+- **Resultado obtenido:** Transcripción local con faster-whisper y un resumen con los puntos del profesor: una base de datos por microservicio, stateless y autoescalado visibles, caché local del QR, modelo de costos, microservicios frente a monolito, distribución del APK por QR, créditos de Azure y scripts de despliegue.
+- **Validación (riesgos):** La transcripción se revisó contra el audio en los pasajes sobre Festa. El mp3 se convirtió con ffmpeg porque el lector fallaba con su encabezado.
+- **Decisión de uso (propuesta):** Aceptado con ajustes. Una transcripción automática puede tener errores de nombres.
+
