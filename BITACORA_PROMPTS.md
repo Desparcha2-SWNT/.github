@@ -1247,3 +1247,23 @@ RIESGOS: Dejar diagramas que se contradigan entre sí; presentar como decidido e
 - **Validación (riesgos):** Se exportaron las imágenes de Lucid y de Structurizr para comprobar que no quedaran bases compartidas. Se buscó en los textos cualquier mención de PostgreSQL o MongoDB compartidos.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. Quedan pendientes las correcciones que dependen de datos del equipo (costos, créditos de Azure).
 
+## P46
+- **Fecha:** 2026-10-26
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Sonnet 5.5 (Claude Code)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que mantiene el backlog coherente con las decisiones.
+CONTEXTO: La decisión de una base de datos por servicio y la retroalimentación del profesor obligan a actualizar Jira.
+TAREA: Indicar qué cambiar en Jira y aplicarlo, creando las tareas que salen de la retroalimentación.
+FORMATO: Historias editadas y tareas nuevas con etiquetas festa-*, sin responsable.
+RIESGOS: Reescribir historias cerradas; asignar responsables sin consultar.
+```
+
+- **Resultado obtenido:** SCRUM-14 y SCRUM-40 reescritos; comentario de la decisión en SCRUM-121 (cerrada); tareas nuevas SCRUM-130 a 135 (motor de cada base, costos, microservicios frente a monolito, APK por QR, créditos de Azure y escalado).
+- **Validación (riesgos):** Primero se buscó en Jira qué incidencias mencionaban bases de datos; la respuesta de cada edición confirmó el cambio. Las tareas nuevas quedaron sin responsable.
+- **Decisión de uso (propuesta):** Aceptado. Queda pendiente repartir las tareas nuevas en el planning del equipo.
+
