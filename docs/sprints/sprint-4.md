@@ -23,11 +23,21 @@ Tablero: <https://desparcha2.atlassian.net/jira/software/projects/SCRUM/boards/1
 ## Historias incluidas
 | Historia | Responsable |
 |---|---|
-| SCRUM-26 RF11 · Compra de entradas dentro de la app | por asignar |
-| SCRUM-27 RF11 · Comisión del 8 % por entrada (split de pago) | por asignar |
-| SCRUM-28 RF10 · Código QR por entrada | por asignar |
-| SCRUM-29 RF10 · Escaneo y validación de QR en la puerta | por asignar |
-| SCRUM-35 RF15 · Panel de comercio | por asignar |
+| SCRUM-26 RF11 · Compra de entradas dentro de la app | Carlos (82, 84, 85) · Duque (83) |
+| SCRUM-27 RF11 · Comisión del 8 % por entrada (split de pago) | Brayan (86, 87, 88) |
+| SCRUM-28 RF10 · Código QR por entrada | Juan (89) · Duque (90, 91) |
+| SCRUM-29 RF10 · Escaneo y validación de QR en la puerta | Juan (93, 94) · Manuel (92) · Isaac (95) |
+| SCRUM-35 RF15 · Panel de comercio | Isaac (112) · Manuel (113) |
+
+Son 16 subtareas: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 2 · Manuel 2. Es el sprint con menos carga a propósito, como colchón para la integración y la demostración final.
+
+## Ruta crítica (fechas de vencimiento en Jira)
+- **12 nov:** SCRUM-82 (Wompi) y 83 (pantalla de compra).
+- **13 nov:** 84 (webhook) y 86 (split).
+- **14 nov:** 89 (QR), 93 (validación), 85, 87.
+- **15 nov:** 94, 90, 92, 88.
+- **16 nov:** 91, 95, 112.
+- **17 nov:** 113. **18 nov:** demostración.
 
 ## Fuera de alcance
 Notificaciones push, compartir en redes, reportes y la gamificación (Sprint 5, que no se hará).
