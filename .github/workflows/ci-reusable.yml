@@ -23,6 +23,10 @@ on:
         description: Lenguaje para CodeQL (javascript-typescript, python, java-kotlin, ...)
         type: string
         default: javascript-typescript
+      codeql-build-mode:
+        description: Modo de extracción de CodeQL. "none" analiza el código fuente sin compilar (sirve para Java, JavaScript y Python)
+        type: string
+        default: none
 
 permissions:
   contents: read
@@ -89,4 +93,5 @@ jobs:
       - uses: github/codeql-action/init@v3
         with:
           languages: ${{ inputs.codeql-language }}
+          build-mode: ${{ inputs.codeql-build-mode }}
       - uses: github/codeql-action/analyze@v3
