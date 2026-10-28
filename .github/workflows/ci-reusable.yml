@@ -1,0 +1,92 @@
+# CI reutilizable para los repositorios festa-*.
+# Se llama desde cada repo con:  uses: Desparcha2-SWNT/.github/.github/workflows/ci-reusable.yml@main
+# Qué hace: (1) escaneo de secretos y vulnerabilidades, (2) build y pruebas si el repo es Node.js,
+# (3) CodeQL opcional. Ajustar los pasos de build/pruebas cuando un servicio use otro lenguaje.
+name: CI reutilizable
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: Versión de Node.js para build y pruebas
+        type: string
+        default: "20"
+      working-directory:
+        description: Carpeta del proyecto dentro del repositorio
+        type: string
+        default: "."
+      enable-codeql:
+        description: Activa el análisis estático con CodeQL (requiere repo público o GitHub Advanced Security)
+        type: boolean
+        default: false
+      codeql-language:
+        description: Lenguaje para CodeQL (javascript-typescript, python, java-kotlin, ...)
+        type: string
+        default: javascript-typescript
+
+permissions:
+  contents: read
+
+jobs:
+  seguridad:
+    name: Secretos y vulnerabilidades
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trivy (secretos, dependencias y configuración)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+
+  build-y-pruebas:
+    name: Build y pruebas
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detectar proyecto Node.js
+        id: node
+        run: |
+          if [ -f package.json ]; then echo "existe=true" >> "$GITHUB_OUTPUT"; else echo "existe=false" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-node@v4
+        if: steps.node.outputs.existe == 'true'
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - name: Instalar dependencias
+        if: steps.node.outputs.existe == 'true'
+        run: npm ci
+      - name: Linter
+        if: steps.node.outputs.existe == 'true'
+        run: npm run lint --if-present
+      - name: Pruebas
+        if: steps.node.outputs.existe == 'true'
+        run: npm test --if-present
+      - name: Build
+        if: steps.node.outputs.existe == 'true'
+        run: npm run build --if-present
+      - name: Aviso si no es Node.js
+        if: steps.node.outputs.existe != 'true'
+        run: echo "No se encontró package.json. Agrega aquí los pasos de build y pruebas del lenguaje de este servicio."
+
+  codeql:
+    name: Análisis estático (CodeQL)
+    if: ${{ inputs.enable-codeql }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.codeql-language }}
+      - uses: github/codeql-action/analyze@v3

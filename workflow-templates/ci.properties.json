@@ -1,0 +1,6 @@
+{
+  "name": "CI Festa (secretos, vulnerabilidades, build y pruebas)",
+  "description": "Llama al flujo reutilizable de la organización: escaneo con Trivy y build y pruebas en cada pull request a develop y main.",
+  "iconName": "octicon shield-check",
+  "categories": ["Continuous integration", "Security"]
+}
