@@ -4,32 +4,92 @@ Esta guía aplica a todos los repositorios `festa-*` de la organización. GitHub
 
 ## 1. Ramas
 
-| Rama | Para qué | Quién escribe |
-|---|---|---|
-| `main` | Lo que se demuestra y se entrega al final de cada sprint | Solo por pull request desde `develop` (o `hotfix/*`) |
-| `develop` | Integración del sprint en curso | Solo por pull request desde ramas de trabajo |
-| `feature/SCRUM-<n>-<descripcion>` | Una historia o subtarea nueva | Quien tenga la historia asignada |
-| `fix/SCRUM-<n>-<descripcion>` | Corrección de un error | Quien lo corrige |
-| `hotfix/SCRUM-<n>-<descripcion>` | Error urgente en `main` | Se mezcla a `main` y luego a `develop` |
-| `docs/...`, `chore/...`, `test/...` | Documentación, mantenimiento, pruebas | Cualquiera |
+### Ramas permanentes
 
-Reglas:
-- **Nadie hace commits directos en `main` ni en `develop`.**
-- Las ramas de trabajo salen de `develop` y se mantienen cortas (máximo 2 o 3 días). Si una historia es más grande, se parte.
-- El nombre incluye la clave de Jira (`SCRUM-17`): así Jira enlaza la rama, los commits y el pull request con la historia.
-- Al cerrar el sprint se abre un pull request de `develop` a `main`; ese es el incremento que se demuestra.
+| Rama | Para qué | Cómo se actualiza |
+|---|---|---|
+| `main` | Lo que se demuestra y se entrega al final de cada sprint | Solo por pull request desde `develop` o desde una rama `hotfix/*` |
+| `develop` | Integración del sprint en curso | Solo por pull request desde ramas de trabajo |
+
+**Nadie hace commits directos en `main` ni en `develop`.** Los repositorios son privados y en el plan gratuito GitHub no deja proteger ramas, así que esta regla depende de todos.
+
+### Ramas de trabajo
+
+Formato:
+
+```
+<tipo>/SCRUM-<n>-<descripcion>
+```
+
+- **`<tipo>`** dice qué clase de cambio es:
+
+  | Tipo | Cuándo |
+  |---|---|
+  | `feature` | Funcionalidad nueva (historia o subtarea) |
+  | `fix` | Corrección de un error en `develop` |
+  | `hotfix` | Error urgente en `main`. Sale de `main`, se mezcla a `main` y luego a `develop` |
+  | `docs` | Solo documentación |
+  | `test` | Solo pruebas |
+  | `refactor` | Cambio interno sin cambiar el comportamiento |
+  | `ci` | Pipelines y automatización |
+  | `chore` | Mantenimiento: dependencias, configuración, limpieza |
+
+- **`SCRUM-<n>`** es la clave de Jira **en mayúsculas**, tal como aparece en el tablero. Con ella Jira enlaza la rama, los commits y el pull request con la tarea. Si la rama cubre varias subtareas de una misma historia, usa la clave de una sola: la principal, o la de la historia.
+- **`<descripcion>`** va en minúsculas y sin tildes ni `ñ`, con las palabras separadas por guiones. Debe tener de 2 a 5 palabras que digan qué se hace.
+
+| ✅ Bien | ❌ Mal | Por qué está mal |
+|---|---|---|
+| `feature/SCRUM-50-pantalla-registro` | `feat/scrum-50-51-pantallas` | Tipo `feat` en vez de `feature`, clave en minúsculas y dos claves |
+| `fix/SCRUM-29-qr-ya-utilizado` | `feature/mapa-eventos` | No tiene clave de Jira |
+| `docs/SCRUM-41-contratos-rabbitmq` | `docs/readme` | No tiene clave de Jira |
+| `ci/SCRUM-44-pipeline-auth` | `feature/SCRUM-17-Login_Google` | Mayúsculas y guion bajo en la descripción |
+
+Expresión regular equivalente, para validarla automáticamente:
+
+```
+^(feature|fix|hotfix|docs|test|refactor|ci|chore)/SCRUM-[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$
+```
+
+### Ciclo de vida
+
+1. Sale de `develop` actualizado (`hotfix/*` sale de `main`).
+2. Es corta: máximo 2 o 3 días. Si una historia es más grande, se parte en subtareas.
+3. Si `develop` avanzó mientras trabajabas, actualiza tu rama desde `develop` antes de pedir revisión.
+4. Se borra después de fusionar el pull request.
+5. Al cerrar el sprint se abre un pull request de `develop` a `main`. Ese es el incremento que se demuestra.
 
 ## 2. Commits
 
-Formato [Conventional Commits](https://www.conventionalcommits.org/es/) con la clave de Jira:
+Formato [Conventional Commits](https://www.conventionalcommits.org/es/) con la clave de Jira al final:
 
 ```
-feat(auth): inicio de sesión con Google [SCRUM-17]
-fix(booking): rechaza el QR ya utilizado [SCRUM-29]
-docs(infra): documenta los contratos de RabbitMQ [SCRUM-41]
+<tipo>(<alcance>): <descripción> [SCRUM-<n>]
+
+<cuerpo opcional: por qué se hizo el cambio>
+
+<pie opcional: trailers>
 ```
 
-Tipos: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`, `perf`, `security`.
+- **`<tipo>`:** `feat`, `fix`, `docs`, `test`, `refactor`, `ci`, `chore`, `perf`, `security`. Corresponde al tipo de la rama: una rama `feature/` lleva commits `feat`, y una `hotfix/` lleva commits `fix`.
+- **`<alcance>`:** la parte del sistema que cambia. Es el nombre del repositorio sin `festa-`: `auth`, `user`, `event`, `booking`, `payment`, `ai`, `notification`, `analytics`, `gateway`, `infra`, `mobile`. En el repositorio `.github` es el área: `ci`, `arquitectura`, `sprints`… Puede omitirse si el cambio es transversal.
+- **`<descripción>`:**
+  - en español y en presente, con el verbo en tercera persona: "agrega", "corrige", "valida";
+  - empieza en minúscula y no lleva punto final;
+  - la primera línea completa, con la clave de Jira, tiene máximo 72 caracteres.
+- **`[SCRUM-<n>]`:** la clave de Jira, entre corchetes y en mayúsculas.
+- **Cuerpo:** explica el **por qué** cuando no es obvio. Va separado por una línea en blanco.
+- **Pie:**
+  - Si el cambio rompe un contrato (API, mensajes de RabbitMQ, esquema de base de datos), agrega `BREAKING CHANGE: <qué se rompe y qué hacer>` y usa `!` después del tipo: `feat(auth)!: …`.
+  - Si el código fue generado con IA, lleva el trailer `Co-Authored-By` (ver abajo).
+
+| ✅ Bien | ❌ Mal | Por qué está mal |
+|---|---|---|
+| `feat(auth): inicio de sesión con Google [SCRUM-17]` | `login google` | No tiene tipo, alcance ni clave |
+| `fix(booking): rechaza el QR ya utilizado [SCRUM-29]` | `Fix: Arreglé el QR.` | Mayúscula inicial, verbo en pasado y punto final |
+| `docs(infra): documenta los contratos de RabbitMQ [SCRUM-41]` | `docs(infra): cambios [SCRUM-41]` | "cambios" no dice qué cambió |
+| `test(auth): cubre el bloqueo tras 5 intentos fallidos [SCRUM-54]` | `feat: varias cosas del sprint` | Un commit debe hacer una sola cosa |
+
+Haz commits pequeños y que cada uno compile. Como los pull requests se fusionan con *squash*, en `develop` solo queda el **título del pull request** como commit. Por eso el título es lo que más importa (ver sección 3).
 
 **Código generado con IA:** el commit debe indicarlo con un trailer al final del mensaje, por ejemplo:
 
@@ -41,11 +101,19 @@ Los prompts que cambien una decisión o generen código importante se registran 
 
 ## 3. Pull requests
 
-- Se abren hacia `develop` (o hacia `main` solo para cerrar el sprint o un hotfix).
-- Usan la plantilla del repositorio y enlazan la historia de Jira.
-- Necesitan **al menos una aprobación de otra persona** (nadie aprueba su propio PR) y **CI en verde**.
-- Son pequeños: idealmente menos de 400 líneas cambiadas.
-- Se mezclan con *squash* para dejar un historial legible.
+- **Título:** el mismo formato de un commit: `<tipo>(<alcance>): <descripción> [SCRUM-<n>]`. Al fusionar con *squash*, el título se vuelve el commit de `develop`. Si GitHub propone un título a partir del nombre de la rama (por ejemplo "Feature/SCRUM 50 pantalla registro"), cámbialo antes de crear el PR.
+- **Rama destino:** `develop`. Hacia `main` solo para cerrar el sprint o para un hotfix.
+- **Descripción:** se llena la plantilla del repositorio y se enlaza la tarea de Jira.
+- **Tamaño:** pequeño, idealmente menos de 400 líneas cambiadas. Si crece más, se parte en varios PR.
+- **Borrador:** si todavía no está listo para revisión, ábrelo como *draft*.
+- **Revisión:**
+  - Necesita **al menos una aprobación de otra persona**; nadie aprueba su propio PR.
+  - Necesita **CI en verde**.
+  - Quien revisa comenta sobre el código. Quien abrió el PR responde cada comentario y resuelve la conversación cuando ya está atendido.
+- **Fusión:**
+  - La hace quien abrió el PR, después de la aprobación.
+  - Se usa **Squash and merge**: el título del commit debe quedar igual al del PR.
+  - Después se borra la rama.
 
 ## 4. Cómo escribir una historia o tarea en Jira
 
