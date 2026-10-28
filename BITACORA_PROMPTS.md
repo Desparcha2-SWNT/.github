@@ -1320,3 +1320,25 @@ FORMATO: Un commit convencional por tipo de cambio y una descripción de PR con 
 - **Resultado obtenido:** `.github` #3 (base DevSecOps: ramas, plantillas, CI reutilizable y ADR) y #4 (detalle de los sprints 1 a 4) fusionados el 28 de octubre.
 - **Validación (riesgos):** Se verificó en GitHub la fecha de fusión de ambos PR. El riesgo mitigado es una versión de Trivy distinta a la del equipo.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P49
+- **Fecha:** 2026-10-28 a 2026-10-31
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Requisito con rol + historia de usuario + Gherkin
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Analista de requisitos del proyecto Festa (Scrum, tablero SCRUM en Jira).
+TAREA: Revisa las tareas del sprint 1 en Jira. Verifica que cada una tenga descripción con «Qué es», «Dónde», «Depende de», «Desbloquea a», «No incluye» y «Terminado cuando». Quita la persona asignada a las tareas que pasaron del backlog a un sprint. Crea la rama de cada tarea desde Jira y haz commits convencionales por cambio. Después dame el listado de los PR.
+RESTRICCIONES: No cambies el responsable de tareas de otros integrantes. No inventes fechas.
+FORMATO: Tabla con clave, estado antes, cambio aplicado y pendiente.
+```
+
+- **Resultado obtenido:** Primer PR de mis tareas del sprint 1: `festa-auth-service` #5 (`feature/SCRUM-126-autorizacion-datos`), abierto el 31 de octubre y fusionado el 3 de noviembre. En `.github`, #7 (política de privacidad y autorización de datos, SCRUM-129), abierto el 31 de octubre y fusionado el 4 de noviembre.
+- **Validación (riesgos):** Los estados de Jira (fechas, responsables, backlog) no se verificaron en el tablero (verificar). El riesgo mitigado es asignar tareas a quien no corresponde.
+- **Decisión de uso:** [confirmar con el autor]
