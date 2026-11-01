@@ -1342,3 +1342,25 @@ FORMATO: Tabla con clave, estado antes, cambio aplicado y pendiente.
 - **Resultado obtenido:** Primer PR de mis tareas del sprint 1: `festa-auth-service` #5 (`feature/SCRUM-126-autorizacion-datos`), abierto el 31 de octubre y fusionado el 3 de noviembre. En `.github`, #7 (política de privacidad y autorización de datos, SCRUM-129), abierto el 31 de octubre y fusionado el 4 de noviembre.
 - **Validación (riesgos):** Los estados de Jira (fechas, responsables, backlog) no se verificaron en el tablero (verificar). El riesgo mitigado es asignar tareas a quien no corresponde.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P50
+- **Fecha:** 2026-11-01 a 2026-11-07
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Diseño (a posteriori: el código ya existía cuando se ajustó el diagrama)
+- **Técnica de prompting utilizada:** Chain-of-Thought + verificación contra fuente (repositorios)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Arquitecto del modelo C4 de Festa.
+TAREA: El diagrama C4 es el diseño de referencia de los servicios. Como el código de los repos festa-* ya estaba escrito, úsalo para validar el diagrama de arquitectura y de despliegue en Lucid: primero lista servicios y puertos en los repos, luego compara con Lucid y corrige solo lo que no coincide. Después actualiza `festa.dsl` y el ADR 0003 (Gemini) con esa misma lista.
+RESTRICCIONES: No cambies la notación C4 ni agregues servicios que no existen. No uses Azure ni GCP (obsoletos).
+FORMATO: Lista de diferencias con archivo y línea, y el cambio aplicado a cada una.
+```
+
+- **Resultado obtenido:** `.github` #8 (ADR 0003, decide Gemini como proveedor de LLM, SCRUM-98), fusionado el 3 de noviembre. `.github` #11 (alinea README, `festa.dsl` y alcance con el modelo vigente), fusionado el 10 de noviembre. `.github` #12 (nombra a AWS como proveedor de la nube, SCRUM-129), fusionado el 10 de noviembre.
+- **Validación (riesgos):** El paso de comparación evita diagramas con servicios inventados. Se verificó en GitHub. **Lección del ciclo:** lo correcto es diagramar antes de programar y programar a partir del diagrama. Aquí se hizo al revés: el diagrama se ajustó al código ya escrito. Por eso la entrada registra diseño a posteriori y no diseño previo.
+- **Decisión de uso:** [confirmar con el autor]
