@@ -37,7 +37,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | Sistema | Descripción |
 |---|:---:|
 | Wompi (pasarela de pagos) | Servicio externo que procesa el cobro de boletos y distribuye la comisión entre el organizador (92 %) y Festa (8 %) mediante split payment. |
-| Azure OpenAI | Servicio gestionado de IA generativa (proveedor propuesto) que genera descripciones de eventos y recomendaciones personalizadas. |
+| Google Gemini API | Modelo de lenguaje externo (proveedor decidido en el ADR 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
 | FCM / APNs | Servicios de Google y Apple que entregan las notificaciones push al dispositivo; Festa los usa a través de Azure Notification Hubs (fase 2). |
 | Google Identity | Proveedor externo (OAuth2) de autenticación federada para iniciar sesión. |
 | Mapbox | Servicio externo de mapas que usa la app para mostrar eventos y clústeres. |
@@ -93,8 +93,8 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 ### 5.3 Relaciones principales
 
-- La app llama solo al gateway (HTTPS/WSS); el gateway enruta a cada servicio por REST.
-- `festa-auth-service` se federa con Google Identity; `festa-payment-service` cobra con Wompi; `festa-ai-service` consulta a Azure OpenAI; `festa-notification-service` envía push a FCM/APNs; la app muestra el mapa con Mapbox.
+- La app llama solo al gateway (HTTPS); el gateway enruta a cada servicio por REST.
+- `festa-auth-service` se federa con Google Identity; `festa-payment-service` cobra con Wompi; `festa-ai-service` consulta a la API de Gemini; `festa-notification-service` envía push a FCM/APNs; la app muestra el mapa con Mapbox.
 - Los servicios publican y consumen eventos en RabbitMQ: pago aprobado, confirmaciones y QR, eventos de dominio y métricas.
 - El equipo de plataforma observa el sistema a través de Prometheus + Grafana.
 
@@ -139,7 +139,7 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 | Limitador de solicitudes | Aplica el tope por usuario y por minuto, con contadores en Redis (RNF8). |
 | Orquestador de prompts | Arma el prompt con el contexto del evento y del usuario (RF8, RF9). |
 | Persistencia de descripciones | Guarda las descripciones generadas para no volver a pedirlas (RNF8). |
-| Cliente Azure OpenAI | Llama al modelo y maneja errores y reintentos. |
+| Cliente Gemini | Llama al modelo y maneja errores y reintentos. |
 
 ## 7. Vista Dinámica: compra de un boleto
 
@@ -253,7 +253,7 @@ Los diagramas editables están en el documento de Lucid del proyecto, páginas "
 |---|---|
 | Plataforma de despliegue: el equipo decidió Azure; la lista exacta de servicios (ADR 0001) sigue pendiente. | Propuesta en Lucid, página "Arquitectura Azure" |
 | Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Los motores actuales son los de `festa-infra`; falta confirmarlos con el equipo (ADR 0002). | Decidido el aislamiento; motor por confirmar |
-| Proveedor de LLM: se propone Azure OpenAI (ADR 0003). | Pendiente |
+| Proveedor de LLM: Gemini (ADR 0003). | Decidido (falta ratificar con el equipo) |
 | Contratos de mensajes de RabbitMQ (ADR 0004). | Hechos en `festa-infra` (38 eventos, rama `feat/fase-0-infra-contratos`); falta fusionarlos y registrar el ADR |
 | RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
 
