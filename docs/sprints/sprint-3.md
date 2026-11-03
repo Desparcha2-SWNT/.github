@@ -32,7 +32,7 @@ Tablero: <https://desparcha2.atlassian.net/jira/software/projects/SCRUM/boards/1
 Carga: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 4 · Manuel 4.
 
 ## Ruta crítica (fechas de vencimiento en Jira)
-- **5 nov:** SCRUM-74 (consulta geoespacial), 71 (API de asistencia), 73 (Mapbox) y 98 (proveedor de LLM, antes se debe cerrar el ADR 0003).
+- **5 nov:** SCRUM-74 (consulta geoespacial), 71 (API de asistencia), 73 (Mapbox) y 98 (proveedor de LLM: Gemini, ya decidido en el ADR 0003).
 - **6 nov:** 80 (API de búsqueda), 79 (UI de filtros), 96 (chat).
 - **7 nov:** 75, 76, 70, 97, 102.
 - **8 nov:** 77, 81, 72, 99, 100, 101.
@@ -43,7 +43,7 @@ Carga: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 4 · Manuel 4.
 Pagos, QR y panel de comercio.
 
 ## Riesgos
-- Hay que elegir el proveedor del modelo de lenguaje (ADR 0003) antes del 5 de noviembre.
+- El proveedor del modelo de lenguaje es Gemini (ADR 0003); falta la clave de API y el límite de uso antes del 5 de noviembre.
 - Las descripciones generadas deben guardarse para no volver a pagarlas (RNF8).
 - El mapa debe verse en menos de 2 segundos (RNF1); hay que medirlo (SCRUM-78).
 - El consentimiento de ubicación debe estar antes de leer la ubicación del dispositivo (Ley 1581).

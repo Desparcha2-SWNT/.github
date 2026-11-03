@@ -10,7 +10,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         comercio = person "Comercio / organizador" "Crea y gestiona eventos, vende boletería y mide el retorno desde su panel."
 
         pagos = softwareSystem "Wompi (pasarela de pagos)" "Servicio externo que procesa el cobro de boletos y reparte la comisión (8 % Festa, 92 % organizador)." "External"
-        ia = softwareSystem "Azure OpenAI" "Servicio gestionado de IA generativa para descripciones de eventos y recomendaciones (proveedor propuesto)." "External"
+        ia = softwareSystem "Google Gemini API" "Modelo de lenguaje externo (gemini-2.5-flash) para descripciones de eventos y recomendaciones (ADR 0003)." "External"
         notificaciones = softwareSystem "FCM / APNs" "Servicios de Google y Apple que entregan notificaciones push al dispositivo." "External"
         identidad = softwareSystem "Google Identity" "Proveedor externo de autenticación federada (OAuth2) para iniciar sesión." "External"
         mapas = softwareSystem "Mapbox" "Servicio externo de mapas que usa la app para mostrar eventos y clústeres." "External"
@@ -60,7 +60,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     limitador = component "Limitador de solicitudes" "Aplica el tope por usuario y por minuto (RNF8)." "Middleware"
                     orquestador = component "Orquestador de prompts" "Arma el prompt con contexto del evento y del usuario (RF8, RF9)." "Servicio"
                     descripciones = component "Persistencia de descripciones" "Guarda las descripciones generadas para no volver a pedirlas (RNF8)." "Acceso a datos"
-                    cliente = component "Cliente Azure OpenAI" "Llama al modelo y maneja errores y reintentos." "Cliente HTTP"
+                    cliente = component "Cliente Gemini" "Llama al modelo y maneja errores y reintentos." "Cliente HTTP"
                     api -> limitador "Valida el cupo"
                     api -> orquestador "Solicita la generación"
                     orquestador -> descripciones "Reutiliza o guarda descripciones"
@@ -83,7 +83,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 
                 # Usuarios hacia la app
-                mobile -> gateway "Consume la API" "HTTPS / WSS"
+                mobile -> gateway "Consume la API" "HTTPS"
                 mobile -> mapas "Muestra el mapa" "SDK Mapbox"
 
                 # Gateway hacia servicios
