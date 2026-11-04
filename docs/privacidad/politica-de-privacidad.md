@@ -45,8 +45,7 @@ Solo con los proveedores necesarios para que Festa funcione, que los tratan por 
 - el proveedor de la nube donde se despliega el servicio [por definir: Azure, AWS o GCP];
 - Wompi, para procesar los pagos (Festa no almacena números de tarjeta);
 - Mapbox, para mostrar el mapa;
-- el proveedor del modelo de lenguaje de las recomendaciones [por definir];
-- Google, si eliges iniciar sesión con tu cuenta de Google.
+- Google, como proveedor del modelo de lenguaje de las recomendaciones (API de Gemini, [ADR 0003](../adr/0003-proveedor-llm-gemini.md)) y, si eliges iniciar sesión con tu cuenta de Google, también como proveedor de esa autenticación.
 
 Podemos transferir datos fuera de Colombia cuando alguno de estos proveedores opere en otro país, con las garantías que exige la ley.
 
