@@ -1364,3 +1364,28 @@ FORMATO: Lista de diferencias con archivo y línea, y el cambio aplicado a cada 
 - **Resultado obtenido:** `.github` #8 (ADR 0003, decide Gemini como proveedor de LLM, SCRUM-98), fusionado el 3 de noviembre. `.github` #11 (alinea README, `festa.dsl` y alcance con el modelo vigente), fusionado el 10 de noviembre. `.github` #12 (nombra a AWS como proveedor de la nube, SCRUM-129), fusionado el 10 de noviembre.
 - **Validación (riesgos):** El paso de comparación evita diagramas con servicios inventados. Se verificó en GitHub. **Lección del ciclo:** lo correcto es diagramar antes de programar y programar a partir del diagrama. Aquí se hizo al revés: el diagrama se ajustó al código ya escrito. Por eso la entrada registra diseño a posteriori y no diseño previo.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P51
+- **Fecha:** 2026-11-05 a 2026-11-07
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Self-Critique (critique-and-correct) + Delimitadores
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de mis propios PR antes de responder al revisor del equipo.
+TAREA: Evalúa cada comentario del bloque contra la rama develop (no contra main). Si ya está corregido, dilo con evidencia. Si es corregible, corrígelo en un commit. Después critica tu respuesta: ¿la línea citada es la correcta?
+<comentarios>
+[pegar comentario del revisor, con su enlace]
+</comentarios>
+RESTRICCIONES: No escribas «solucionado» sin el commit. No respondas en hilos de otros integrantes.
+FORMATO: Un bloque por comentario: clasificación, evidencia (commit o línea) y respuesta propuesta.
+```
+
+- **Resultado obtenido:** `.github` #10 (CI reutilizable que compila y prueba por stack, fusionado el 7 de noviembre). `festa-auth-service` #6 (pide la autorización de datos personales al registrarse, SCRUM-126), fusionado el 7 de noviembre. Se verificó que la protección de rama de `user-service` (develop) aparecía como pendiente en un comentario.
+- **Validación (riesgos):** El paso de autocrítica evitó responder con una línea equivocada. Se verificó en GitHub.
+- **Decisión de uso:** [confirmar con el autor]
