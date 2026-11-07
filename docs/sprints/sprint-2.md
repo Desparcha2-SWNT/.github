@@ -29,6 +29,9 @@ Tablero: <https://desparcha2.atlassian.net/jira/software/projects/SCRUM/boards/1
 | SCRUM-20 RF4 · Crear evento | Carlos | |
 | SCRUM-21 RF4 · Editar y cancelar evento | Brayan | |
 
+## Asignación en Jira (6 de noviembre de 2026)
+Todas las subtareas tienen responsable en Jira, con el reparto de arriba. Además, de la retroalimentación del profesor: SCRUM-130 (ADR 0002, motor de cada base de datos) es de Carlos y SCRUM-134 (créditos de AWS y scripts de redespliegue) es de Brayan. Con esas dos tareas, Carlos y Brayan tienen 4 en este sprint y los demás 3.
+
 ## Ruta crítica (fechas de vencimiento en Jira)
 APIs primero, pantallas después, pruebas al final:
 - **29 oct:** SCRUM-57 (API de perfil) y 60 (API de verificación), de Juan; 64 (API de eventos), de Carlos; 49 (secretos), de Brayan.
