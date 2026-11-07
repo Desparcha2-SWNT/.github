@@ -2,7 +2,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
     !identifiers hierarchical
 
-    # Fuente: repositorios Desparcha2-SWNT/festa-* (24-oct-2026) y decisión de despliegue en Azure (25-oct-2026).
+    # Fuente: repositorios Desparcha2-SWNT/festa-* (24-oct-2026) y propuesta de despliegue en Azure (25-oct-2026; la plataforma sigue por decidir, ADR 0001).
     # Lo marcado como "propuesto" depende de los ADR 0001 (plataforma) y 0002 (almacén por servicio).
 
     model {
@@ -71,15 +71,15 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
                 # festa-infra
                 broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (pod en Kubernetes; AKS propuesto, ADR 0001)" "Queue"
-                auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
-                booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
-                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
-                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "Azure Cosmos DB API para MongoDB" "Database"
-                cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Azure Cache for Redis" "Database"
+                auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
+                booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
+                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
+                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
+                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
+                cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Redis gestionado (propuesta: Azure Cache for Redis)" "Database"
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 
                 # Usuarios hacia la app
@@ -144,7 +144,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
         festa.payment -> pagos "Procesa el cobro y el split" "HTTPS"
         festa.ai -> ia "Solicita descripciones y recomendaciones" "HTTPS"
-        festa.notification -> notificaciones "Envía notificaciones push (vía Azure Notification Hubs)" "HTTPS"
+        festa.notification -> notificaciones "Envía notificaciones push (vía el servicio de push de la nube elegida)" "HTTPS"
         festa.auth -> identidad "Autentica usuarios" "OAuth2"
     }
 
