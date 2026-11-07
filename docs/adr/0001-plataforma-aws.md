@@ -1,8 +1,8 @@
 # ADR 0001 — Plataforma de despliegue: AWS
 
-- **Estado:** Propuesta (pasa a Aceptada cuando el equipo la ratifique; entonces se anotan la fecha y quién participó)
+- **Estado:** Aceptada (ratificada por el equipo el 2026-11-07)
 - **Fecha:** 2026-11-07
-- **Participantes:** propuesto por Juan Sebastián Guayazán Clavijo; Brayan Loaiza (dueño de SCRUM-134) está de acuerdo por los créditos de AWS. Falta que el resto del equipo Desparcha2 lo ratifique.
+- **Participantes:** propuesto por Juan Sebastián Guayazán Clavijo; Brayan Loaiza (dueño de SCRUM-134) lo respaldó por los créditos de AWS. El equipo Desparcha2 lo confirmó el 2026-11-07 (comunicado por Juan; los nombres de quienes lo ratificaron no están anotados).
 - **Historias relacionadas (Jira):** SCRUM-134, SCRUM-131, SCRUM-135
 
 ## Contexto
