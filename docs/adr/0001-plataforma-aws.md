@@ -1,8 +1,8 @@
 # ADR 0001 — Plataforma de despliegue: AWS
 
-- **Estado:** Aceptada
+- **Estado:** Propuesta (pasa a Aceptada cuando el equipo la ratifique; entonces se anotan la fecha y quién participó)
 - **Fecha:** 2026-11-07
-- **Participantes:** decidido por Juan Sebastián Guayazán Clavijo; el equipo Desparcha2 debe ratificarlo.
+- **Participantes:** propuesto por Juan Sebastián Guayazán Clavijo; Brayan Loaiza (dueño de SCRUM-134) está de acuerdo por los créditos de AWS. Falta que el resto del equipo Desparcha2 lo ratifique.
 - **Historias relacionadas (Jira):** SCRUM-134, SCRUM-131, SCRUM-135
 
 ## Contexto
@@ -28,4 +28,7 @@ Se despliega en **AWS**, en la región us-east-1, con los servicios de la págin
 - Hay que escribir la infraestructura como código y los scripts de redespliegue (SCRUM-134), y calcular el costo en AWS por transacción y uso proyectado, sin capas gratuitas (SCRUM-131).
 - La política de privacidad debe nombrar a AWS como proveedor de la nube (SCRUM-129).
 - Si se prefiere ECR a GHCR, se cambia el CD de los servicios; hoy publican en GHCR.
+- **Amazon MQ** no carga `definitions.json` al arrancar, como sí lo hace el Docker Compose de `festa-infra`. La topología (exchanges, colas `.inbox`, `.retry` y `.dlq`, y `festa.dlx`) hay que aplicarla con la API de administración de RabbitMQ desde los scripts de redespliegue (SCRUM-134).
+- **ElastiCache** debe usarse con *cluster mode disabled*: el reparto en las bases 0 (mapa), 1 (límite de IA) y 2 (caché de perfiles de user-service) no funciona con ElastiCache Serverless ni con el modo clúster, que solo permiten la base 0.
+- **DocumentDB** no tiene instancias de la familia micro (la más pequeña es de clase medium: db.t4g.medium o db.t3.medium) y no es 100 % compatible con MongoDB. Hay que tenerlo en cuenta en el modelo de costos (SCRUM-131) y en las pruebas de `festa-ai-service`, `festa-notification-service` y `festa-analytics-service`.
 - Pendiente: la prueba de redespliegue completo desde cero y el tiempo que tarda.
