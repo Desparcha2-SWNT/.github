@@ -42,12 +42,12 @@ No vendemos tus datos ni los usamos para fines distintos a estos sin pedirte una
 
 Solo con los proveedores necesarios para que Festa funcione, que los tratan por encargo nuestro:
 
-- el proveedor de la nube donde se despliega el servicio [por definir: Azure, AWS o GCP];
+- Amazon Web Services (AWS), proveedor de la nube donde se despliega el servicio y se guardan las bases de datos, en la región de Virginia del Norte (Estados Unidos) ([ADR 0001](../adr/0001-plataforma-aws.md));
 - Wompi, para procesar los pagos (Festa no almacena números de tarjeta);
 - Mapbox, para mostrar el mapa;
 - Google, como proveedor del modelo de lenguaje de las recomendaciones (API de Gemini, [ADR 0003](../adr/0003-proveedor-llm-gemini.md)) y, si eliges iniciar sesión con tu cuenta de Google, también como proveedor de esa autenticación.
 
-Podemos transferir datos fuera de Colombia cuando alguno de estos proveedores opere en otro país, con las garantías que exige la ley.
+Tus datos se almacenan en servidores de AWS ubicados en Estados Unidos, así que se transfieren fuera de Colombia. Lo mismo puede ocurrir con los demás proveedores cuando operen en otro país. Lo hacemos con las garantías que exige la ley.
 
 ## 5. Cómo protegemos tus datos
 
