@@ -29,7 +29,10 @@ Tablero: <https://desparcha2.atlassian.net/jira/software/projects/SCRUM/boards/1
 | SCRUM-29 RF10 · Escaneo y validación de QR en la puerta | Juan (93, 94) · Manuel (92) · Isaac (95) |
 | SCRUM-35 RF15 · Panel de comercio | Isaac (112) · Manuel (113) |
 
-Son 16 subtareas: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 2 · Manuel 2. Es el sprint con menos carga a propósito, como colchón para la integración y la demostración final.
+Son 16 subtareas (más las dos de abajo): Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 2 · Manuel 2. Es el sprint con menos carga a propósito, como colchón para la integración y la demostración final.
+
+## Asignación en Jira (6 de noviembre de 2026)
+Todas tienen responsable en Jira. Se suman SCRUM-114 (restringir el acceso a los datos del propio comercio), de Isaac, y SCRUM-133 (distribuir el APK con un código QR, de la retroalimentación del profesor), de Manuel. Con eso cada integrante tiene 3.
 
 ## Ruta crítica (fechas de vencimiento en Jira)
 - **12 nov:** SCRUM-82 (Wompi) y 83 (pantalla de compra).

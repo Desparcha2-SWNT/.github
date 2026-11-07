@@ -29,12 +29,19 @@ Tablero: <https://desparcha2.atlassian.net/jira/software/projects/SCRUM/boards/1
 | SCRUM-30 RF8 · Recomendaciones con IA | Juan | 97, 98, 99 (Juan) · 100 (Brayan) · 96 (Manuel) |
 | SCRUM-31 RF9 · Descripción con IA | Manuel | 101, 103 (Manuel) · 102 (Brayan) |
 
-Carga: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 4 · Manuel 4.
+Carga de subtareas: Carlos 3 · Brayan 3 · Duque 3 · Juan 3 · Isaac 4 · Manuel 4.
+
+## Asignación en Jira (6 de noviembre de 2026)
+Todas tienen responsable en Jira. Cambios frente al reparto de arriba:
+- **SCRUM-76** (mapa en tiempo real por WSS) sale del sprint: WSS se quitó de la arquitectura porque ningún servicio lo usa. Queda sin responsable hasta decidir si se borra o se reescribe.
+- **SCRUM-127** (consentimiento de ubicación, RNF5) entra al sprint y es de Duque. SCRUM-128 es un duplicado y se borra.
+- Tareas de la retroalimentación del profesor: SCRUM-131 (modelo de costos) es de Brayan; SCRUM-132 (microservicios frente a monolito) y SCRUM-135 (stateless y autoescalado) son de Carlos.
+- Resultado: Carlos 4 · Brayan 4 · Duque 4 · Isaac 4 · Manuel 4 · Juan 3.
 
 ## Ruta crítica (fechas de vencimiento en Jira)
 - **5 nov:** SCRUM-74 (consulta geoespacial), 71 (API de asistencia), 73 (Mapbox) y 98 (proveedor de LLM: Gemini, ya decidido en el ADR 0003).
 - **6 nov:** 80 (API de búsqueda), 79 (UI de filtros), 96 (chat).
-- **7 nov:** 75, 76, 70, 97, 102.
+- **7 nov:** 75, 70, 97, 102.
 - **8 nov:** 77, 81, 72, 99, 100, 101.
 - **9 nov:** 78 (rendimiento) y 103 (revisión del texto).
 - **11 nov:** cierre y demostración.
