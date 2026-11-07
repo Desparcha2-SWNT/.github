@@ -70,15 +70,15 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                 analytics = container "festa-analytics-service" "RF15: conteos de asistentes y boletos vendidos para el panel de comercio." "Tarea en Amazon ECS Fargate"
 
                 # festa-infra
-                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (Amazon MQ)" "Queue"
+                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (contenedor en ECS Fargate)" "Queue"
                 auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
                 user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
                 event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Amazon RDS for PostgreSQL + PostGIS (una base de datos por servicio)" "Database"
                 booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
                 payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
-                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
-                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
-                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
+                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "MongoDB (contenedor en ECS Fargate con EFS; una instancia con bases separadas)" "Database"
+                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "MongoDB (contenedor en ECS Fargate con EFS; una instancia con bases separadas)" "Database"
+                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "MongoDB (contenedor en ECS Fargate con EFS; una instancia con bases separadas)" "Database"
                 cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Amazon ElastiCache for Redis" "Database"
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 

@@ -87,7 +87,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | `festa-notification-service` | Tarea en Amazon ECS Fargate | Envío de notificaciones push (fase 2). | RF12 |
 | `festa-analytics-service` | Tarea en Amazon ECS Fargate | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
-| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB / Amazon DocumentDB (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `develop`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
+| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB como contenedor en Fargate con EFS (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `develop`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
 | Redis | Amazon ElastiCache for Redis (una instancia, con cluster mode disabled para poder usar las bases 0, 1 y 2) | Bases lógicas separadas: caché del mapa de `festa-event-service` (db 0), límite de solicitudes de `festa-ai-service` (db 1) y caché de perfiles de `festa-user-service` (db 2). La validación rápida de QR de booking es una propuesta. El rate limit del gateway lo lleva Kong. | RNF1, RNF7, RNF8 |
 | Prometheus + Grafana | Prometheus y Grafana | Métricas, tableros y alertas de los servicios. | RNF3 |
 
