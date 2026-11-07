@@ -1,16 +1,24 @@
 # CI reutilizable para los repositorios festa-*.
 # Se llama desde cada repo con:  uses: Desparcha2-SWNT/.github/.github/workflows/ci-reusable.yml@main
-# Qué hace: (1) escaneo de secretos y vulnerabilidades, (2) build y pruebas si el repo es Node.js,
-# (3) CodeQL opcional. Ajustar los pasos de build/pruebas cuando un servicio use otro lenguaje.
+# Qué hace: (1) escaneo de secretos y vulnerabilidades, (2) build y pruebas según el stack (Node.js, Maven,
+# Gradle o Flutter; si no hay ninguno detectable el job FALLA, o se omite con `stack: none`), (3) CodeQL opcional.
 name: CI reutilizable
 
 on:
   workflow_call:
     inputs:
+      stack:
+        description: Cómo compilar y probar. auto (detecta por archivo), node, maven, gradle, flutter o none (el repo compila y prueba en otro job y este se omite)
+        type: string
+        default: auto
       node-version:
         description: Versión de Node.js para build y pruebas
         type: string
         default: "20"
+      java-version:
+        description: Versión de Java (Temurin) para Maven y Gradle
+        type: string
+        default: "17"
       working-directory:
         description: Carpeta del proyecto dentro del repositorio
         type: string
@@ -49,37 +57,83 @@ jobs:
 
   build-y-pruebas:
     name: Build y pruebas
+    # Con `stack: none` el job se omite (queda "skipped", nunca en verde): el repo compila y prueba en otro job.
+    if: ${{ inputs.stack != 'none' }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - uses: actions/checkout@v4
-      - name: Detectar proyecto Node.js
-        id: node
+      - name: Detectar el stack del proyecto
+        id: stack
+        env:
+          STACK_PEDIDO: ${{ inputs.stack }}
         run: |
-          if [ -f package.json ]; then echo "existe=true" >> "$GITHUB_OUTPUT"; else echo "existe=false" >> "$GITHUB_OUTPUT"; fi
+          if [ "$STACK_PEDIDO" != "auto" ]; then stack="$STACK_PEDIDO"
+          elif [ -f package.json ]; then stack=node
+          elif [ -f pom.xml ]; then stack=maven
+          elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then stack=gradle
+          elif [ -f pubspec.yaml ]; then stack=flutter
+          else stack=ninguno
+          fi
+          echo "stack=$stack" >> "$GITHUB_OUTPUT"
+          echo "Stack: $stack"
+      - name: Fallar si no hay cómo compilar y probar
+        if: steps.stack.outputs.stack == 'ninguno'
+        run: |
+          echo "::error::No se encontró package.json, pom.xml, build.gradle ni pubspec.yaml. Un CI en verde sin compilar ni probar no cuenta para la Definition of Done. Indica el stack con 'stack:' o usa 'stack: none' si este repo compila y prueba en otro job."
+          exit 1
+
+      # Node.js
       - uses: actions/setup-node@v4
-        if: steps.node.outputs.existe == 'true'
+        if: steps.stack.outputs.stack == 'node'
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
           cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
-      - name: Instalar dependencias
-        if: steps.node.outputs.existe == 'true'
+      - name: Node.js, instalar dependencias
+        if: steps.stack.outputs.stack == 'node'
         run: npm ci
-      - name: Linter
-        if: steps.node.outputs.existe == 'true'
+      - name: Node.js, linter
+        if: steps.stack.outputs.stack == 'node'
         run: npm run lint --if-present
-      - name: Pruebas
-        if: steps.node.outputs.existe == 'true'
+      - name: Node.js, pruebas
+        if: steps.stack.outputs.stack == 'node'
         run: npm test --if-present
-      - name: Build
-        if: steps.node.outputs.existe == 'true'
+      - name: Node.js, build
+        if: steps.stack.outputs.stack == 'node'
         run: npm run build --if-present
-      - name: Aviso si no es Node.js
-        if: steps.node.outputs.existe != 'true'
-        run: echo "No se encontró package.json. Agrega aquí los pasos de build y pruebas del lenguaje de este servicio."
+
+      # Java (Maven o Gradle)
+      - uses: actions/setup-java@v4
+        if: steps.stack.outputs.stack == 'maven' || steps.stack.outputs.stack == 'gradle'
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          cache: ${{ steps.stack.outputs.stack }}
+      - name: Maven, compilar y probar
+        if: steps.stack.outputs.stack == 'maven'
+        run: mvn -B -ntp verify
+      - name: Gradle, compilar y probar
+        if: steps.stack.outputs.stack == 'gradle'
+        run: ./gradlew --no-daemon build
+
+      # Flutter
+      - uses: subosito/flutter-action@v2
+        if: steps.stack.outputs.stack == 'flutter'
+        with:
+          channel: stable
+          cache: true
+      - name: Flutter, dependencias
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter pub get
+      - name: Flutter, análisis estático
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter analyze
+      - name: Flutter, pruebas
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter test
 
   codeql:
     name: Análisis estático (CodeQL)
