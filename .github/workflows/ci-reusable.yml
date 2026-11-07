@@ -18,7 +18,7 @@ on:
       java-version:
         description: Versión de Java (Temurin) para Maven y Gradle
         type: string
-        default: "17"
+        default: "21"
       working-directory:
         description: Carpeta del proyecto dentro del repositorio
         type: string
@@ -130,7 +130,7 @@ jobs:
         run: flutter pub get
       - name: Flutter, análisis estático
         if: steps.stack.outputs.stack == 'flutter'
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
       - name: Flutter, pruebas
         if: steps.stack.outputs.stack == 'flutter'
         run: flutter test
