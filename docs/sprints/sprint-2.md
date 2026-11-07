@@ -36,7 +36,7 @@ Cambio del 7 de noviembre: Manuel ya escribió el backend de perfil, intereses y
 
 ## Ruta crítica (fechas de vencimiento en Jira)
 APIs primero, pantallas después, pruebas al final:
-- **29 oct:** SCRUM-57 (API de perfil) y 60 (API de verificación), de Juan; 64 (API de eventos), de Carlos; 49 (secretos), de Brayan.
+- **29 oct:** SCRUM-57 (API de perfil) y 60 (API de verificación), de Manuel; 64 (API de eventos), de Carlos; 49 (secretos), de Brayan.
 - **30 oct:** SCRUM-65 (geocodificación), 69 (permisos), 48 (TLS).
 - **1 nov:** pantallas 55, 56, 59 y 63, que esperan a sus APIs.
 - **2–3 nov:** 67, 68, 58, 61, 62 y 66.
