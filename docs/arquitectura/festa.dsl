@@ -2,8 +2,8 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
     !identifiers hierarchical
 
-    # Fuente: repositorios Desparcha2-SWNT/festa-* (24-oct-2026) y propuesta de despliegue en Azure (25-oct-2026; la plataforma sigue por decidir, ADR 0001).
-    # Lo marcado como "propuesto" depende de los ADR 0001 (plataforma) y 0002 (almacén por servicio).
+    # Fuente: repositorios Desparcha2-SWNT/festa-* (24-oct-2026) y decisión de desplegar en AWS (7-nov-2026, ADR 0001).
+    # Lo marcado como "propuesto" depende del ADR 0002 (almacén por servicio).
 
     model {
         persona = person "Persona interesada en eventos" "Descubre eventos y planes en un mapa en tiempo real, recibe recomendaciones y confirma su asistencia."
@@ -21,11 +21,11 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
             festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa en tiempo real, con recomendaciones por IA y venta de boletería." {
                 mobile = container "festa-mobile" "App del usuario y vista de comercio (panel simple, RF15): mapa, escáner y generador de QR, caché local del QR." "Flutter (iOS y Android)" "Mobile"
-                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Kong 3.9 DB-less (pod en Kubernetes; AKS propuesto, ADR 0001)"
-                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (pod en Kubernetes; AKS propuesto, ADR 0001)"
-                user = container "festa-user-service" "RF2 y RF3: perfiles de usuario y comercio, preferencias, verificación manual de comercios." "Pod en Kubernetes (AKS propuesto, ADR 0001)"
-                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo." "Pod en Kubernetes (AKS propuesto, ADR 0001)"
-                booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Pod en Kubernetes (AKS propuesto, ADR 0001)" {
+                gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Kong 3.9 DB-less (tarea en Amazon ECS Fargate)"
+                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (tarea en Amazon ECS Fargate)"
+                user = container "festa-user-service" "RF2 y RF3: perfiles de usuario y comercio, preferencias, verificación manual de comercios." "Tarea en Amazon ECS Fargate"
+                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo." "Tarea en Amazon ECS Fargate"
+                booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Tarea en Amazon ECS Fargate" {
                     api = component "API de asistencia y QR" "Endpoints REST: confirmar asistencia, obtener el QR y validarlo en la puerta." "REST"
                     asistencia = component "Gestor de asistencia" "Confirma la asistencia (RF7) y registra el ingreso al evento." "Servicio"
                     generador = component "Generador de QR" "Crea el token firmado de un solo uso para cada boleto (RF10)." "Servicio"
@@ -40,7 +40,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     generador -> repo "Guarda el boleto"
                     validador -> repo "Marca el QR como usado"
                 }
-                payment = container "festa-payment-service" "RF11: boletería con Wompi y split de pago (comisión del 8 %)." "Pod en Kubernetes (AKS propuesto, ADR 0001)" {
+                payment = container "festa-payment-service" "RF11: boletería con Wompi y split de pago (comisión del 8 %)." "Tarea en Amazon ECS Fargate" {
                     api = component "API de pagos" "Endpoints REST para iniciar la compra y consultar su estado." "REST"
                     cobro = component "Servicio de cobro" "Orquesta la compra de un boleto (RF11)." "Servicio"
                     split = component "Calculador de split" "Divide el valor: 8 % para Festa y 92 % para el organizador." "Servicio"
@@ -55,7 +55,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     webhook -> cobro "Actualiza el estado"
                     cobro -> publicador "Notifica el resultado"
                 }
-                ai = container "festa-ai-service" "RF8 y RF9: recomendaciones y descripciones con IA; límite de solicitudes por usuario (RNF8)." "Pod en Kubernetes (AKS propuesto, ADR 0001)" {
+                ai = container "festa-ai-service" "RF8 y RF9: recomendaciones y descripciones con IA; límite de solicitudes por usuario (RNF8)." "Tarea en Amazon ECS Fargate" {
                     api = component "API de IA" "Endpoints REST para pedir recomendaciones y descripciones." "REST"
                     limitador = component "Limitador de solicitudes" "Aplica el tope por usuario y por minuto (RNF8)." "Middleware"
                     orquestador = component "Orquestador de prompts" "Arma el prompt con contexto del evento y del usuario (RF8, RF9)." "Servicio"
@@ -66,20 +66,20 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     orquestador -> descripciones "Reutiliza o guarda descripciones"
                     orquestador -> cliente "Envía el prompt"
                 }
-                notification = container "festa-notification-service" "RF12: envío de notificaciones push (fase 2)." "Pod en Kubernetes (AKS propuesto, ADR 0001)"
-                analytics = container "festa-analytics-service" "RF15: conteos de asistentes y boletos vendidos para el panel de comercio." "Pod en Kubernetes (AKS propuesto, ADR 0001)"
+                notification = container "festa-notification-service" "RF12: envío de notificaciones push (fase 2)." "Tarea en Amazon ECS Fargate"
+                analytics = container "festa-analytics-service" "RF15: conteos de asistentes y boletos vendidos para el panel de comercio." "Tarea en Amazon ECS Fargate"
 
                 # festa-infra
-                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (pod en Kubernetes; AKS propuesto, ADR 0001)" "Queue"
-                auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server + PostGIS (una base de datos por servicio)" "Database"
-                booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "PostgreSQL gestionado, propuesta Azure Database for PostgreSQL Flexible Server (una base de datos por servicio)" "Database"
-                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
-                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
-                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "MongoDB (propuesta: Azure Cosmos DB API para MongoDB)" "Database"
-                cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Redis gestionado (propuesta: Azure Cache for Redis)" "Database"
+                broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios y contratos de mensajes." "RabbitMQ (Amazon MQ)" "Queue"
+                auth_db = container "auth_db" "Cuentas y sesiones de festa-auth-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
+                user_db = container "user_db" "Perfiles, intereses y comercios de festa-user-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
+                event_db = container "event_db" "Categorías, eventos y descripciones de festa-event-service, con consultas geoespaciales (propuesto)." "Amazon RDS for PostgreSQL + PostGIS (una base de datos por servicio)" "Database"
+                booking_db = container "booking_db" "Asistencias, boletos y códigos QR de festa-booking-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
+                payment_db = container "payment_db" "Pagos y webhooks de festa-payment-service (propuesto)." "Amazon RDS for PostgreSQL (una base de datos por servicio)" "Database"
+                ai_db = container "ai_db" "Recomendaciones de festa-ai-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
+                analytics_db = container "analytics_db" "Conteos de asistentes y boletos de festa-analytics-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
+                notification_db = container "notification_db" "Registros de envío de festa-notification-service (propuesto)." "Amazon DocumentDB (compatible con MongoDB; un solo clúster con bases separadas)" "Database"
+                cache = container "Redis" "Una instancia con bases lógicas separadas: caché del mapa (festa-event-service) y límite de solicitudes de IA (festa-ai-service). La validación rápida de QR de booking es una propuesta." "Amazon ElastiCache for Redis" "Database"
                 observabilidad = container "Prometheus + Grafana" "Recolecta métricas de los servicios y las muestra en tableros con alertas." "Prometheus y Grafana"
 
                 # Usuarios hacia la app
@@ -144,7 +144,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
 
         festa.payment -> pagos "Procesa el cobro y el split" "HTTPS"
         festa.ai -> ia "Solicita descripciones y recomendaciones" "HTTPS"
-        festa.notification -> notificaciones "Envía notificaciones push (vía el servicio de push de la nube elegida)" "HTTPS"
+        festa.notification -> notificaciones "Envía notificaciones push (vía Amazon SNS)" "HTTPS"
         festa.auth -> identidad "Autentica usuarios" "OAuth2"
     }
 

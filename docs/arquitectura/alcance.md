@@ -2,7 +2,7 @@
 
 Basado en `Requerimientos.docx`, en [`requirements.md`](../requirements/requirements.md) y en el modelo C4 de [`festa.dsl`](./festa.dsl). Este documento reúne y explica todos los diagramas de arquitectura de Festa: contexto, contenedores, componentes, vista dinámica, clases y base de datos.
 
-> **Estado:** la arquitectura sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026), que al 25 de octubre solo tienen README, y la plataforma de despliegue sigue por decidir (ADR 0001): Azure es la propuesta con la que se dibujó este modelo y el plan de créditos del Sprint 2 apunta a AWS (SCRUM-134). Los componentes internos, las clases y las tablas son una **propuesta de diseño**; lo que depende del almacén de datos de cada servicio queda pendiente del ADR 0002.
+> **Estado:** la arquitectura sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026), que al 25 de octubre solo tienen README, y el despliegue en AWS decidido el 7-nov-2026 (ADR 0001). Los componentes internos, las clases y las tablas son una **propuesta de diseño**; lo que depende del almacén de datos de cada servicio queda pendiente del ADR 0002.
 
 ## 1. Sistema
 
@@ -38,7 +38,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 |---|:---:|
 | Wompi (pasarela de pagos) | Servicio externo que procesa el cobro de boletos y distribuye la comisión entre el organizador (92 %) y Festa (8 %) mediante split payment. |
 | Google Gemini API | Modelo de lenguaje externo (proveedor decidido en el ADR 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
-| FCM / APNs | Servicios de Google y Apple que entregan las notificaciones push al dispositivo; Festa los usa a través de un servicio de notificaciones push de la nube elegida (fase 2; Azure Notification Hubs en la propuesta de Azure). |
+| FCM / APNs | Servicios de Google y Apple que entregan las notificaciones push al dispositivo; Festa los usa a través de Amazon SNS (fase 2). |
 | Google Identity | Proveedor externo (OAuth2) de autenticación federada para iniciar sesión. |
 | Mapbox | Servicio externo de mapas que usa la app para mostrar eventos y clústeres. |
 
@@ -77,18 +77,18 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | Contenedor (repositorio) | Tecnología | Responsabilidad | Requisitos |
 |---|:---:|---|:---:|
 | `festa-mobile` | Flutter (iOS y Android) | App del usuario y vista de comercio: mapa, escáner y generador de QR, caché local del QR. | RF5, RF15, RNF10 |
-| `festa-gateway` | Kong 3.9 DB-less (pod en Kubernetes; AKS propuesto) | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
-| `festa-auth-service` | Spring Boot 3.5 (pod en Kubernetes; AKS propuesto) | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
-| `festa-user-service` | Pod en Kubernetes (AKS propuesto) | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
-| `festa-event-service` | Pod en Kubernetes (AKS propuesto) | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
-| `festa-booking-service` | Pod en Kubernetes (AKS propuesto) | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
-| `festa-payment-service` | Pod en Kubernetes (AKS propuesto) | Boletería con Wompi y split de pago (comisión del 8 %). | RF11, RNF6 |
-| `festa-ai-service` | Pod en Kubernetes (AKS propuesto) | Recomendaciones y descripciones con IA; límite de solicitudes por usuario. | RF8, RF9, RNF8 |
-| `festa-notification-service` | Pod en Kubernetes (AKS propuesto) | Envío de notificaciones push (fase 2). | RF12 |
-| `festa-analytics-service` | Pod en Kubernetes (AKS propuesto) | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
+| `festa-gateway` | Kong 3.9 DB-less (tarea en Amazon ECS Fargate) | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
+| `festa-auth-service` | Spring Boot 3.5 (tarea en Amazon ECS Fargate) | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
+| `festa-user-service` | Tarea en Amazon ECS Fargate | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
+| `festa-event-service` | Tarea en Amazon ECS Fargate | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
+| `festa-booking-service` | Tarea en Amazon ECS Fargate | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
+| `festa-payment-service` | Tarea en Amazon ECS Fargate | Boletería con Wompi y split de pago (comisión del 8 %). | RF11, RNF6 |
+| `festa-ai-service` | Tarea en Amazon ECS Fargate | Recomendaciones y descripciones con IA; límite de solicitudes por usuario. | RF8, RF9, RNF8 |
+| `festa-notification-service` | Tarea en Amazon ECS Fargate | Envío de notificaciones push (fase 2). | RF12 |
+| `festa-analytics-service` | Tarea en Amazon ECS Fargate | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
-| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB / Cosmos DB API MongoDB (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `develop`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
-| Redis | Servicio de Redis gestionado de la nube elegida (una instancia; Azure Cache for Redis en la propuesta de Azure) | Bases lógicas separadas: caché del mapa de `festa-event-service` (db 0), límite de solicitudes de `festa-ai-service` (db 1) y caché de perfiles de `festa-user-service` (db 2). La validación rápida de QR de booking es una propuesta. El rate limit del gateway lo lleva Kong. | RNF1, RNF7, RNF8 |
+| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB / Amazon DocumentDB (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `develop`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
+| Redis | Amazon ElastiCache for Redis (una instancia) | Bases lógicas separadas: caché del mapa de `festa-event-service` (db 0), límite de solicitudes de `festa-ai-service` (db 1) y caché de perfiles de `festa-user-service` (db 2). La validación rápida de QR de booking es una propuesta. El rate limit del gateway lo lleva Kong. | RNF1, RNF7, RNF8 |
 | Prometheus + Grafana | Prometheus y Grafana | Métricas, tableros y alertas de los servicios. | RNF3 |
 
 ### 5.3 Relaciones principales
@@ -251,13 +251,13 @@ Los diagramas editables están en el documento de Lucid del proyecto, páginas "
 
 | Tema | Estado |
 |---|---|
-| Plataforma de despliegue (ADR 0001): Azure, AWS o GCP; el plan de créditos del Sprint 2 apunta a AWS (SCRUM-134). | Propuesta en Lucid, páginas "Arquitectura Azure", "Arquitectura AWS (alternativa)" y "Arquitectura GCP (alternativa)" |
+| Plataforma de despliegue: AWS (ADR 0001, 7-nov-2026); faltan la infraestructura como código y los scripts de redespliegue (SCRUM-134). | Lucid, página "Arquitectura AWS (oficial)"; Azure y GCP quedan como alternativas |
 | Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Los motores actuales son los de `festa-infra`; falta confirmarlos con el equipo (ADR 0002). | Decidido el aislamiento; motor por confirmar |
 | Proveedor de LLM: Gemini (ADR 0003). | Decidido (falta ratificar con el equipo) |
 | Contratos de mensajes de RabbitMQ (ADR 0004). | Hechos y fusionados en `develop` de `festa-infra` (38 eventos); falta registrar el ADR |
 | RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
 
-El despliegue (propuesta en Azure con los íconos oficiales, y alternativas en AWS y GCP) está en el documento de Lucid del proyecto, en las páginas de arquitectura; no se modela en C4.
+El despliegue en AWS está en el documento de Lucid del proyecto, página "Arquitectura AWS (oficial)" (Azure y GCP quedan como páginas alternativas); no se modela en C4.
 
 ### 10.1 Estado de los repositorios (7-nov-2026)
 
@@ -269,4 +269,4 @@ El trabajo ya está en `develop` de `festa-infra`, `festa-auth-service`, `festa-
 | `festa-auth-service` | `develop` | RF1: registro, login con correo y Google, refresh y logout, JWT RS256 y JWKS, borrado de cuenta (Ley 1581), cifrado de datos personales, outbox y pruebas. Spring Boot 3.5. |
 | `festa-gateway` | `develop` | Kong 3.9 DB-less con validación de JWT, límite de peticiones por ruta, correlation-id y cabeceras de seguridad. |
 
-Hoy todo corre en Docker Compose local. El despliegue en la nube (AKS, ECS u otra) y sus scripts siguen pendientes (SCRUM-134).
+Hoy todo corre en Docker Compose local. El despliegue en AWS (ECS Fargate) y sus scripts siguen pendientes (SCRUM-134).

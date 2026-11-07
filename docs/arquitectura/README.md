@@ -53,8 +53,8 @@ la clave de su vista en `festa.dsl`; las de 05 y 06 vienen de Lucid.
 
 El documento [`alcance.md`](./alcance.md) describe el sistema, su problema, su contexto, actores y sistemas externos y su alcance, y reúne y explica todos los diagramas de esta carpeta.
 
-El despliegue en Azure no se modela aquí: está en la página "Arquitectura Azure" del documento de Lucid del proyecto,
-con los íconos oficiales de Azure.
+El despliegue en AWS no se modela aquí: está en la página "Arquitectura AWS (oficial)" del documento de Lucid del proyecto
+(Azure y GCP quedan como páginas alternativas).
 
 ## Diagramas en Lucid
 
@@ -62,10 +62,10 @@ Todos los diagramas de Lucid están en el mismo documento del proyecto. Las pág
 
 ## Estado del modelo
 
-El modelo sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026) y el despliegue en Azure
-(decisión del 25-oct-2026). Lo marcado como **propuesto** depende de decisiones pendientes del equipo:
-la plataforma de despliegue (ADR 0001) y el almacén que usa cada servicio (ADR 0002). Las relaciones
-servicio-almacén, los componentes internos del nivel 3 y los servicios de Azure son una propuesta
+El modelo sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026) y el despliegue en AWS
+(decisión del 7-nov-2026, ADR 0001). Lo marcado como **propuesto** depende de una decisión pendiente del equipo:
+el almacén que usa cada servicio (ADR 0002). Las relaciones
+servicio-almacén, los componentes internos del nivel 3 y los servicios de AWS son una propuesta
 de diseño, no código existente. Los repositorios solo tienen README al 25 de octubre.
 
 La versión anterior del modelo (Kong, Spring Boot, Admin Panel en React) quedó obsoleta y se reemplazó.
