@@ -251,13 +251,13 @@ Los diagramas editables están en el documento de Lucid del proyecto, páginas "
 
 | Tema | Estado |
 |---|---|
-| Plataforma de despliegue: AWS (ADR 0001, 7-nov-2026); faltan la infraestructura como código y los scripts de redespliegue (SCRUM-134). | Lucid, página "Arquitectura AWS (oficial)"; Azure y GCP quedan como alternativas |
+| Plataforma de despliegue: AWS (ADR 0001, 7-nov-2026); faltan la infraestructura como código y los scripts de redespliegue (SCRUM-134). | Lucid, página "Arquitectura AWS (oficial)" (la única vigente; las páginas de Azure y GCP se eliminaron) |
 | Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Los motores actuales son los de `festa-infra`; falta confirmarlos con el equipo (ADR 0002). | Decidido el aislamiento; motor por confirmar |
 | Proveedor de LLM: Gemini (ADR 0003). | Decidido (falta ratificar con el equipo) |
 | Contratos de mensajes de RabbitMQ (ADR 0004). | Hechos y fusionados en `develop` de `festa-infra` (38 eventos); falta registrar el ADR |
 | RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
 
-El despliegue en AWS está en el documento de Lucid del proyecto, página "Arquitectura AWS (oficial)" (Azure y GCP quedan como páginas alternativas); no se modela en C4.
+El despliegue en AWS está en el documento de Lucid del proyecto, página "Arquitectura AWS (oficial)", que incluye la entrada HTTPS por API Gateway y cómo se distribuye la app (APK con QR); no se modela en C4. Las páginas de Azure y GCP se eliminaron.
 
 ### 10.1 Estado de los repositorios (7-nov-2026)
 
