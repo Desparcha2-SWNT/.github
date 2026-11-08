@@ -1389,3 +1389,25 @@ FORMATO: Un bloque por comentario: clasificación, evidencia (commit o línea) y
 - **Resultado obtenido:** `.github` #10 (CI reutilizable que compila y prueba por stack, fusionado el 7 de noviembre). `festa-auth-service` #6 (pide la autorización de datos personales al registrarse, SCRUM-126), fusionado el 7 de noviembre. Se verificó que la protección de rama de `user-service` (develop) aparecía como pendiente en un comentario.
 - **Validación (riesgos):** El paso de autocrítica evitó responder con una línea equivocada. Se verificó en GitHub.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P52
+- **Fecha:** 2026-11-08 a 2026-11-09
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Despliegue
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparación de alternativas) + Structured Output (tabla)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Responsable de despliegue del front de Festa (app Flutter), con presupuesto de Learner Lab y sin dominio propio.
+TAREA: Compara tres vías para llegar a los compañeros: APK en GitHub Release con QR, versión web y Firebase App Distribution. Para cada una indica costo, alcance en Android y iOS, y dependencia de cuentas. Razona cada punto antes de recomendar una para el MVP.
+RESTRICCIONES: No propongas dominio propio ni CloudFront. Android bloquea HTTP en builds de release.
+FORMATO: Tabla comparativa y, debajo, una recomendación de dos líneas.
+```
+
+- **Resultado obtenido:** El equipo decidió GitHub Release con QR el 9 de noviembre («quedémonos con GitHub Release»). Quedó en `festa-mobile` #8 (release de la app del sprint 1 y CD del APK con QR, SCRUM-45, fusionado el 10 de noviembre) y #9 (`feat/SCRUM-133-cd-publicar-manual`, fusionado el 10 de noviembre).
+- **Validación (riesgos):** iOS queda fuera del MVP. Firebase sigue apareciendo en `festa-notification-service` (verificar el alcance de «sin Firebase» con el equipo). Riesgo mitigado: elegir una vía que el presupuesto no cubre.
+- **Decisión de uso:** Decisión del equipo; el autor la aplicó en los PR de distribución.
