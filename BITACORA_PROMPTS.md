@@ -1411,3 +1411,25 @@ FORMATO: Tabla comparativa y, debajo, una recomendación de dos líneas.
 - **Resultado obtenido:** El equipo decidió GitHub Release con QR el 9 de noviembre («quedémonos con GitHub Release»). Quedó en `festa-mobile` #8 (release de la app del sprint 1 y CD del APK con QR, SCRUM-45, fusionado el 10 de noviembre) y #9 (`feat/SCRUM-133-cd-publicar-manual`, fusionado el 10 de noviembre).
 - **Validación (riesgos):** iOS queda fuera del MVP. Firebase sigue apareciendo en `festa-notification-service` (verificar el alcance de «sin Firebase» con el equipo). Riesgo mitigado: elegir una vía que el presupuesto no cubre.
 - **Decisión de uso:** Decisión del equipo; el autor la aplicó en los PR de distribución.
+
+
+---
+
+## P53
+- **Fecha:** 2026-11-09 a 2026-11-10
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Red Teaming (revisión de seguridad) + Structured Output
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de seguridad (AppSec) del CI/CD de Festa.
+TAREA: Evalúa qué piezas del kit de integración AppSec para GitHub (Dependabot, DAST pasivo, evidencia) conviene incluir. Festa maneja pagos y datos personales (Ley 1581). Para cada pieza di qué detecta, qué falso positivo o costo trae y si mitiga un riesgo real de Festa.
+RESTRICCIONES: No agregues secretos al repositorio. No propongas herramientas de pago.
+FORMATO: Tabla con pieza, riesgo que mitiga, costo y decisión recomendada.
+```
+
+- **Resultado obtenido:** `.github` #13 (Dependabot, DAST pasivo manual y evidencia de seguridad), fusionado el 10 de noviembre.
+- **Validación (riesgos):** Se verificó la fecha de fusión en GitHub. El Excel de costos que se mencionó en la misma sesión no se volvió a abrir (verificar). Riesgo mitigado: incluir herramientas que añaden falsos positivos sin cubrir un riesgo real.
+- **Decisión de uso:** [confirmar con el autor]
