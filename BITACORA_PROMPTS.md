@@ -1433,3 +1433,25 @@ FORMATO: Tabla con pieza, riesgo que mitiga, costo y decisión recomendada.
 - **Resultado obtenido:** `.github` #13 (Dependabot, DAST pasivo manual y evidencia de seguridad), fusionado el 10 de noviembre.
 - **Validación (riesgos):** Se verificó la fecha de fusión en GitHub. El Excel de costos que se mencionó en la misma sesión no se volvió a abrir (verificar). Riesgo mitigado: incluir herramientas que añaden falsos positivos sin cubrir un riesgo real.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P54
+- **Fecha:** 2026-11-09 a 2026-11-10
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Persona (diseñador UX) + Few-shot (paleta del logo y eventos de muestra)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Diseñador UX de la app Festa.
+TAREA: Diseña el Figma con los colores del logo (magenta #F0127E, tinta #111111; texto sobre magenta en negro). Separa las pantallas de usuario de las de comercio. Usa como ejemplo eventos de la Escuela Colombiana de Ingeniería. Compara el front actual con el Figma y lista cada pantalla que no coincide.
+RESTRICCIONES: Ningún color fuera de la paleta. No inventes pantallas fuera del alcance del sprint.
+FORMATO: Dos listas (usuario, comercio) y una tabla pantalla / diferencia / acción para el front.
+```
+
+- **Resultado obtenido:** Archivo de Figma «Festa — Diseño de la app» con fundamentos y pantallas del sprint 1 (verificar la lista de pantallas). `festa-mobile` #18 (alinea acceso y registro con Figma), fusionado el 12 de noviembre.
+- **Validación (riesgos):** El Figma está en la cuenta personal del usuario; el equipo tiene solo lectura. Riesgo mitigado: pantallas de un diseño distinto al acordado.
+- **Decisión de uso:** [confirmar con el autor]
