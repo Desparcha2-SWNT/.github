@@ -53,7 +53,7 @@ la clave de su vista en `festa.dsl`; las de 05 y 06 vienen de Lucid.
 
 El documento [`alcance.md`](./alcance.md) describe el sistema, su problema, su contexto, actores y sistemas externos y su alcance, y reúne y explica todos los diagramas de esta carpeta.
 
-El despliegue en AWS no se modela aquí: está en la página "Arquitectura AWS (oficial)" del documento de Lucid del proyecto
+El despliegue en AWS no se modela aquí: está en la página "Despliegue en AWS (oficial)" del documento de Lucid del proyecto
 (Azure y GCP quedan como páginas alternativas).
 
 ## Diagramas en Lucid

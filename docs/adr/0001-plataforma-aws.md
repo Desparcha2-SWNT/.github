@@ -18,7 +18,7 @@ Había tres páginas de arquitectura en Lucid (Azure, AWS y GCP) con el mismo co
 3. **GCP:** Cloud Run, Cloud SQL y Memorystore; tampoco tiene créditos.
 
 ## Decisión
-Se despliega en **AWS**, en la región us-east-1, con los servicios de la página "Arquitectura AWS (oficial)" de Lucid. Azure y GCP quedan como páginas alternativas, no como diseño vigente.
+Se despliega en **AWS**, en la región us-east-1, con los servicios de la página "Despliegue en AWS (oficial)" de Lucid. Las páginas de Azure y GCP se eliminaron: AWS es la única plataforma vigente.
 
 - Cómputo: Amazon ECS en Fargate, con las imágenes publicadas en GitHub Container Registry (GHCR) desde GitHub Actions; Fargate las descarga con credenciales guardadas en Secrets Manager.
 - Entrada: un Application Load Balancer con HTTPS (certificado de ACM) delante del gateway Kong.
