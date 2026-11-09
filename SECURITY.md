@@ -19,4 +19,6 @@ El equipo confirmará la recepción, corregirá el problema en una rama `fix/` o
 - **Pagos:** solo llaves de sandbox de Wompi durante el proyecto académico.
 - **Datos personales:** tratamiento conforme a la Ley 1581 de 2012.
 
+La evidencia de lo que se analiza y se decide (herramientas, hallazgos, falsos positivos y pendientes) está en [`docs/seguridad/EVIDENCIA_SEGURIDAD.md`](docs/seguridad/EVIDENCIA_SEGURIDAD.md).
+
 Este es un proyecto académico en fase de desarrollo: no hay soporte formal de versiones ni garantías de seguridad en producción.

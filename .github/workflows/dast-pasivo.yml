@@ -1,0 +1,71 @@
+# DAST pasivo con OWASP ZAP (baseline) contra el entorno de Festa en AWS.
+#
+# Solo se lanza a mano. Necesita el backend encendido (el Learner Lab lo apaga fuera de las
+# demostraciones) y la URL HTTPS que da API Gateway (salida `api_base_url` del Terraform de
+# festa-infra), que cambia en cada despliegue; por eso se pasa como entrada y no como variable.
+#
+# Es un análisis PASIVO: observa las respuestas, no ataca. Aun así genera tráfico y consume
+# horas del crédito del laboratorio: córrelo en una ventana corta, no en cada pull request.
+# Solo contra el entorno del equipo. El workflow no puede comprobar de quién es la URL: por eso
+# pide marcar la casilla de autorización.
+#
+# El kit de AppSec del curso usaba `|| true`, que esconde cualquier falla. Aquí no: con `-I` ZAP
+# no falla por advertencias, pero sí si el análisis no corre.
+name: DAST pasivo (ZAP)
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL HTTPS del entorno propio de Festa, por ejemplo https://abc123.execute-api.us-east-1.amazonaws.com"
+        required: true
+        type: string
+      autorizado:
+        description: "Confirmo que este entorno es del equipo Desparcha2 y que está autorizado para el análisis"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  zap:
+    name: ZAP baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validar el destino
+        env:
+          TARGET: ${{ inputs.url }}
+          AUTORIZADO: ${{ inputs.autorizado }}
+        run: |
+          python3 - <<'PYV'
+          import os, sys, urllib.parse
+          if os.environ.get("AUTORIZADO") != "true":
+              sys.exit("Marca la casilla de autorización: solo se analiza un entorno propio.")
+          u = urllib.parse.urlparse(os.environ["TARGET"])
+          if u.scheme != "https" or not u.hostname or u.username or u.password or u.port not in (None, 443):
+              sys.exit("Se requiere una URL HTTPS sin credenciales ni puerto alterno.")
+          if not u.hostname.endswith(".execute-api.us-east-1.amazonaws.com"):
+              sys.exit("Solo se admite el API Gateway del laboratorio (*.execute-api.us-east-1.amazonaws.com).")
+          print("Destino:", u.hostname)
+          PYV
+
+      - name: Ejecutar el baseline pasivo
+        env:
+          TARGET: ${{ inputs.url }}
+        run: |
+          mkdir -p reports
+          chmod 777 reports
+          docker run --rm -v "$PWD/reports:/zap/wrk:rw" ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t "$TARGET" -m 1 -r zap-report.html -J zap-report.json -I
+
+      - name: Guardar el informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-zap
+          path: reports/
+          retention-days: 30
+          if-no-files-found: warn
