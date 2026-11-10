@@ -1455,3 +1455,28 @@ FORMATO: Dos listas (usuario, comercio) y una tabla pantalla / diferencia / acci
 - **Resultado obtenido:** Archivo de Figma «Festa — Diseño de la app» con fundamentos y pantallas del sprint 1 (verificar la lista de pantallas). `festa-mobile` #18 (alinea acceso y registro con Figma), fusionado el 12 de noviembre.
 - **Validación (riesgos):** El Figma está en la cuenta personal del usuario; el equipo tiene solo lectura. Riesgo mitigado: pantallas de un diseño distinto al acordado.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P55
+- **Fecha:** 2026-11-10
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Requisito con rol + Negative Constraints + Delimitadores
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Analista de requisitos y Scrum Master del equipo Desparcha2.
+TAREA: Reparte las tareas del sprint 2 entre los integrantes con el mismo esfuerzo para todos. Propón la configuración de los campos de registro: usuario u organizador, capturados en el registro y no en una pantalla de acceso compartido.
+<datos>
+[lista de tareas del sprint 2 con su estimación]
+</datos>
+RESTRICCIONES: No cambies tareas ya asignadas sin dejar la razón. No dupliques campos entre usuario y organizador.
+FORMATO: Tabla de reparto (tarea, responsable, esfuerzo) y lista de campos de registro.
+```
+
+- **Resultado obtenido:** Reparto del sprint 2 registrado en Jira (verificar). Archivo `CLAUDE.md` del proyecto actualizado con el estado (verificar fecha exacta).
+- **Validación (riesgos):** El reparto lo revisó el usuario antes de aplicarlo. Riesgo mitigado: esfuerzo desigual entre integrantes, que el profesor evalúa por aporte en código.
+- **Decisión de uso:** [confirmar con el autor]
