@@ -1502,3 +1502,28 @@ FORMATO: Por tarea: dependencias, estado en develop, enlace registrado y estado 
 - **Resultado obtenido:** `festa-mobile` #18 (alinea acceso y registro con Figma), fusionado el 12 de noviembre. `festa-mobile` #19 (perfil e intereses, SCRUM-55 y SCRUM-56), fusionado el 19 de noviembre.
 - **Validación (riesgos):** Las dependencias en Jira no se verificaron en el tablero (verificar). Riesgo mitigado: tareas que se bloquean entre sí y commits que no se pueden revertir por partes.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P57
+- **Fecha:** 2026-11-12 a 2026-11-13
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Self-Critique + Delimitadores (un bloque por hilo)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de comentarios de mis PR de la app.
+TAREA: Para cada hilo del bloque, verifica la línea citada en el commit actual. Si ya está corregido en develop, responde «solucionado» con el commit. Si no, corrígelo y critica el cambio: ¿resuelve el comentario exacto?
+<hilos>
+[un bloque por hilo: enlace, archivo, línea y texto del comentario]
+</hilos>
+RESTRICCIONES: Solo corrijo mis PR y los que quedaron sin dueño. No cierres un hilo que no hayas corregido o explicado.
+FORMATO: Por hilo: estado (corregido / explicado / pendiente), evidencia y respuesta.
+```
+
+- **Resultado obtenido:** Comentarios del usuario en `festa-mobile` #20 (13, 16 y 19 de noviembre), `festa-payment-service` #1 (13 al 19 de noviembre), `festa-analytics-service` #1 (13 al 17 de noviembre) y `festa-ai-service` #1 (13 al 16 de noviembre).
+- **Validación (riesgos):** Riesgo mitigado: cerrar hilos sin corregir lo que pedían. Se evitó responder en hilos de otros que ya estaban corrigiendo, como pidió el usuario.
+- **Decisión de uso:** [confirmar con el autor]
