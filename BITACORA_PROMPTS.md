@@ -1480,3 +1480,25 @@ FORMATO: Tabla de reparto (tarea, responsable, esfuerzo) y lista de campos de re
 - **Resultado obtenido:** Reparto del sprint 2 registrado en Jira (verificar). Archivo `CLAUDE.md` del proyecto actualizado con el estado (verificar fecha exacta).
 - **Validación (riesgos):** El reparto lo revisó el usuario antes de aplicarlo. Riesgo mitigado: esfuerzo desigual entre integrantes, que el profesor evalúa por aporte en código.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P56
+- **Fecha:** 2026-11-12
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Chain-of-Thought (descomposición) + Negative Constraints (commits)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Desarrollador Flutter con commits convencionales.
+TAREA: Para cada tarea del sprint 2, lista las tareas de las que depende y si ya están en develop. Registra la dependencia en el campo de enlace de Jira. Si la tarea ya tiene PR y falta aprobación, muévela a En revisión.
+RESTRICCIONES: No hagas un solo commit con todos los cambios: un commit por tipo (feat, fix, test, style). No hagas force-push.
+FORMATO: Por tarea: dependencias, estado en develop, enlace registrado y estado en Jira.
+```
+
+- **Resultado obtenido:** `festa-mobile` #18 (alinea acceso y registro con Figma), fusionado el 12 de noviembre. `festa-mobile` #19 (perfil e intereses, SCRUM-55 y SCRUM-56), fusionado el 19 de noviembre.
+- **Validación (riesgos):** Las dependencias en Jira no se verificaron en el tablero (verificar). Riesgo mitigado: tareas que se bloquean entre sí y commits que no se pueden revertir por partes.
+- **Decisión de uso:** [confirmar con el autor]
