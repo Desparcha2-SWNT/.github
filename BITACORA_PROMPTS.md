@@ -1527,3 +1527,25 @@ FORMATO: Por hilo: estado (corregido / explicado / pendiente), evidencia y respu
 - **Resultado obtenido:** Comentarios del usuario en `festa-mobile` #20 (13, 16 y 19 de noviembre), `festa-payment-service` #1 (13 al 19 de noviembre), `festa-analytics-service` #1 (13 al 17 de noviembre) y `festa-ai-service` #1 (13 al 16 de noviembre).
 - **Validación (riesgos):** Riesgo mitigado: cerrar hilos sin corregir lo que pedían. Se evitó responder en hilos de otros que ya estaban corrigiendo, como pidió el usuario.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P58
+- **Fecha:** 2026-11-15 a 2026-11-16
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Chain-of-Thought (orden por dependencias) + Structured Output
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Responsable de la secuencia de aprobación de PR del equipo.
+TAREA: Lista los PR de correcciones de SonarCloud (número y repositorio), verifica el estado de sus checks y ordénalos por dependencia: primero los que otros necesitan.
+RESTRICCIONES: No propongas aprobar PR propios. No marques como listo un PR con check en rojo.
+FORMATO: Tabla ordenada: orden, PR, repositorio, dependencia, estado de checks y quién debe aprobar.
+```
+
+- **Resultado obtenido:** `festa-event-service` #11 (fija las acciones de terceros a SHA completo) y `festa-infra` #17 (misma corrección), ambos fusionados el 16 de noviembre. `festa-infra` #16 (alinea la guía de secretos con el Learner Lab), fusionado el 20 de noviembre.
+- **Validación (riesgos):** Se verificaron los checks en GitHub antes de listar. Riesgo mitigado: aprobar en un orden que rompe una dependencia.
+- **Decisión de uso:** [confirmar con el autor]
