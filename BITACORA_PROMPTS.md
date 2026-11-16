@@ -1615,3 +1615,25 @@ FORMATO: Explicación en pasos numerados y tabla de supuestos con estado (verifi
 - **Resultado obtenido:** `festa-payment-service` #1 (pagos con Wompi, abierto desde el 13 de noviembre y con revisiones hasta el 19). La decisión de que la comisión por boleta la paga el comercio se tomó el 21 de noviembre y quedó en `festa-infra` #21.
 - **Validación (riesgos):** La tarifa se verificó en la página oficial antes de cambiar el código (ver P59). Riesgo mitigado: supuestos de negocio no validados que cambian el código.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P62
+- **Fecha:** 2026-11-16 a 2026-11-17
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Requisito con rol + historia de usuario + Negative Constraints
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Scrum Master de Festa.
+TAREA: Mueve cada tarea sin sprint al sprint que le corresponde (sprint 0, o sprint 1 si cabe). Redacta un mensaje por sprint con lo que falta, sin proponer nombres de personas. Marca como mejora fuera del MVP lo que no se haga esta semana.
+RESTRICCIONES: No muevas tareas de sprints ya cerrados. El sprint 1 ya está cerrado en Jira y en código.
+FORMATO: Un mensaje corto por sprint, con enlaces a las tareas.
+```
+
+- **Resultado obtenido:** Sprint 1 cerrado en Jira y en código (según la transcripción). El mensaje por sprint se redactó para el equipo. SCRUM-136 (login con Google, subtarea de SCRUM-17) quedó sin asignar; el 21 de noviembre el equipo decidió dejarlo fuera del MVP.
+- **Validación (riesgos):** Se corrigió el borrador que proponía nombres de personas. Riesgo mitigado: asignar trabajo a alguien sin acuerdo del equipo.
+- **Decisión de uso:** [confirmar con el autor]
