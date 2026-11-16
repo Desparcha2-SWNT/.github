@@ -1593,3 +1593,25 @@ FORMATO: Tabla: diagrama, Lucid (sí/no), repositorio (sí/no) y acción.
 - **Resultado obtenido:** Confirmación de los diagramas en Lucid y en el repositorio (verificar cuáles quedaron en cada lugar).
 - **Validación (riesgos):** Riesgo mitigado: diagramas que solo existen en un lugar y se desincronizan. **Lección del ciclo:** los diagramas de clases y BD deben existir antes de programar cada servicio; aquí se documentaron después. Queda como deuda de diseño por revisar.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P61
+- **Fecha:** 2026-11-16
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought (explicación paso a paso) + Self-Critique
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Consultor de modelos de negocio de plataformas de eventos.
+TAREA: Explica el modelo de pagos del Excel paso a paso: ingresos, costos y de quién es cada cobro. Investiga modelos de cobro habituales en plataformas de eventos y compara. Critica la idea del proyecto: ¿qué supuesto podría ser falso? Después propón, sin aplicar, los cambios de comisión para payment-service.
+RESTRICCIONES: No des asesoría financiera personal. Cita la fuente de cada cifra.
+FORMATO: Explicación en pasos numerados y tabla de supuestos con estado (verificado / por validar).
+```
+
+- **Resultado obtenido:** `festa-payment-service` #1 (pagos con Wompi, abierto desde el 13 de noviembre y con revisiones hasta el 19). La decisión de que la comisión por boleta la paga el comercio se tomó el 21 de noviembre y quedó en `festa-infra` #21.
+- **Validación (riesgos):** La tarifa se verificó en la página oficial antes de cambiar el código (ver P59). Riesgo mitigado: supuestos de negocio no validados que cambian el código.
+- **Decisión de uso:** [confirmar con el autor]
