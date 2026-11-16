@@ -1571,3 +1571,25 @@ FORMATO: Cita de la fuente con fecha y el cambio aplicado a cada diapositiva afe
 - **Resultado obtenido:** `PitchDeck.pptx` como única versión. La tarifa de Wompi quedó como 2,65 % + 700 COP + IVA, aplicada en `festa-infra` #21 (quitar la comisión por boleta y usar la tarifa oficial de Wompi), fusionado el 21 de noviembre.
 - **Validación (riesgos):** La cifra se contrastó con la página oficial. Riesgo mitigado: presentar una tarifa de memoria o desactualizada ante los jueces.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P60
+- **Fecha:** 2026-11-16
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Diseño (a posteriori, con documentación del código existente)
+- **Técnica de prompting utilizada:** Few-shot (plantilla de secuencia de Lucid) + verificación de existencia
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Documentador de diagramas UML del proyecto.
+TAREA: Confirma que los diagramas de secuencia y de clases existen en Lucid y en el repositorio de documentación, usando la plantilla «secuencia» de Lucid como estructura. Para cada servicio con base propia, el diagrama de clases y de BD debe reflejar el código ya escrito; crea en el lugar que falte los que no estén.
+RESTRICCIONES: No crees diagramas en un solo lugar. No copies la plantilla con datos de otro servicio.
+FORMATO: Tabla: diagrama, Lucid (sí/no), repositorio (sí/no) y acción.
+```
+
+- **Resultado obtenido:** Confirmación de los diagramas en Lucid y en el repositorio (verificar cuáles quedaron en cada lugar).
+- **Validación (riesgos):** Riesgo mitigado: diagramas que solo existen en un lugar y se desincronizan. **Lección del ciclo:** los diagramas de clases y BD deben existir antes de programar cada servicio; aquí se documentaron después. Queda como deuda de diseño por revisar.
+- **Decisión de uso:** [confirmar con el autor]
