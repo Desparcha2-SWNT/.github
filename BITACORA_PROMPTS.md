@@ -1549,3 +1549,25 @@ FORMATO: Tabla ordenada: orden, PR, repositorio, dependencia, estado de checks y
 - **Resultado obtenido:** `festa-event-service` #11 (fija las acciones de terceros a SHA completo) y `festa-infra` #17 (misma corrección), ambos fusionados el 16 de noviembre. `festa-infra` #16 (alinea la guía de secretos con el Learner Lab), fusionado el 20 de noviembre.
 - **Validación (riesgos):** Se verificaron los checks en GitHub antes de listar. Riesgo mitigado: aprobar en un orden que rompe una dependencia.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P59
+- **Fecha:** 2026-11-16
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Iterative Refinement + verificación contra fuente oficial
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Asistente de preparación de la presentación de pitch de Festa.
+TAREA: Consulta la tarifa de Wompi en su página oficial y actualiza el pitch con esa tarifa, citando fuente y fecha. El modelo de monetización oficial es el del Excel de costos (Festa Pro con cupo de IA y overage); no presentes el 8 % anterior. Deja una sola versión: PitchDeck.pptx. Quita la información universitaria de la portada.
+RESTRICCIONES: No crees versiones nuevas del archivo.
+FORMATO: Cita de la fuente con fecha y el cambio aplicado a cada diapositiva afectada.
+```
+
+- **Resultado obtenido:** `PitchDeck.pptx` como única versión. La tarifa de Wompi quedó como 2,65 % + 700 COP + IVA, aplicada en `festa-infra` #21 (quitar la comisión por boleta y usar la tarifa oficial de Wompi), fusionado el 21 de noviembre.
+- **Validación (riesgos):** La cifra se contrastó con la página oficial. Riesgo mitigado: presentar una tarifa de memoria o desactualizada ante los jueces.
+- **Decisión de uso:** [confirmar con el autor]
