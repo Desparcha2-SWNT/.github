@@ -1637,3 +1637,25 @@ FORMATO: Un mensaje corto por sprint, con enlaces a las tareas.
 - **Resultado obtenido:** Sprint 1 cerrado en Jira y en código (según la transcripción). El mensaje por sprint se redactó para el equipo. SCRUM-136 (login con Google, subtarea de SCRUM-17) quedó sin asignar; el 21 de noviembre el equipo decidió dejarlo fuera del MVP.
 - **Validación (riesgos):** Se corrigió el borrador que proponía nombres de personas. Riesgo mitigado: asignar trabajo a alguien sin acuerdo del equipo.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P63
+- **Fecha:** 2026-11-17
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (modelo a confirmar)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Chain-of-Thought (verificación por hilo) + Self-Critique
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de cierre de hilos de PR.
+TAREA: Para cada hilo de `festa-mobile` #11, busca la línea citada y el código actual. Decide si el código cubre el comentario y di por qué. Resuelve solo los que cubre el código. Después critica tu decisión: ¿cubre el caso exacto o uno parecido?
+RESTRICCIONES: No cierres hilos sin evidencia. No inventes cobertura de pruebas.
+FORMATO: Por hilo: cubierto / no cubierto, línea y motivo.
+```
+
+- **Resultado obtenido:** Comentarios del usuario en `festa-mobile` #11 los días 17 y 20 de noviembre. El orden de aprobación se entregó y se usó para aprobar y fusionar después (ver P64).
+- **Validación (riesgos):** Riesgo mitigado: cerrar hilos cuyo caso exacto no está cubierto.
+- **Decisión de uso:** [confirmar con el autor]
