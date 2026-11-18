@@ -95,3 +95,86 @@ Key routing rules:
 - Ship/deploy/PR → invoke /ship
 
 Do not suggest or auto-invoke other skills: they run when the user types them, or when a running skill hands off to them (`gstack-config set proactive all` routes every skill).
+
+---
+
+# Actualización de contexto — 2026-11-18
+
+Esta sección incorpora decisiones de producto, seguimiento de Jira y lineamientos de presentación consolidados al 18 de noviembre de 2026. Cuando una descripción histórica anterior contradiga una decisión explícita de esta sección, prevalece esta actualización. Los estados de Jira que se indican son una fotografía de la revisión realizada ese día; deben consultarse de nuevo antes de afirmar que una tarea sigue en el mismo estado.
+
+## Identidad, posicionamiento y alcance del producto
+
+- **Lema oficial:** «Menos buscar, más vivir la ciudad». No sustituir por «Descubre tu próximo plan».
+- Festa es una **plataforma móvil para descubrir eventos en Bogotá y conectar a asistentes con organizadores y comercios locales**. El piloto se realiza con la comunidad de la Escuela Colombiana de Ingeniería Julio Garavito, pero el producto no es exclusivo de la universidad.
+- El problema central es la dispersión de la información de eventos entre redes sociales y distintas plataformas. Esto dificulta encontrar actividades cercanas y relevantes; organizadores y comercios también necesitan herramientas para publicar y gestionar sus eventos y llegar a potenciales asistentes.
+- No reducir la propuesta de valor a una boletera ni a un chatbot. El núcleo es el descubrimiento de actividades, la conexión entre asistentes y organizadores y el acceso a eventos desde una experiencia móvil integrada.
+- La geolocalización requiere consentimiento explícito. Si la persona no concede permiso o la ubicación no está disponible, el mapa debe utilizar la ubicación predeterminada del piloto en la Escuela Colombiana de Ingeniería. No afirmar que la aplicación obtiene automáticamente la ubicación sin consentimiento.
+
+## Modelo de negocio vigente
+
+- El modelo principal definido es **suscripción Festa Pro**, que incluye un cupo de uso de inteligencia artificial y cobra por consumo excedente (*overage*).
+- La comisión por venta de entradas puede considerarse una oportunidad adicional de ingresos (*upside*), pero **no debe presentarse como el modelo principal**.
+- La comisión del 8 % y el reparto 92/8 aparecen en una historia técnica antigua de Jira (SCRUM-27). Esa historia no sustituye la decisión comercial más reciente de Festa Pro. La discrepancia debe mantenerse visible hasta que el equipo alinee formalmente la historia y sus criterios.
+- Mantener separados el flujo técnico de compra/procesamiento de pagos con Wompi y el modelo comercial Festa Pro. No inferir precios de suscripción, cupos exactos ni tarifas que no estén documentados en una decisión vigente del equipo.
+
+## Alcance del MVP y decisiones funcionales
+
+- **Mapa:** el mapa permite explorar eventos cercanos, mostrar marcadores y abrir el detalle del evento. La decisión vigente para el MVP es no implementar WebSockets/WSS para actualizaciones en tiempo real. En la demo, el mapa se actualiza al abrirse y al moverlo; no describirlo como un mapa con actualización en tiempo real.
+- Aunque los criterios originales de SCRUM-23 mencionan actualizaciones en tiempo real, la subtarea SCRUM-76 asociada a WSS fue retirada del alcance del MVP. No reintroducirla como compromiso de entrega sin una nueva decisión del equipo.
+- **Búsqueda y filtros:** contemplan categoría, zona y fecha.
+- **Comercios:** el perfil de comercio requiere verificación manual por el equipo. Solo los comercios aprobados pueden publicar eventos.
+- **Eventos:** organizadores autenticados y comercios aprobados pueden crear y gestionar eventos.
+- **IA:** las recomendaciones conversacionales consideran intereses y eventos disponibles cercanos y deben enlazar a los eventos recomendados. Gemini es el proveedor LLM escogido. La generación de descripciones propone un texto que el organizador puede revisar, editar o regenerar.
+- **Asistencia y entradas:** se contempla confirmar asistencia, emitir un QR único firmado y de un solo uso, mostrarlo en la aplicación y validarlo en el acceso por parte del organizador. La compra de entradas contempla Wompi.
+- **Fuera del MVP:** RF18 de reputación/visibilidad pagada y posicionamiento promocionado permanece fuera de alcance (*Won't*). La finalidad general de dar visibilidad a comercios locales no debe confundirse con una funcionalidad de publicidad o posicionamiento pagado.
+- Distinguir siempre entre funcionalidad especificada, en desarrollo, con PR abierto, fusionada en `develop` y probada en la demo. Una historia o subtarea de Jira no demuestra por sí sola que el código esté integrado u operativo.
+
+## Revisión de Jira — fotografía al 2026-11-18
+
+Se revisaron las historias y subtareas relacionadas con comercio, eventos, mapa, búsqueda, IA, pagos y QR en el proyecto SCRUM:
+
+| Elemento | Alcance | Estado observado |
+|---|---|---|
+| SCRUM-19 (RF3) | Perfil de comercio y verificación manual | En revisión |
+| SCRUM-20 (RF4) | Crear y gestionar eventos | En curso |
+| SCRUM-23 (RF5) | Mapa interactivo de eventos | Por hacer |
+| SCRUM-73 | Mapbox y ubicación del usuario en mobile | En revisión |
+| SCRUM-74 | Consulta PostGIS de eventos cercanos | Por hacer |
+| SCRUM-75 | Marcadores y detalle del evento | En revisión |
+| SCRUM-76 | WSS para actualización en tiempo real | Por hacer; retirado del MVP |
+| SCRUM-127 | Consentimiento y ubicación predeterminada | En revisión |
+| SCRUM-25 (RF6) | Búsqueda y filtros | Por hacer |
+| SCRUM-26 (RF11) | Compra de entradas con Wompi | Por hacer |
+| SCRUM-27 | Reparto de comisión 92/8 | Por hacer; mantener como discrepancia frente a Festa Pro |
+| SCRUM-28 (RF10) | Generación de QR único de entrada/asistencia | Por hacer |
+| SCRUM-29 (RF10) | Escaneo y validación del QR en el acceso | Por hacer |
+| SCRUM-30 (RF8) | Recomendaciones conversacionales con IA | En revisión |
+| SCRUM-31 (RF9) | Generación de descripciones de eventos con IA | Por hacer |
+
+Esta tabla es una referencia histórica de la revisión del 18 de noviembre, no una afirmación del estado actual. Antes de preparar una entrega, demo o exposición, comprobar Jira, las PR y la rama de integración correspondiente.
+
+## Presentaciones y narrativa
+
+Se mantienen **dos presentaciones independientes**, con objetivos y contenidos distintos:
+
+1. **Pitch teórico/comercial:** `Presentacion_Pitch_Festa/PitchDeck.pptx`, máximo 7 diapositivas, se presenta en vivo y sin videos. Se genera con `node build7.js`. Su narrativa debe vender la propuesta: problema, oportunidad/usuarios, solución, diferenciación/competencia, modelo de negocio, indicadores y equipo/cierre. No convertirlo en una explicación de microservicios.
+2. **Sustentación técnica/práctica:** `Sustentacion2/Festa_Sustentacion2.pptx`, presentación única para entregas y sustentaciones, generada con `node build.js`. Se actualiza en cada entrega sin crear copias. Incluye demo, arquitectura, diagramación, programación, avances y evidencias técnicas.
+
+Lineamientos para el pitch:
+- Usar siempre el lema oficial.
+- Presentar Festa Pro con cupo de IA incluido y cobro por excedente como modelo principal. No presentar el 8 % como ingreso principal.
+- No afirmar que una funcionalidad está disponible si solo está especificada o planificada.
+- La ubicación inicial del piloto puede ser la Escuela Colombiana de Ingeniería; no prometer geolocalización sin consentimiento.
+- La inclusión del equipo con fotos, nombres y roles cerca del cierre es una recomendación narrativa, no una decisión obligatoria del equipo.
+- El video vertical de referencia compartido fue `https://youtube.com/shorts/EBw-YxjBQlQ`; no se verificó su contenido, por lo que no se deben inventar elementos visuales, lema o narrativa atribuidos a ese video.
+
+## Descripción de referencia para jurados
+
+Usar la siguiente descripción como base cuando se solicite presentar el proyecto, ajustando los verbos al estado real de implementación:
+
+> **Festa — Menos buscar, más vivir la ciudad.** Actualmente, encontrar eventos y planes de interés puede convertirse en una tarea dispersa, ya que la información se encuentra distribuida entre redes sociales y diferentes plataformas. Esto dificulta que las personas descubran actividades cercanas que se ajusten a sus gustos, mientras que los organizadores necesitan mejores herramientas para publicar sus eventos y llegar a potenciales asistentes.
+>
+> Festa busca resolver esta necesidad mediante una plataforma móvil que centraliza el descubrimiento y la gestión de eventos, iniciando con un piloto en la comunidad de la Escuela Colombiana de Ingeniería. Los usuarios podrán explorar eventos activos y próximos mediante un mapa interactivo, buscar y filtrar actividades por categoría, zona y fecha, y recibir recomendaciones conversacionales apoyadas en inteligencia artificial según sus intereses y los eventos disponibles. Por su parte, los organizadores podrán registrar y verificar sus perfiles de comercio, publicar y gestionar eventos, y utilizar herramientas de inteligencia artificial para generar sus descripciones. La plataforma contempla además la confirmación de asistencia, la compra de entradas mediante Wompi y el ingreso a los eventos mediante códigos QR únicos y verificables.
+>
+> El modelo de negocio de Festa se basa en una suscripción Festa Pro que incluye un cupo de uso de inteligencia artificial y contempla cobros por consumo excedente. De esta manera, Festa busca conectar a quienes desean encontrar nuevas experiencias con quienes organizan eventos, facilitando el descubrimiento y el acceso a actividades desde un mismo lugar.
+
