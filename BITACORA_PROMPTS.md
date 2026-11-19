@@ -1659,3 +1659,25 @@ FORMATO: Por hilo: cubierto / no cubierto, línea y motivo.
 - **Resultado obtenido:** Comentarios del usuario en `festa-mobile` #11 los días 17 y 20 de noviembre. El orden de aprobación se entregó y se usó para aprobar y fusionar después (ver P64).
 - **Validación (riesgos):** Riesgo mitigado: cerrar hilos cuyo caso exacto no está cubierto.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P64
+- **Fecha:** 2026-11-19 a 2026-11-20
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Sonnet 5.5 y Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Self-Critique + Chain-of-Thought por PR + Structured Output
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de PR de Festa que responde en cada hilo con evidencia.
+TAREA: Para cada PR abierto donde comenté: lee el hilo y el diff del commit corregido, verifica en develop que la corrección está, corrígela o explica por qué no aplica, y critica si el commit toca el archivo y la línea del comentario. Dime qué puedo aceptar yo (nunca mis propios PR) y en qué orden.
+RESTRICCIONES: Nada de aprobar ni fusionar. Sin mencionar a otros asistentes de IA en los comentarios.
+FORMATO: Tabla por PR: hilo, estado (corregido / explicado / pendiente), commit y prueba.
+```
+
+- **Resultado obtenido:** Revisiones del usuario (COMMENTED o APPROVED) en `festa-mobile` #11, #20, #21, #26, #27; `festa-booking-service` #5, #6, #7; `festa-infra` #19; `festa-event-service` #12; `festa-payment-service` #1; `festa-analytics-service` #1; `festa-ai-service` #1. Se fusionaron en `develop` `festa-booking-service` #6 y #7 y `festa-mobile` #21, entre otros (verificar la lista exacta).
+- **Validación (riesgos):** Un hallazgo se corrigió en el commit equivocado: se verificó que el código corregido fuera el que nombraba el comentario, no el archivo más cercano. Riesgo mitigado: marcar corregido lo que no lo está.
+- **Decisión de uso:** [confirmar con el autor]
