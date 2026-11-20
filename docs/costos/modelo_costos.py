@@ -29,8 +29,9 @@ USO = dict(
     usuarios_chat=0.25,          # fracción de MAU que usa el asistente de IA
     mensajes_chat=4,             # mensajes al mes por usuario que usa el chat
     tokens_chat=(3_000, 500),    # entrada (prompt + candidatos), salida (incluye razonamiento)
-    generaciones_por_evento=1.5, # descripción con IA + alguna regeneración
-    tokens_descripcion=(800, 400),
+    # Solicitudes de IA de los organizadores: se costean con el MISMO volumen que se factura en Festa Pro
+    # (NEGOCIO['solicitudes_por_evento'] x eventos), con los tokens por solicitud del XLSM (hoja Supuestos_Festa).
+    tokens_solicitud=(3_000, 300),
     peticiones_por_compra=20,
     mb_por_compra=0.1,
 )
@@ -108,9 +109,14 @@ def trafico_sin_compra(f):
     return c, pet, gb
 
 
-def ia_descripciones(f):
-    ti, to = USO["tokens_descripcion"]
-    return f["eventos"] * USO["generaciones_por_evento"] * (ti * P["llm_in_millon"] + to * P["llm_out_millon"]) / 1e6
+def costo_solicitud_usd():
+    ti, to = USO["tokens_solicitud"]
+    return (ti * P["llm_in_millon"] + to * P["llm_out_millon"]) / 1e6
+
+
+def ia_organizadores(f):
+    """Todas las solicitudes que se facturan (descripción, moderación, chat de asistentes y métricas)."""
+    return f["eventos"] * NEGOCIO["solicitudes_por_evento"] * costo_solicitud_usd()
 
 
 def por_compra_usd():
@@ -170,7 +176,7 @@ if __name__ == "__main__":
     for nombre, f in FASES.items():
         fijo, vcpu, gb, tareas = fijo_aws(f)
         sin, pet, gbx = trafico_sin_compra(f)
-        desc = ia_descripciones(f)
+        desc = ia_organizadores(f)
         compras_usd = f["compras"] * infra_compra
         total_fijo = sum(fijo.values())
         total_var = sum(sin.values()) + desc + compras_usd
@@ -183,7 +189,8 @@ if __name__ == "__main__":
         print(f"== {nombre}: {f['mau']} MAU, {orgs} organizadores, {f['eventos']} eventos, {tareas} tareas ({vcpu} vCPU, {gb} GB)")
         print("   fijo:", {k: round(v, 2) for k, v in fijo.items()}, "=", round(total_fijo, 2))
         print("   sin compra:", {k: round(v, 2) for k, v in sin.items()}, f"peticiones={pet:,.0f} GB={gbx:.1f}")
-        print(f"   IA descripciones={desc:.2f} compras={compras_usd:.4f}  variable={total_var:.2f}")
+        print(f"   IA organizadores ({f['eventos'] * NEGOCIO['solicitudes_por_evento']:,} solicitudes a USD {costo_solicitud_usd():.5f})={desc:.2f} "
+              f"compras={compras_usd:.4f}  variable={total_var:.2f}")
         print(f"   TOTAL USD {total:.2f}/mes = {fmt(total*TRM,0)} COP; por MAU USD {total/f['mau']:.4f}; "
               f"sin compra por MAU {sum(sin.values())/f['mau']:.4f}")
         print(f"   ingreso Festa Pro {fmt(ingreso_cop,0)} COP (USD {ingreso_cop/TRM:.2f}); Wompi {fmt(wompi_total_cop,0)} COP; "
