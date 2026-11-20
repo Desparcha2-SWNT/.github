@@ -1704,3 +1704,25 @@ FORMATO: Un PR por repositorio, con la prueba de integración que falla sin el c
 - **Resultado obtenido:** `festa-infra` #19 (contrato con `attendanceVersion`, fusionado el 20 de noviembre); `festa-booking-service` #5 (fusionado) y #8 (el sobre lleva el `x-version` del esquema, fusionado el 20 de noviembre); `festa-event-service` #12 (el conteo se ordena por `attendanceVersion`, fusionado el 20 de noviembre).
 - **Validación (riesgos):** Un error de tipo solo apareció con base real: `pg` devolvía el `bigint` como texto y mandaba los mensajes a la DLQ. Se cambió a `integer`. Las pruebas unitarias no lo detectaban; por eso se exige prueba de integración con PostgreSQL y RabbitMQ.
 - **Decisión de uso:** Aceptado con ajustes; los PR son del usuario y los aprobó y fusionó otro integrante.
+
+
+---
+
+## P66
+- **Fecha:** 2026-11-20
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Sonnet 5.5 según la sesión)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Few-shot (plantilla AAA de pruebas) + Edge cases
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Desarrollador Flutter de pruebas de widget.
+TAREA: Agrega una prueba de widget para el refresh fallido de asistentes (SCRUM-141). Haz lo mismo con saveProfile y MerchantController.save: una respuesta diferida que llega después de cambiar la sesión no debe escribir el resultado. Sigue el patrón AAA (arrange: petición diferida que falla; act: pull-to-refresh; assert: la lista anterior sigue visible).
+RESTRICCIONES: Cada prueba debe fallar sin la corrección y pasar con ella. No cambies el resto del comportamiento.
+FORMATO: Una prueba por caso; commit de test separado del de fix.
+```
+
+- **Resultado obtenido:** `festa-mobile` #28 (prueba del refresh fallido de asistentes, SCRUM-141), fusionado el 20 de noviembre. El perfil de comercio (`festa-mobile` #21) quedó fusionado el 20 de noviembre con 155 pruebas en verde (según la transcripción).
+- **Validación (riesgos):** Las dos correcciones de carrera tienen prueba de respuesta diferida que falla sin la corrección. Riesgo mitigado: mostrar datos de otra cuenta tras cambiar de sesión.
+- **Decisión de uso:** [confirmar con el autor]
