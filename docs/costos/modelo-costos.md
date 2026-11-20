@@ -3,6 +3,7 @@
 - **Estado:** borrador. Los supuestos de la sección 1 esperan la aprobación del equipo.
 - **Fecha:** 2026-11-16 · **Responsable:** Brayan Loaiza
 - **Reemplaza:** las cifras del pitch (USD 113 al mes y 17 meses con USD 2.000) y el presupuesto del *Informe de arquitectura y viabilidad* de septiembre, que suponía GCP con capas gratuitas.
+- **Ingresos:** el modelo oficial de monetización es el del XLSM `adjuntos/documentos/2026-11-16_festa-pg-ia-swnt-costos.xlsm` (suscripción Festa Pro con cupo de IA y overage). La comisión por boleta queda fuera: es un ingreso adicional posible, no parte del modelo.
 - **Cálculo reproducible:** [`modelo_costos.py`](modelo_costos.py). Todos los supuestos y precios están arriba del archivo; al cambiar uno, `python modelo_costos.py` recalcula todo.
 
 **Reglas del cálculo.** Precios de lista **sin capas gratuitas** (cada recurso se cobra desde la primera unidad), región us-east-1, 730 horas al mes y TRM de **3.300 COP por dólar** (la del 11 de noviembre fue 3.297,07). Se separa el costo de **operación** (el servicio encendido para usuarios reales) del de **desarrollo** (sección 6).
@@ -12,9 +13,9 @@
 | Supuesto | Fase 1 · Piloto ECI | Fase 2 · Bogotá zonal | Fase 3 · Ciudad |
 |---|---|---|---|
 | Usuarios activos al mes (MAU) | 4.000 | 30.000 | 100.000 |
-| Eventos creados al mes | 150 | 1.000 | 4.000 |
+| Organizadores con Festa Pro (pagan la suscripción) | 60 | 250 | 1.000 |
+| Eventos creados al mes (4 por organizador) | 240 | 1.000 | 4.000 |
 | Boletas vendidas al mes | 200 | 1.500 | 5.000 |
-| Comercios destacados | 5 | 40 | 150 |
 | Réplicas de los servicios de la ruta crítica (gateway, auth, user, event, booking, payment) | 1 | 2 | 4 |
 | Réplicas de ai, notification y analytics | 1 | 1 | 2 |
 | Base de datos y caché | db.t3.micro, cache.t3.micro | db.t3.medium, cache.t3.small | db.t3.medium, cache.t3.medium |
@@ -24,7 +25,7 @@ Uso por usuario, igual en las tres fases:
 - **Chat de IA:** lo usa el 25 % de los MAU, 4 mensajes al mes cada uno, con 3.000 tokens de entrada y 500 de salida por mensaje.
 - **Descripción con IA:** 1,5 generaciones por evento (con alguna regeneración), 800 tokens de entrada y 400 de salida.
 - **Compra:** 20 peticiones y 0,1 MB.
-- **Negocio:** boleta promedio de 35.000 COP, comisión del 8 %, destacado a 50.000 COP al mes. Wompi cobra 2,65 % + 700 COP + IVA, y **lo paga el comprador** como cargo por servicio (recomendación del informe de viabilidad). La sección 5 muestra qué pasa si lo absorbe Festa.
+- **Negocio (Festa Pro, XLSM oficial):** suscripción de 79.000 COP al mes por organizador, con 150 solicitudes de IA incluidas y 60 COP por cada solicitud adicional. Un organizador típico hace 4 eventos al mes y 196 solicitudes (4 × (5 de descripción + 2 de moderación + 40 del chat de asistentes + 2 de métricas)). Wompi cobra 2,65 % + 700 COP + IVA: sobre la suscripción es costo de Festa (un cobro mensual por organizador) y sobre las boletas **lo paga el comprador** como cargo por servicio. Boleta promedio de 35.000 COP, solo para calcular ese cargo.
 
 ## 2. Precios usados
 
@@ -57,10 +58,10 @@ Uso por usuario, igual en las tres fases:
 | Almacenamiento (RDS, EFS de Mongo, secreto) | 4,20 | 4,20 | 4,20 |
 | **Fijo** | **230,51** | **376,32** | **627,08** |
 | Tráfico sin compra (sección 4) | 26,76 | 200,78 | 669,27 |
-| Descripciones con IA | 0,28 | 1,86 | 7,44 |
+| Descripciones con IA | 0,45 | 1,86 | 7,44 |
 | Compras (infraestructura) | 0,01 | 0,06 | 0,19 |
-| **Total al mes (USD)** | **257,57** | **579,02** | **1.303,99** |
-| Total al mes (COP) | 849.982 | 1.910.774 | 4.303.161 |
+| **Total al mes (USD)** | **257,74** | **579,02** | **1.303,99** |
+| Total al mes (COP) | 850.535 | 1.910.774 | 4.303.161 |
 | Costo por MAU (USD) | 0,064 | 0,019 | 0,013 |
 
 En la Fase 1 hay 11 tareas (3,5 vCPU y 7,5 GB): los 8 servicios, Kong, RabbitMQ y MongoDB, como en `festa-infra/terraform/aws-lab`. **El 90 % del costo es fijo:** lo que más pesa es tener la plataforma encendida, no los usuarios.
@@ -81,31 +82,37 @@ La mayoría de los usuarios solo navega. Su costo por mes:
 
 **Por usuario que no compra: USD 0,0067 al mes (unos 22 COP).** El 60 % es Mapbox y el 32 % es el chat de IA. Mapbox incluye 25.000 MAU gratis al mes; con esa franja, el mapa costaría USD 0 en la Fase 1, USD 20 en la Fase 2 y USD 300 en la Fase 3, pero el criterio de la tarea pide no contarla.
 
-## 5. Por transacción y justificación del 8 %
+## 5. Ingresos con Festa Pro, por transacción y punto de equilibrio
 
-Por cada boleta de 35.000 COP:
+El modelo oficial (XLSM) cobra al organizador una suscripción con cupo de IA y overage; el público usa Festa gratis. **La comisión por boleta no se incluye**: es un ingreso adicional posible (la discrepancia con SCRUM-27 sigue abierta en Jira hasta que el equipo la alinee).
+
+Por organizador al mes:
 
 | Concepto | COP |
 |---|---:|
-| Comisión de Festa (8 %) | **2.800** |
-| Infraestructura de la compra | 0,13 |
-| Wompi (2,65 % + 700 + IVA) | 1.937, que lo paga el comprador |
+| Suscripción Festa Pro | 79.000 |
+| Overage de IA (196 solicitudes, 150 incluidas: 46 × 60) | 2.760 |
+| **ARPU** | **81.760** |
+| Wompi sobre el cobro mensual (2,65 % + 700 + IVA) | 3.411 |
+| **Neto antes de IA y costos fijos** | **78.349** |
 
-La compra en sí casi no cuesta: **los 2.800 COP sirven para pagar la parte fija**, es decir, tener la plataforma encendida y atender a quienes no compran. Boletas al mes que hacen falta para el punto de equilibrio:
+Por boleta de 35.000 COP: la infraestructura de la compra cuesta 0,13 COP y Wompi cobra 1.937 COP, que **paga el comprador**. Festa no cobra comisión.
 
 | | Fase 1 | Fase 2 | Fase 3 |
 |---|---:|---:|---:|
-| Solo con comisión | 304 | 682 | 1.537 |
-| Con comisión y destacados | 214 | 0, los destacados ya cubren el costo | 0 |
-| Si Festa absorbe Wompi (gana 863 COP netos por boleta) | 695 | 0 | 0 |
-| Boletas supuestas en la fase | 200 | 1.500 | 5.000 |
-| **Resultado mensual (USD)** | **−12,12** | **+1.299,77** | **+5.211,16** |
+| Organizadores con Festa Pro | 60 | 250 | 1.000 |
+| Ingresos por suscripción y overage (COP) | 4.905.600 | 20.440.000 | 81.760.000 |
+| Wompi sobre las suscripciones (COP) | 204.678 | 852.825 | 3.411.302 |
+| Costo de operación, sección 3 (COP) | 850.535 | 1.910.774 | 4.303.161 |
+| **Margen sobre la operación (COP)** | **3.850.387** | **17.676.401** | **74.045.538** |
+| Margen sobre la operación (USD) | 1.166,78 | 5.356,49 | 22.438,04 |
+| Organizadores para cubrir la operación | 11 | 25 | 55 |
 
-**Conclusión sobre el 8 %:**
-- **Es suficiente desde la Fase 2.** Con 1.500 boletas y 40 destacados, los ingresos (6.200.000 COP) triplican el costo (1.910.774 COP).
-- **En el piloto queda casi en equilibrio.** Faltan unos 14 boletas al mes para cubrir los USD 257,57 con los 5 destacados supuestos.
-- **Trasladar Wompi al comprador es indispensable:** si Festa lo absorbe, en el piloto se necesitarían 695 boletas en vez de 214.
-- Frente al 10 a 15 % que cobran las boleterías en Colombia, **el 8 % sigue siendo competitivo** y cubre el costo con holgura desde la Fase 2.
+**Lectura:**
+- **La operación se cubre con pocos organizadores:** 11 en el piloto (de los 60 supuestos), 25 en la Fase 2 y 55 en la Fase 3.
+- **Este margen no incluye nómina, mercadeo ni otros gastos.** El XLSM sí los incluye (9,3 millones de COP de costos fijos al mes) y por eso necesita unos 128 organizadores para el equilibrio, con utilidad positiva desde el mes 8 si la base crece 12 % mensual.
+- **El costo de IA de este documento no es el del XLSM.** Aquí sale de las tarifas de Gemini y del uso de la sección 1; el XLSM usa un costo fijo por solicitud. Las dos cifras no son intercambiables.
+- **Trasladar Wompi al comprador, en las boletas, sigue siendo necesario:** sin comisión por boleta, Festa no tendría con qué cubrirlo.
 
 ## 6. Costo de desarrollo (aparte de la operación)
 
@@ -136,9 +143,9 @@ Precios de Azure: API Retail Prices (eastus). Precios de GCP: Cloud Billing Cata
 
 | En el pitch | Con este modelo |
 |---|---|
-| El piloto cuesta USD 113 al mes | **USD 258 al mes** (850.000 COP), operación en AWS sin capas gratuitas |
-| Con USD 2.000 se cubren 17 meses | **Unos 8 meses** de infraestructura sin contar ingresos. Con los ingresos supuestos del piloto, el déficit es de USD 12 al mes y los USD 2.000 duran mucho más |
-| Cada usuario deja USD 0,40 y cuesta USD 0,30 al mes | En el piloto, cada MAU deja **USD 0,061** y cuesta **USD 0,064**. En la Fase 2 deja USD 0,063 y cuesta USD 0,019 |
+| El piloto cuesta USD 113 al mes | **USD 258 al mes** (851.000 COP), operación en AWS sin capas gratuitas |
+| Con USD 2.000 se cubren 17 meses | **Unos 8 meses** de infraestructura sin contar ingresos. Si los 60 organizadores del piloto pagan Festa Pro, los ingresos (USD 1.487 al mes) cubren la operación y los USD 2.000 no se consumen |
+| Cada usuario deja USD 0,40 y cuesta USD 0,30 al mes | En el piloto, cada MAU deja **USD 0,372** de ingreso y cuesta **USD 0,064**. En la Fase 2 deja USD 0,207 y cuesta USD 0,019 |
 
 ## 9. Dónde se puede ahorrar
 
@@ -152,4 +159,5 @@ Precios de Azure: API Retail Prices (eastus). Precios de GCP: Cloud Billing Cata
 - Los supuestos de uso (sesiones, peticiones, mensajes de chat) son estimaciones y **hay que recalibrarlos con las métricas del piloto** (analytics-service, RF15).
 - Los tamaños de las Fases 2 y 3 son una primera aproximación. Hay que validarlos con pruebas de carga (SCRUM-78).
 - La TRM y los precios de terceros cambian. El script permite recalcular en un minuto.
-- No incluye impuestos sobre los ingresos de Festa, soporte, mercadeo ni nómina.
+- No incluye impuestos sobre los ingresos de Festa, soporte, mercadeo ni nómina (el XLSM sí incluye nómina, mercadeo y otros gastos; ver sección 5).
+- Los organizadores de cada fase son supuestos: el piloto de 60 viene del XLSM, y las Fases 2 y 3 siguen la proporción de 4 eventos por organizador.
