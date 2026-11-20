@@ -1681,3 +1681,26 @@ FORMATO: Tabla por PR: hilo, estado (corregido / explicado / pendiente), commit 
 - **Resultado obtenido:** Revisiones del usuario (COMMENTED o APPROVED) en `festa-mobile` #11, #20, #21, #26, #27; `festa-booking-service` #5, #6, #7; `festa-infra` #19; `festa-event-service` #12; `festa-payment-service` #1; `festa-analytics-service` #1; `festa-ai-service` #1. Se fusionaron en `develop` `festa-booking-service` #6 y #7 y `festa-mobile` #21, entre otros (verificar la lista exacta).
 - **Validación (riesgos):** Un hallazgo se corrigió en el commit equivocado: se verificó que el código corregido fuera el que nombraba el comentario, no el archivo más cercano. Riesgo mitigado: marcar corregido lo que no lo está.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P65
+- **Fecha:** 2026-11-20
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Sonnet 5.5 según la sesión)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Chain-of-Thought (descomposición en cadena) + Negative Constraints + Gherkin para aceptación
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Desarrollador backend de mensajería con RabbitMQ y PostgreSQL.
+TAREA: Diseño antes de código: primero se define el contrato del evento en festa-infra (x-version 2) y luego se programa. El conteo de asistentes llega desordenado porque la hora se redondea. Agrega un attendanceVersion monotónico por evento: booking lo sube en la misma transacción de cada cambio, infra lo lleva en el contrato (x-version 2) y event-service aplica el conteo solo si la versión es mayor que la guardada. Un PR por repositorio, en cadena: infra, booking, event.
+ACEPTACIÓN (Gherkin): Dado dos cambios en el mismo milisegundo, cuando llegan fuera de orden, entonces el conteo final es el de la versión mayor.
+RESTRICCIONES: No cambies el esquema v1 sin dejar v2 convivir. Sin trailer de coautor.
+FORMATO: Un PR por repositorio, con la prueba de integración que falla sin el cambio.
+```
+
+- **Resultado obtenido:** `festa-infra` #19 (contrato con `attendanceVersion`, fusionado el 20 de noviembre); `festa-booking-service` #5 (fusionado) y #8 (el sobre lleva el `x-version` del esquema, fusionado el 20 de noviembre); `festa-event-service` #12 (el conteo se ordena por `attendanceVersion`, fusionado el 20 de noviembre).
+- **Validación (riesgos):** Un error de tipo solo apareció con base real: `pg` devolvía el `bigint` como texto y mandaba los mensajes a la DLQ. Se cambió a `integer`. Las pruebas unitarias no lo detectaban; por eso se exige prueba de integración con PostgreSQL y RabbitMQ.
+- **Decisión de uso:** Aceptado con ajustes; los PR son del usuario y los aprobó y fusionó otro integrante.
