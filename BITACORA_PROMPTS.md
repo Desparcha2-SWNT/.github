@@ -1726,3 +1726,25 @@ FORMATO: Una prueba por caso; commit de test separado del de fix.
 - **Resultado obtenido:** `festa-mobile` #28 (prueba del refresh fallido de asistentes, SCRUM-141), fusionado el 20 de noviembre. El perfil de comercio (`festa-mobile` #21) quedó fusionado el 20 de noviembre con 155 pruebas en verde (según la transcripción).
 - **Validación (riesgos):** Las dos correcciones de carrera tienen prueba de respuesta diferida que falla sin la corrección. Riesgo mitigado: mostrar datos de otra cuenta tras cambiar de sesión.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P67
+- **Fecha:** 2026-11-20 (noche)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Sonnet 5.5 según la sesión)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Red Teaming (revisión adversarial) + Critique-and-Correct
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor adversarial de los PR de payment, analytics, ai e infra de Festa.
+TAREA: Para cada hallazgo, confirma que el código corregido es el que nombra el comentario. Busca cómo romper la corrección (reintento, réplica, orden de llegada). Corrige lo que aplica a la alineación del proyecto y comenta lo que no. Critica la corrección: ¿la prueba falla sin el cambio?
+RESTRICCIONES: No apruebes PR de otros. No corrijas PR de otros sin pedirlo.
+FORMATO: Por hallazgo: archivo, línea, corrección o motivo, y prueba que lo cubre.
+```
+
+- **Resultado obtenido:** `festa-infra` #20 (claves estables de reintentos para analytics, payment y ai) con 9 commits, aprobado por otro integrante y pendiente de fusión. `festa-analytics-service` #1 y `festa-ai-service` #1 con la firma HMAC del origen de sus reintentos. `festa-payment-service` #1 con bloqueo por comprador y la migración 008. Todos siguen abiertos el 21 de noviembre.
+- **Validación (riesgos):** Un hallazgo de ai se dejó abierto porque la corrección citada no tocaba el archivo señalado (verificar en el hilo). Riesgo mitigado: falsificación del origen de un reintento.
+- **Decisión de uso:** [confirmar con el autor]
