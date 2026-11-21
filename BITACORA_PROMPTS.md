@@ -1798,3 +1798,25 @@ FORMATO: Un PR por tarea, con las pruebas de modelo, hoja y parámetros.
 - **Resultado obtenido:** `festa-mobile` #38 (filtros, SCRUM-79 y SCRUM-81), sin revisión todavía; `festa-mobile` #37 (compra, SCRUM-83), con cambios solicitados (ver P68).
 - **Validación (riesgos):** La caché sin conexión guarda la lista filtrada; el límite queda anotado en el PR. El login con Google queda pausado en una rama local, sin subir.
 - **Decisión de uso:** Google queda fuera del MVP (decisión del equipo).
+
+
+---
+
+## P70
+- **Fecha:** 2026-11-21
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Red Teaming + Structured Output (checklist por repositorio)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Revisor de integración de los microservicios de Festa (gateway Kong, ocho servicios, RabbitMQ, MongoDB y PostgreSQL).
+TAREA: Haz una revisión formal de los repos backend: compara las rutas del gateway con el prefijo de cada servicio, las rutas que llama la app con las que existen, los eventos publicados y consumidos con los contratos, las variables obligatorias con la infraestructura y los puertos con el NLB. Lista lo que hay que corregir, con prioridad.
+RESTRICCIONES: Separa lo verificado de lo no revisado. Un falso positivo se marca como tal.
+FORMATO: Lista de correcciones con prioridad (alta, media, baja) y, aparte, lo verificado sin hallazgos.
+```
+
+- **Resultado obtenido:** Lista de correcciones entregada y mensaje redactado (contenido en la transcripción). Entre los hallazgos: una ruta del gateway sin destino y CORS abierto en `festa-gateway`. Sin hallazgos en prefijos, rutas de la app, eventos, variables y puertos.
+- **Validación (riesgos):** Las señales de eventos desconocidos eran falsos positivos (`orders.approved` es un contador). Riesgo mitigado: corregir lo que no está roto.
+- **Decisión de uso:** [confirmar con el autor]
