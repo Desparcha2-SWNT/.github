@@ -1820,3 +1820,25 @@ FORMATO: Lista de correcciones con prioridad (alta, media, baja) y, aparte, lo v
 - **Resultado obtenido:** Lista de correcciones entregada y mensaje redactado (contenido en la transcripción). Entre los hallazgos: una ruta del gateway sin destino y CORS abierto en `festa-gateway`. Sin hallazgos en prefijos, rutas de la app, eventos, variables y puertos.
 - **Validación (riesgos):** Las señales de eventos desconocidos eran falsos positivos (`orders.approved` es un contador). Riesgo mitigado: corregir lo que no está roto.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P71
+- **Fecha:** 2026-11-21
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Despliegue
+- **Técnica de prompting utilizada:** Structured Output + verificación con herramienta
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Ingeniero de infraestructura en AWS Learner Lab (sin CloudFront, sin dominio, LabRole).
+TAREA: La promoción de infra a main falla en SonarCloud por la API pública (intencional) y el ALB interno sin logs de acceso. Activa los logs del ALB interno en un bucket S3 privado, documenta la excepción de la API pública y valida con terraform fmt y terraform validate.
+RESTRICCIONES: No toques la promoción #22 hasta que #23 esté fusionado. No uses llave KMS propia (costo y permisos del Learner Lab).
+FORMATO: Commit único con la clave de Jira en el mensaje, y descripción del PR con la lista de excepciones.
+```
+
+- **Resultado obtenido:** `festa-infra` #23 abierto (commit `31c0ebb`), con bucket privado, cifrado SSE-S3 y política solo para `logdelivery.elasticloadbalancing.amazonaws.com`. Trivy pasó con la excepción `AVD-AWS-0132` documentada. Queda un hallazgo de SonarCloud que hay que marcar como falso positivo en la plataforma.
+- **Validación (riesgos):** No hay terraform local; `terraform validate` no se corrió (verificar en CI). Riesgo mitigado: exponer logs del ALB sin registro de auditoría.
+- **Decisión de uso:** [confirmar con el autor]
