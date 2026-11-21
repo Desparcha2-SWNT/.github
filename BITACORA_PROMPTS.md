@@ -1773,3 +1773,28 @@ FORMATO: Tabla: cuestión, estado, commit; y al final, el orden de fusión con l
 - **Resultado obtenido:** Aprobados por el revisor `festa-mobile` #33 (chat con la IA), #34 (descripción con IA) y #36 (panel del comercio). `festa-mobile` #37 (compra de boletas, SCRUM-83) con cambios solicitados: la clave de idempotencia se generaba de nuevo en cada toque. Corregido en el commit `1a8b0d0` (la clave se reutiliza en los reintentos del mismo intento).
 - **Validación (riesgos):** Sin la prueba de red caída, el cambio anterior parecía correcto y creaba órdenes duplicadas. La corrección incluye la prueba que lo cubre.
 - **Decisión de uso:** Aceptado con ajustes. #33 y #36 chocan en `routes.dart`; el segundo en fusionarse debe actualizarse.
+
+
+---
+
+## P69
+- **Fecha:** 2026-11-21
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Gherkin para aceptación + Negative Constraints
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Desarrollador Flutter del front de Festa.
+TAREA: Agrega los filtros del mapa (categoría, fecha y distancia) y deja listo el flujo de compra de boletas (SCRUM-83). event-service ya acepta category, from y to. Cada escenario debe tener prueba automatizada:
+- Dado el mapa abierto, cuando elijo una categoría y una fecha, entonces la búsqueda envía category, from y to en UTC.
+- Dado un filtro activo, cuando abro la hoja, entonces el indicador muestra el número de filtros activos.
+- Dado que la red se cae en la compra, cuando reintento, entonces se reutiliza la misma clave de idempotencia.
+RESTRICCIONES: No cambies la API. Google (SCRUM-136) queda fuera del MVP.
+FORMATO: Un PR por tarea, con las pruebas de modelo, hoja y parámetros.
+```
+
+- **Resultado obtenido:** `festa-mobile` #38 (filtros, SCRUM-79 y SCRUM-81), sin revisión todavía; `festa-mobile` #37 (compra, SCRUM-83), con cambios solicitados (ver P68).
+- **Validación (riesgos):** La caché sin conexión guarda la lista filtrada; el límite queda anotado en el PR. El login con Google queda pausado en una rama local, sin subir.
+- **Decisión de uso:** Google queda fuera del MVP (decisión del equipo).
