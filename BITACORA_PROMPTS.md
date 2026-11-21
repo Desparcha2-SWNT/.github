@@ -1842,3 +1842,25 @@ FORMATO: Commit único con la clave de Jira en el mensaje, y descripción del PR
 - **Resultado obtenido:** `festa-infra` #23 abierto (commit `31c0ebb`), con bucket privado, cifrado SSE-S3 y política solo para `logdelivery.elasticloadbalancing.amazonaws.com`. Trivy pasó con la excepción `AVD-AWS-0132` documentada. Queda un hallazgo de SonarCloud que hay que marcar como falso positivo en la plataforma.
 - **Validación (riesgos):** No hay terraform local; `terraform validate` no se corrió (verificar en CI). Riesgo mitigado: exponer logs del ALB sin registro de auditoría.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P72
+- **Fecha:** 2026-11-21
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Few-shot (tono del video) + Persona (Festi) + Negative Constraints
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Redactor del discurso de Festi, la IA de Festa.
+TAREA: Haz que la última diapositiva hable como Festi en el tono del video del proyecto (frases cortas, p. ej. «Aprende lo que te gusta y te muestra lo que sí te interesa»). Escribe el texto de cierre y genera la voz nueva con ElevenLabs, sin reutilizar audios anteriores.
+RESTRICCIONES: No prometas funciones que no estén en develop o en un PR. La clave de ElevenLabs va en la variable de entorno, nunca en el código ni en el chat.
+FORMATO: Texto de la tarjeta de la diapositiva y texto narrado.
+```
+
+- **Resultado obtenido:** Script `Presentacion_Pitch_Festa/tts/festi_cierre.mjs` y audio `assets/audio/festi_cierre.mp3` (293 032 bytes, 21 de noviembre). Diapositiva 12 con el audio incrustado y la tarjeta «Festi aprende lo que te gusta y te muestra lo que sí te interesa».
+- **Validación (riesgos):** El audio no se reproduce solo en PowerPoint: hay que configurar el inicio automático. El volumen y el ritmo los confirma el autor al escucharlo. Riesgo mitigado: prometer en la voz funciones que el producto no tiene.
+- **Decisión de uso:** Aceptado con ajustes; el autor revisó la diapositiva en PowerPoint.
