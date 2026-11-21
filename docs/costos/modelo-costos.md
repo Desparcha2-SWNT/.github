@@ -25,7 +25,7 @@ Uso por usuario, igual en las tres fases:
 - **Chat de IA:** lo usa el 25 % de los MAU, 4 mensajes al mes cada uno, con 3.000 tokens de entrada y 500 de salida por mensaje.
 - **IA de los organizadores:** se costea el mismo volumen que se factura en Festa Pro: 49 solicitudes por evento (5 de descripción, 2 de moderación, 40 del chat de asistentes y 2 de métricas), es decir 196 por organizador al mes, con 3.000 tokens de entrada y 300 de salida por solicitud (XLSM, hoja Supuestos_Festa). A las tarifas de Gemini de la sección 2, cada solicitud cuesta USD 0,00165 (unos 5,4 COP).
 - **Compra:** 20 peticiones y 0,1 MB.
-- **Negocio (Festa Pro, XLSM oficial):** suscripción de 79.000 COP al mes por organizador, con 150 solicitudes de IA incluidas y 60 COP por cada solicitud adicional. Un organizador típico hace 4 eventos al mes y 196 solicitudes (4 × (5 de descripción + 2 de moderación + 40 del chat de asistentes + 2 de métricas)). Wompi cobra 2,65 % + 700 COP + IVA: sobre la suscripción es costo de Festa (un cobro mensual por organizador) y sobre las boletas **lo paga el comprador** como cargo por servicio. Boleta promedio de 35.000 COP, solo para calcular ese cargo.
+- **Negocio (Festa Pro, XLSM oficial):** suscripción de 79.000 COP al mes por organizador, con 150 solicitudes de IA incluidas y 60 COP por cada solicitud adicional. Un organizador típico hace 4 eventos al mes y 196 solicitudes (4 × (5 de descripción + 2 de moderación + 40 del chat de asistentes + 2 de métricas)). Wompi cobra 2,65 % + 700 COP + IVA: sobre la suscripción es costo de Festa (un cobro mensual por organizador). **Sobre las boletas, quién lo asume es una decisión de producto pendiente:** hoy el servicio de pagos cobra `total = subtotal` y el comercio recibe el subtotal, es decir, lo asume Festa (sección 5). Boleta promedio de 35.000 COP, solo para calcular ese cargo.
 
 ## 2. Precios usados
 
@@ -96,7 +96,7 @@ Por organizador al mes:
 | Wompi sobre el cobro mensual (2,65 % + 700 + IVA) | 3.411 |
 | **Neto antes de IA y costos fijos** | **78.349** |
 
-Por boleta de 35.000 COP: la infraestructura de la compra cuesta 0,13 COP y Wompi cobra 1.937 COP, que **paga el comprador**. Festa no cobra comisión.
+Por boleta de 35.000 COP: la infraestructura de la compra cuesta 0,13 COP y Wompi cobra 1.937 COP. Festa no cobra comisión, y hoy el checkout cobra `total = subtotal` (`festa-payment-service#1`), así que **esa tarifa la asume Festa**: el modelo la muestra aparte, no dentro del margen principal, hasta que el equipo decida si se traslada al comprador.
 
 | | Fase 1 | Fase 2 | Fase 3 |
 |---|---:|---:|---:|
@@ -106,13 +106,14 @@ Por boleta de 35.000 COP: la infraestructura de la compra cuesta 0,13 COP y Womp
 | Costo de operación, sección 3 (COP) | 913.095 | 2.171.441 | 5.345.829 |
 | **Margen sobre la operación (COP)** | **3.787.827** | **17.415.734** | **73.002.870** |
 | Margen sobre la operación (USD) | 1.147,83 | 5.277,50 | 22.122,08 |
-| Organizadores para cubrir la operación | 12 | 28 | 69 |
+| Organizadores para cubrir la operación (con la IA de cada organizador como costo marginal) | 11 | 25 | 56 |
+| Margen si Festa asume el Wompi de las boletas (COP) | 3.400.482 | 14.510.646 | 63.319.245 |
 
 **Lectura:**
-- **La operación se cubre con pocos organizadores:** 12 en el piloto (de los 60 supuestos), 28 en la Fase 2 y 69 en la Fase 3.
+- **La operación se cubre con pocos organizadores:** 11 en el piloto (de los 60 supuestos), 25 en la Fase 2 y 56 en la Fase 3. La IA de cada organizador (unos 1.067 COP al mes) se trata como costo marginal: el umbral deja fijos la infraestructura, el tráfico sin compra y las compras de la fase, y suma la IA solo de los organizadores que pagan.
 - **Este margen no incluye nómina, mercadeo ni otros gastos.** El XLSM sí los incluye (9,3 millones de COP de costos fijos al mes) y por eso necesita unos 128 organizadores para el equilibrio, con utilidad positiva desde el mes 8 si la base crece 12 % mensual.
 - **El volumen de IA es el mismo que se factura** (196 solicitudes por organizador), pero el costo por solicitud no es el del XLSM: aquí son unos 5,4 COP con la tarifa vigente de Gemini y la TRM de 3.300; el XLSM usa 30 COP (tarifa de referencia de 1 y 5 USD por millón de tokens, TRM de 4.000 y 40 % de sobrecosto). Con el costo del XLSM, la IA del piloto pasaría de USD 19 a unos USD 107 al mes y el margen seguiría siendo positivo. El chat de recomendaciones del público (sección 4) es aparte: no se factura a nadie.
-- **Trasladar Wompi al comprador, en las boletas, sigue siendo necesario:** sin comisión por boleta, Festa no tendría con qué cubrirlo.
+- **Wompi de las boletas es una decisión pendiente.** Con el código actual lo asume Festa (la última fila de la tabla): resta unos 0,39, 2,9 y 9,7 millones de COP al mes en cada fase. Trasladarlo al comprador exigiría cambiar el cálculo del total en el checkout; hasta entonces el margen principal no lo incluye y no debe presentarse como aplicable sin esa decisión.
 
 ## 6. Costo de desarrollo (aparte de la operación)
 
