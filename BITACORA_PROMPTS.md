@@ -1748,3 +1748,28 @@ FORMATO: Por hallazgo: archivo, línea, corrección o motivo, y prueba que lo cu
 - **Resultado obtenido:** `festa-infra` #20 (claves estables de reintentos para analytics, payment y ai) con 9 commits, aprobado por otro integrante y pendiente de fusión. `festa-analytics-service` #1 y `festa-ai-service` #1 con la firma HMAC del origen de sus reintentos. `festa-payment-service` #1 con bloqueo por comprador y la migración 008. Todos siguen abiertos el 21 de noviembre.
 - **Validación (riesgos):** Un hallazgo de ai se dejó abierto porque la corrección citada no tocaba el archivo señalado (verificar en el hilo). Riesgo mitigado: falsificación del origen de un reintento.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P68
+- **Fecha:** 2026-11-21 (madrugada)
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Self-Critique + Structured Output
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Autor de los PR de la app que responde a la revisión de un integrante.
+TAREA: El revisor comentó los PR #33, #34, #36 y #37 (mensaje pegado abajo). Para cada cuestión que menciona, verifica si ya está corregida en el PR y en qué commit; si no, corrígela. Critica tu respuesta: ¿cubre exactamente lo que pidió? Al final, recomienda el orden de fusión de #33 y #36, que chocan en routes.dart y router.dart.
+<revision>
+[texto de la revisión]
+</revision>
+RESTRICCIONES: No escribas «solucionado» sin commit.
+FORMATO: Tabla: cuestión, estado, commit; y al final, el orden de fusión con la razón.
+```
+
+- **Resultado obtenido:** Aprobados por el revisor `festa-mobile` #33 (chat con la IA), #34 (descripción con IA) y #36 (panel del comercio). `festa-mobile` #37 (compra de boletas, SCRUM-83) con cambios solicitados: la clave de idempotencia se generaba de nuevo en cada toque. Corregido en el commit `1a8b0d0` (la clave se reutiliza en los reintentos del mismo intento).
+- **Validación (riesgos):** Sin la prueba de red caída, el cambio anterior parecía correcto y creaba órdenes duplicadas. La corrección incluye la prueba que lo cubre.
+- **Decisión de uso:** Aceptado con ajustes. #33 y #36 chocan en `routes.dart`; el segundo en fusionarse debe actualizarse.
