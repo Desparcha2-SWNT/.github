@@ -44,7 +44,7 @@ NEGOCIO = dict(
     solicitudes_por_evento=5 + 2 + 40 + 2,  # descripción + moderación + chat de asistentes + métricas
     wompi_pct=0.0265, wompi_fijo_cop=700, iva=0.19,
     cobros_wompi_por_organizador=1,   # suscripción y overage se cobran en un solo cargo mensual
-    precio_boleta_cop=35_000,         # solo para el costo de Wompi de una boleta (lo paga el comprador)
+    precio_boleta_cop=35_000,         # solo para el costo de Wompi de una boleta (decisión de producto pendiente)
 )
 # El tamaño de cada fase se da en organizadores; los eventos salen de ahí (4 por organizador).
 for _f in FASES.values():
@@ -169,7 +169,7 @@ def fmt(x, d=2):
 if __name__ == "__main__":
     infra_compra, wompi_boleta = por_compra_usd()
     pro = festa_pro()
-    print(f"Por boleta: infraestructura USD {infra_compra:.6f}; Wompi {fmt(wompi_boleta,0)} COP (lo paga el comprador); sin comisión (fuera del modelo oficial)")
+    print(f"Por boleta: infraestructura USD {infra_compra:.6f}; Wompi {fmt(wompi_boleta,0)} COP (hoy lo asume Festa: el checkout cobra total = subtotal); sin comisión (fuera del modelo oficial)")
     print(f"Festa Pro por organizador: {pro['solicitudes']} solicitudes de IA, overage {fmt(pro['overage'],0)}; ARPU {fmt(pro['arpu'],0)} COP; "
           f"Wompi {fmt(pro['wompi'],0)} COP; neto {fmt(pro['neto'],0)} COP")
     print()
@@ -185,7 +185,14 @@ if __name__ == "__main__":
         ingreso_cop = orgs * pro["arpu"]
         wompi_total_cop = orgs * pro["wompi"]
         margen_cop = ingreso_cop - wompi_total_cop - total * TRM
-        equilibrio = math.ceil(total * TRM / pro["neto"])
+        # El gasto de IA crece con los organizadores: el equilibrio usa el costo MARGINAL por organizador y deja fijo
+        # (infraestructura, tráfico sin compra y compras) lo que no depende de cuántos pagan Festa Pro.
+        ia_por_org_cop = NEGOCIO["eventos_por_organizador"] * NEGOCIO["solicitudes_por_evento"] * costo_solicitud_usd() * TRM
+        fijo_cop = (total - desc) * TRM
+        equilibrio = math.ceil(fijo_cop / (pro["neto"] - ia_por_org_cop))
+        # Wompi de las boletas: hoy el servicio de pagos cobra total = subtotal (sin cargo al comprador), así que
+        # quien tiene la cuenta de Wompi, Festa, asume su tarifa salvo que el equipo decida trasladarla.
+        wompi_boletas_cop = f["compras"] * wompi_boleta
         print(f"== {nombre}: {f['mau']} MAU, {orgs} organizadores, {f['eventos']} eventos, {tareas} tareas ({vcpu} vCPU, {gb} GB)")
         print("   fijo:", {k: round(v, 2) for k, v in fijo.items()}, "=", round(total_fijo, 2))
         print("   sin compra:", {k: round(v, 2) for k, v in sin.items()}, f"peticiones={pet:,.0f} GB={gbx:.1f}")
@@ -196,6 +203,8 @@ if __name__ == "__main__":
         print(f"   ingreso Festa Pro {fmt(ingreso_cop,0)} COP (USD {ingreso_cop/TRM:.2f}); Wompi {fmt(wompi_total_cop,0)} COP; "
               f"margen sobre operación {fmt(margen_cop,0)} COP (USD {margen_cop/TRM:.2f}); "
               f"ingreso por MAU USD {ingreso_cop/TRM/f['mau']:.4f}; organizadores para equilibrio de operación {equilibrio}")
+        print(f"   si Festa asume el Wompi de {f['compras']:,} boletas ({fmt(wompi_boletas_cop,0)} COP): "
+              f"margen {fmt(margen_cop - wompi_boletas_cop,0)} COP (USD {(margen_cop - wompi_boletas_cop)/TRM:.2f})")
         print()
     aws, az, gcp = comparar_nubes_fase1()
     print(f"Nubes Fase 1 (fijo): AWS {aws:.2f} | Azure {sum(az.values()):.2f} {[(k, round(v,2)) for k,v in az.items()]} "
