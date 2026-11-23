@@ -1864,3 +1864,25 @@ FORMATO: Texto de la tarjeta de la diapositiva y texto narrado.
 - **Resultado obtenido:** Script `Presentacion_Pitch_Festa/tts/festi_cierre.mjs` y audio `assets/audio/festi_cierre.mp3` (293 032 bytes, 21 de noviembre). Diapositiva 12 con el audio incrustado y la tarjeta «Festi aprende lo que te gusta y te muestra lo que sí te interesa».
 - **Validación (riesgos):** El audio no se reproduce solo en PowerPoint: hay que configurar el inicio automático. El volumen y el ritmo los confirma el autor al escucharlo. Riesgo mitigado: prometer en la voz funciones que el producto no tiene.
 - **Decisión de uso:** Aceptado con ajustes; el autor revisó la diapositiva en PowerPoint.
+
+
+---
+
+## P73
+- **Fecha:** 2026-11-23
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought + Structured Output (lista de pendientes por dueño)
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Preparador de la sustentación técnica final de Festa.
+TAREA: Según los lineamientos del profesor (10 minutos, nueve criterios de 1 a 5, no más de 6 grupos por día, QR con documentación y descarga de la app, entrega de prompts), revisa paso a paso: qué debe mostrar el QR y qué falta, el APK y los secretos de firma, el horario y la decisión sobre la demo, y el estado de la bitácora en docs/bitacora-prompts.
+RESTRICCIONES: No inventes el horario: el Excel de SharePoint no es accesible desde aquí.
+FORMATO: Tabla por bloque (demo, QR, prompts, diapositivas) con pendiente, dueño y forma de verificarlo.
+```
+
+- **Resultado obtenido:** Pendientes identificados: APK y QR nuevos (el release es del 10 de noviembre); secretos de firma de `festa-mobile` en 0; horario de la sustentación (no accesible desde esta sesión); la bitácora está en `docs/bitacora-prompts` y no en `main`.
+- **Validación (riesgos):** Se verificó el estado de los releases y de la bitácora en GitHub. Riesgo mitigado: entregar un QR con una versión vieja.
+- **Decisión de uso:** [confirmar con el autor]
