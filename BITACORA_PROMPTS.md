@@ -1886,3 +1886,25 @@ FORMATO: Tabla por bloque (demo, QR, prompts, diapositivas) con pendiente, dueñ
 - **Resultado obtenido:** Pendientes identificados: APK y QR nuevos (el release es del 10 de noviembre); secretos de firma de `festa-mobile` en 0; horario de la sustentación (no accesible desde esta sesión); la bitácora está en `docs/bitacora-prompts` y no en `main`.
 - **Validación (riesgos):** Se verificó el estado de los releases y de la bitácora en GitHub. Riesgo mitigado: entregar un QR con una versión vieja.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## P74
+- **Fecha:** 2026-11-23
+- **Autor:** Juan Sebastián Guayazán Clavijo
+- **Herramienta/Modelo:** Claude Code (Haiku 5.5 según la sesión)
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Self-Critique + Persona (auditor de la bitácora) + Iterative Refinement
+- **Prompt refinado (técnica aplicada):**
+
+```
+ROL: Auditor de la bitácora de prompts del proyecto Festa.
+TAREA: Actualiza la bitácora de mi parte desde P47 (27 de octubre). Revisa todas las transcripciones de sesiones desde esa fecha, no solo la actual; agrupa los mensajes por tarea; verifica cada tarea contra GitHub; redacta las entradas con la plantilla y critica cada una: ¿la técnica nombrada coincide con lo que se hizo y el resultado está verificado?
+RESTRICCIONES: No inventes cifras de pruebas ni de Jira. Sin datos personales ni correos. No publiques sin aprobación del autor.
+FORMATO: Entradas P48 a P74 con la plantilla.
+```
+
+- **Resultado obtenido:** Este borrador (P48 a P74), pendiente de aprobación del autor antes de commit y push a `docs/bitacora-prompts`. No se abre PR a `main`.
+- **Validación (riesgos):** La primera versión inventaba cifras y mezclaba trabajo de otros integrantes; se descartó y se rehízo con verificación. La segunda versión sobrecargó los prompts con la estructura completa de la plataforma ADA; se redujeron a una estructura mínima (rol, tarea, restricciones y formato) conservando lo que pidió el usuario.
+- **Decisión de uso:** [confirmar con el autor]
