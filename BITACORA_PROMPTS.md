@@ -1283,3 +1283,19 @@ RIESGOS: Dependencias inventadas; cargas desiguales; prometer un Sprint 1 que no
 - **Resultado obtenido:** RF2 y RF3 pasan al Sprint 2 y RF5 y RF6 al Sprint 3. Reparto de 18, 20 y 16 subtareas con 3 a 4 por persona, fechas de vencimiento por dependencias y unos 60 vínculos "bloquea" en Jira. Metas del Sprint 2 y 3 actualizadas y docs/sprints al día.
 - **Validación (riesgos):** Se comprobó en Jira, tarea por tarea, que el responsable y la fecha quedaran aplicados y que ninguna tarea venza antes que la que la bloquea. Los puntos de historia siguen sin estimar.
 - **Decisión de uso (propuesta):** Aceptado con ajustes. El equipo debe confirmar el reparto y decidir qué pasa con el Sprint 1 si la app no alcanza.
+
+---
+
+Entradas P48 a P74 (27 oct a 23 nov). Los prompts son reconstrucciones a partir de las transcripciones de las sesiones de trabajo, con la estructura mínima rol / tarea / restricciones / formato. Modelo y decisiones de uso quedan marcados para confirmar por el autor.
+
+**Mapa por fase del ciclo** (los números son el orden cronológico; el ciclo ideal es de arriba abajo):
+- **Análisis:** P49, P55, P59, P61, P62, P73
+- **Diseño:** P54 (Figma antes del front), P72 (voz y mensaje de cierre); P50 y P60 son diseño a posteriori, ver nota en cada una
+- **Implementación:** P56, P65 (contrato de infra antes que el código), P69, P48
+- **Pruebas:** P51, P53, P57, P58, P63, P64, P66, P67, P68, P70
+- **Despliegue:** P52, P71
+- **Documentación:** P74
+
+Lección transversal: en varias entradas el orden real fue código primero y documentación después. Las entradas lo registran tal cual y lo marcan en «Validación». Lo que el equipo debe seguir para el resto del proyecto es diagramar antes de programar.
+
+---
