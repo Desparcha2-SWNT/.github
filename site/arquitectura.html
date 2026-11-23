@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arquitectura · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">Festa</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="arquitectura.html" aria-current="page">Arquitectura</a>
+      <a href="contratos.html">Contratos</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="instalacion.html">Instalar la app</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Arquitectura</h1>
+    <p>Microservicios detrás de un gateway Kong. Cada servicio tiene su propia base de datos. La app habla con Kong por HTTPS; los servicios se comunican por RabbitMQ con contratos versionados.</p>
+
+    <h2>Diagramas C4</h2>
+    <p>Los diagramas fuente están en <a href="https://github.com/Desparcha2-SWNT/.github/tree/main/docs/arquitectura">docs/arquitectura</a> del repositorio de documentación (modelo en <code>festa.dsl</code>).</p>
+
+    <h3>1. Contexto</h3>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/01-contexto/ContextoFesta.png" alt="Diagrama de contexto de Festa">
+    </figure>
+
+    <h3>2. Contenedores</h3>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/02-contenedores/ContenedoresFesta.png" alt="Diagrama de contenedores de Festa">
+    </figure>
+
+    <h3>3. Componentes</h3>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesBooking.png" alt="Componentes de booking-service">
+      <figcaption>booking-service</figcaption>
+    </figure>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesPayment.png" alt="Componentes de payment-service">
+      <figcaption>payment-service</figcaption>
+    </figure>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesAI.png" alt="Componentes de ai-service">
+      <figcaption>ai-service</figcaption>
+    </figure>
+
+    <h3>4. Dinámica: compra de boleta</h3>
+    <figure>
+      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/04-dinamicas/CompraBoleto.png" alt="Flujo de compra de boleta">
+    </figure>
+
+    <h3>5. Clases y base de datos</h3>
+    <p>Un diagrama de clases y uno de base de datos por servicio con base propia.</p>
+    <ul class="links">
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/auth-service.png">Clases: auth-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/user-service.png">Clases: user-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/event-service.png">Clases: event-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/booking-service.png">Clases: booking-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/payment-service.png">Clases: payment-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/ai-service.png">Clases: ai-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/auth-service.png">Base de datos: auth-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/user-service.png">Base de datos: user-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/event-service.png">Base de datos: event-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/booking-service.png">Base de datos: booking-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/payment-service.png">Base de datos: payment-service</a></li>
+      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/ai-service.png">Base de datos: ai-service</a></li>
+    </ul>
+
+    <h2>Decisiones de arquitectura</h2>
+    <ul class="links">
+      <li><a href="https://github.com/Desparcha2-SWNT/.github/blob/main/docs/adr/0001-plataforma-aws.md">ADR 0001: plataforma AWS</a></li>
+      <li><a href="https://github.com/Desparcha2-SWNT/.github/blob/main/docs/adr/0003-proveedor-llm-gemini.md">ADR 0003: proveedor de LLM (Gemini)</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>Equipo Desparcha2 · Curso ISIS, grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301.</p>
+  </footer>
+</body>
+</html>

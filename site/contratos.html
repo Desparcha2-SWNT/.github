@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contratos de eventos · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html">Festa</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="contratos.html" aria-current="page">Contratos</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="instalacion.html">Instalar la app</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Contratos de eventos</h1>
+    <p>Los servicios se comunican por RabbitMQ con mensajes definidos como JSON Schema en <code>festa-infra/contracts</code>. Cada cambio incompatible sube la versión del contrato y el productor convive con la versión anterior hasta que todos los consumidores se actualizan.</p>
+
+    <h2>Ejemplo: asistencia con versión</h2>
+    <p>El conteo de asistentes usa <code>attendanceVersion</code>, un entero monotónico por evento. Un consumidor aplica el conteo solo si la versión recibida es mayor que la guardada, así un mensaje atrasado no sobrescribe uno más reciente.</p>
+    <ul class="links">
+      <li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/events/booking/attendance.confirmed.schema.json">attendance.confirmed (esquema)</a></li>
+      <li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/events/booking/attendance.cancelled.schema.json">attendance.cancelled (esquema)</a></li>
+      <li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/README.md">Reglas de evolución de contratos</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>Equipo Desparcha2 · Curso ISIS, grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301.</p>
+  </footer>
+</body>
+</html>
