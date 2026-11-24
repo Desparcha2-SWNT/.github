@@ -4,7 +4,7 @@ Modelo de arquitectura de Festa escrito como código (*diagrams as code*) con
 [Structurizr DSL](https://docs.structurizr.com/dsl). El archivo
 [`festa.dsl`](./festa.dsl) es la **fuente de verdad de las vistas C4** (contexto, contenedores,
 componentes y dinámica): sus imágenes en `diagramas/` se exportan desde él y no deben editarse a mano.
-Los diagramas de clases (`05-clases/`) y de base de datos (`06-base-de-datos/`) **no salen del DSL**:
+Los diagramas de las carpetas `05` a `09` (clases, base de datos, secuencias, proceso y despliegue) **no salen del DSL**:
 se dibujan en Lucid, que es su fuente de verdad, y no tienen vista equivalente en `festa.dsl`.
 
 ## Estructura de carpetas
@@ -28,47 +28,47 @@ docs/
 │       │   └── CompraBoleto.png          ← vista dinámica (complementaria)
 │       ├── 05-clases/                    ← un diagrama de clases por microservicio (Lucid)
 │       │   └── auth-service.png, user-service.png, event-service.png,
-│       │       booking-service.png, payment-service.png, ai-service.png
-│       └── 06-base-de-datos/             ← un modelo de base de datos por microservicio (Lucid)
-│           └── auth-service.png, user-service.png, … (los mismos seis)
+│       │       booking-service.png, payment-service.png, ai-service.png,
+│       │       analytics-service.png, notification-service.png
+│       ├── 06-base-de-datos/             ← un modelo de base de datos por microservicio (Lucid)
+│       │   └── auth-service.png, user-service.png, … (los mismos ocho)
+│       ├── 07-secuencias/                ← seis diagramas de secuencia (Lucid)
+│       ├── 08-proceso/                   ← proceso de negocio BPMN (Lucid)
+│       └── 09-despliegue/                ← arquitectura y despliegue en AWS (Lucid)
 └── adr/                                  ← decisiones de arquitectura (en el PR de DevSecOps)
 ```
 
 Cada carpeta de `diagramas/` corresponde a un tipo de vista del modelo C4 y lleva
 un número para que se lea de lo general a lo particular. El nombre de cada imagen de las carpetas 01 a 04 es
-la clave de su vista en `festa.dsl`; las de 05 y 06 vienen de Lucid.
+la clave de su vista en `festa.dsl`; las de 05 a 09 vienen de Lucid.
 
 ## Diagramas
 
 | Nivel | Vista (`festa.dsl`) | Imagen | Qué muestra |
 | --- | --- | --- | --- |
-| 1. Contexto | `ContextoFesta` | [`01-contexto/ContextoFesta.png`](./diagramas/01-contexto/ContextoFesta.png) | Festa frente a sus actores y a los sistemas externos (Wompi, Google Gemini API, FCM/APNs, Google Identity y Mapbox). |
+| 1. Contexto | `ContextoFesta` | [`01-contexto/ContextoFesta.png`](./diagramas/01-contexto/ContextoFesta.png) | Festa frente a sus actores y a los sistemas externos (Wompi, Google Gemini API, Firebase Cloud Messaging, Google Identity y Mapbox). |
 | 2. Contenedores | `ContenedoresFesta` | [`02-contenedores/ContenedoresFesta.png`](./diagramas/02-contenedores/ContenedoresFesta.png) | `festa-mobile`, `festa-gateway`, los ocho microservicios de negocio, RabbitMQ, la base de datos propia de cada servicio (PostgreSQL o MongoDB), Redis y Prometheus + Grafana. |
 | 3. Componentes | `ComponentesBooking` | [`03-componentes/ComponentesBooking.png`](./diagramas/03-componentes/ComponentesBooking.png) | `festa-booking-service`: asistencia y QR de un solo uso (RF7, RF10, RNF7). |
-| 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: cobro y split con Wompi (RF11). |
+| 3. Componentes | `ComponentesPayment` | [`03-componentes/ComponentesPayment.png`](./diagramas/03-componentes/ComponentesPayment.png) | `festa-payment-service`: órdenes y checkout firmado de Wompi (RF11). |
 | 3. Componentes | `ComponentesAI` | [`03-componentes/ComponentesAI.png`](./diagramas/03-componentes/ComponentesAI.png) | `festa-ai-service`: recomendaciones, descripciones y límite de uso (RF8, RF9, RNF8). |
-| Dinámica | `CompraBoleto` | [`04-dinamicas/CompraBoleto.png`](./diagramas/04-dinamicas/CompraBoleto.png) | Secuencia de compra, pago, evento en RabbitMQ y entrega del QR (RF11, RF10). |
-| Clases | (Lucid) | [`05-clases/`](./diagramas/05-clases/) | Un diagrama de clases por microservicio (auth, user, event, booking, payment y ai). |
+| Dinámica | `CompraBoleto` | [`04-dinamicas/CompraBoleto.png`](./diagramas/04-dinamicas/CompraBoleto.png) | Compra con checkout de Wompi, webhook, evento en RabbitMQ y emisión del pase QR (RF11, RF10). |
+| Clases | (Lucid) | [`05-clases/`](./diagramas/05-clases/) | Un diagrama de clases por microservicio (auth, user, event, booking, payment, ai, analytics y notification). |
 | Base de datos | (Lucid) | [`06-base-de-datos/`](./diagramas/06-base-de-datos/) | Un modelo de base de datos por microservicio, con su propio esquema. |
+| Secuencias | (Lucid) | [`07-secuencias/`](./diagramas/07-secuencias/) | Registro, crear evento, asistencia, descripción con IA, compra y validación de QR. |
+| Proceso | (Lucid) | [`08-proceso/`](./diagramas/08-proceso/) | Proceso de negocio en BPMN. |
+| Despliegue | (Lucid) | [`09-despliegue/`](./diagramas/09-despliegue/) | Arquitectura de microservicios y despliegue en AWS. |
 
 El documento [`alcance.md`](./alcance.md) describe el sistema, su problema, su contexto, actores y sistemas externos y su alcance, y reúne y explica todos los diagramas de esta carpeta.
 
-El despliegue en AWS no se modela aquí: está en la página "Despliegue en AWS (oficial)" del documento de Lucid del proyecto
-(Azure y GCP quedan como páginas alternativas).
+El despliegue en AWS no se modela en C4: su fuente es la página "Despliegue en AWS (oficial)" del documento de Lucid del proyecto.
 
 ## Diagramas en Lucid
 
-Todos los diagramas de Lucid están en el mismo documento del proyecto. Las páginas "Clases y BD · auth-service", "… user-service", "… event-service", "… booking-service", "… payment-service" y "… ai-service" tienen el diagrama de clases y el modelo de base de datos de cada microservicio. Son una propuesta, pendiente del ADR 0002.
+Todos los diagramas de Lucid están en el mismo documento del proyecto. Las páginas "Clases y BD · auth-service", "… user-service", "… event-service", "… booking-service", "… payment-service", "… ai-service", "… analytics-service" y "… notification-service" tienen el diagrama de clases y el modelo de base de datos de cada microservicio, hechos desde sus migraciones y colecciones reales.
 
 ## Estado del modelo
 
-El modelo sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026) y el despliegue en AWS
-(decisión del 7-nov-2026, ADR 0001). Lo marcado como **propuesto** depende de una decisión pendiente del equipo:
-el almacén que usa cada servicio (ADR 0002). Las relaciones
-servicio-almacén, los componentes internos del nivel 3 y los servicios de AWS son una propuesta
-de diseño, no código existente. Los repositorios solo tienen README al 25 de octubre.
-
-La versión anterior del modelo (Kong, Spring Boot, Admin Panel en React) quedó obsoleta y se reemplazó.
+El modelo se contrastó el 23-nov-2026 con la rama `develop` de cada repositorio `Desparcha2-SWNT/festa-*` y con el Terraform de `festa-infra`. Los PR abiertos se revisaron, pero lo que aún no está fusionado no se dibuja como hecho.
 
 ## Cómo visualizar o exportar los diagramas
 
