@@ -23,50 +23,236 @@
     </nav>
   </header>
 
-  <main class="doc">
-<div class="aviso"><strong>Nota sobre RF11.</strong> La versión vigente no retiene una comisión sobre la boleta: el comercio asume la comisión de Wompi (2,65 % + $700 + IVA) y Festa cobra la suscripción. Este texto se actualizará cuando el equipo confirme el modelo de comisiones. Los diagramas de casos de uso se publicarán cuando se actualicen.</div>
-<h1>📄 Requerimientos del Sistema</h1>
-<h2>1. Lista general de requerimientos</h2>
-<p>El sistema de Festa tiene los siguientes requerimientos (descripción a alto nivel):</p>
-<h3>1.1 Requerimientos funcionales</h3>
-<p>El sistema de Festa debe tener la capacidad de:</p>
-<ol>
-<li>Registrar e iniciar sesión (correo o Google) — usuarios y comercios. <em>(RF1 — Must)</em></li>
-<li>Gestionar un perfil de usuario con intereses y preferencias de plan. <em>(RF2 — Must)</em></li>
-<li>Gestionar un perfil de comercio/organizador, con verificación manual del equipo Festa. <em>(RF3 — Must)</em></li>
-<li>Crear, editar y cancelar eventos (fecha, lugar, categoría, cupo, descripción). <em>(RF4 — Must)</em></li>
-<li>Mostrar un mapa interactivo en tiempo real con eventos activos y próximos, agrupados en clústeres por zona. <em>(RF5 — Must)</em></li>
-<li>Buscar y filtrar eventos por categoría, zona y fecha. <em>(RF6 — Should, alcance reducido)</em></li>
-<li>Confirmar asistencia a un evento, con conteo de asistentes. <em>(RF7 — Should, alcance reducido)</em></li>
-<li>Generar recomendaciones personalizadas de eventos en lenguaje natural mediante IA Generativa conversacional. <em>(RF8 — Must, requisito del profesor)</em></li>
-<li>Generar automáticamente, a partir de datos básicos del comercio, una descripción atractiva del evento redactada por IA Generativa. <em>(RF9 — Must, requisito del profesor)</em></li>
-<li>Validar asistencia mediante código QR generado por evento, de un solo uso. <em>(RF10 — Must, indicación del profesor)</em></li>
-<li>Vender boletería dentro de la app, reteniendo una comisión por cada entrada vendida. <em>(RF11 — Must, indicación del profesor)</em></li>
-<li>Enviar notificaciones push por eventos cercanos y recordatorios de asistencia. <em>(RF12 — Should, fase 2; fuera del MVP actual)</em></li>
-<li>Compartir eventos mediante enlaces hacia redes sociales externas. <em>(RF13 — Could)</em></li>
-<li>Reportar eventos o usuarios, con revisión manual del equipo. <em>(RF14 — Should)</em></li>
-<li>Mostrar un panel de comercio simple para medir retorno (conteos de asistentes y boletos vendidos). <em>(RF15 — Should)</em></li>
-<li>Otorgar XP por asistir, crear y promocionar eventos, según reglas configurables. <em>(RF16 — Won't / roadmap futuro)</em></li>
-<li>Permitir canje de puntos por descuentos en comercios aliados, con generación y redención de cupones. <em>(RF17 — Won't / roadmap futuro)</em></li>
-<li>Mantener un sistema de reputación para creadores de eventos (ranking, insignias, mayor visibilidad). <em>(RF18 — Won't / roadmap futuro)</em></li>
-<li>Habilitar "Parches en Vivo": eventos improvisados que se activan en menos de 2 horas y expiran automáticamente. <em>(RF19 — Could)</em></li>
-</ol>
-<h3>1.2 Requerimientos no funcionales</h3>
-<p>El sistema de Festa debe tener:</p>
-<ol>
-<li>Rendimiento: el mapa debe cargar los eventos visibles en menos de 2 segundos. <em>(RNF1)</em></li>
-<li>Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. <em>(RNF2)</em></li>
-<li>Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. <em>(RNF3)</em></li>
-<li>Seguridad: autenticación con tokens (JWT/OAuth2), cifrado en tránsito (HTTPS) y en reposo para datos personales. <em>(RNF4)</em></li>
-<li>Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. <em>(RNF5)</em></li>
-<li>Integración con una pasarela de pagos existente (Wompi/PayU/Mercado Pago) para la venta de boletería. <em>(RNF6)</em></li>
-<li>Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. <em>(RNF7)</em></li>
-<li>Costo de IA controlado: descripciones (RF9) se generan una sola vez y se persisten; recomendaciones (RF8) usan un modelo de costo reducido con límite de 5–20 solicitudes por usuario por minuto. <em>(RNF8)</em></li>
-<li>Eficiencia de recursos: funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería. <em>(RNF9)</em></li>
-<li>Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. <em>(RNF10)</em></li>
-<li>Usabilidad: interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras. <em>(RNF11)</em></li>
-<li>Mantenibilidad: arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos). <em>(RNF12)</em></li>
-</ol>
+  <main class="doc req-page">
+    <section class="req-hero">
+      <p class="kicker">Especificación</p>
+      <h1>Requerimientos del sistema</h1>
+      <p>Festa define 19 requerimientos funcionales y 12 no funcionales. Cada requerimiento tiene una prioridad MoSCoW: lo que debe tener, lo que debería, lo que podría y lo que queda para una versión futura.</p>
+      <div class="stats">
+        <div class="stat stat-must"><strong>9</strong><span>Debe tener</span></div>
+        <div class="stat stat-should"><strong>5</strong><span>Debería tener</span></div>
+        <div class="stat stat-could"><strong>2</strong><span>Podría tener</span></div>
+        <div class="stat stat-wont"><strong>3</strong><span>Versión futura</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Requerimientos funcionales</h2>
+      <div class="filtros" role="group" aria-label="Filtrar por prioridad">
+        <button type="button" class="activo" data-filtro="todos">Todos</button>
+        <button type="button" data-filtro="Must">Debe tener</button>
+        <button type="button" data-filtro="Should">Debería tener</button>
+        <button type="button" data-filtro="Could">Podría tener</button>
+        <button type="button" data-filtro="Won't">Versión futura</button>
+      </div>
+      <div class="reqs" id="rf">
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF1</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Registro e inicio de sesión</h3>
+        <p>Registrar e iniciar sesión con correo o Google, para usuarios y comercios.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF2</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Perfil de usuario</h3>
+        <p>Gestionar un perfil con intereses y preferencias de plan.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF3</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Perfil de comercio</h3>
+        <p>Gestionar el perfil de un comercio u organizador, con verificación manual por el equipo de Festa.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF4</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Crear, editar y cancelar eventos</h3>
+        <p>Fecha, lugar, categoría, cupo y descripción del evento.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF5</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Mapa de eventos</h3>
+        <p>Mapa interactivo con eventos activos y próximos, agrupados en clústeres por zona.</p>
+        <p class="nota">En el MVP el mapa se actualiza al abrirse y al moverse. No es en tiempo real.</p>
+      </article>
+      <article class="req" data-prio="Should">
+        <div class="req-top"><span class="req-id">RF6</span><span class="chip chip-should">Debería tener</span></div>
+        <h3>Buscar y filtrar</h3>
+        <p>Búsqueda y filtros por categoría, zona y fecha.</p>
+        <p class="nota">Alcance reducido.</p>
+      </article>
+      <article class="req" data-prio="Should">
+        <div class="req-top"><span class="req-id">RF7</span><span class="chip chip-should">Debería tener</span></div>
+        <h3>Confirmar asistencia</h3>
+        <p>Confirmar la asistencia a un evento, con conteo de asistentes.</p>
+        <p class="nota">Alcance reducido.</p>
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF8</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Recomendaciones con IA</h3>
+        <p>Recomendaciones personalizadas de eventos en lenguaje natural, con IA generativa conversacional.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF9</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Descripción con IA</h3>
+        <p>Descripción atractiva del evento, generada a partir de datos básicos del comercio.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF10</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Entrada con QR</h3>
+        <p>Código QR único por evento y de un solo uso, para validar la asistencia.</p>
+        
+      </article>
+      <article class="req" data-prio="Must">
+        <div class="req-top"><span class="req-id">RF11</span><span class="chip chip-must">Debe tener</span></div>
+        <h3>Venta de boletería</h3>
+        <p>Venta de boletas dentro de la app. La comisión de la pasarela la asume el comercio y Festa cobra una suscripción.</p>
+        <p class="nota">El modelo de comisiones se confirma con el equipo.</p>
+      </article>
+      <article class="req" data-prio="Should">
+        <div class="req-top"><span class="req-id">RF12</span><span class="chip chip-should">Debería tener</span></div>
+        <h3>Notificaciones push</h3>
+        <p>Notificaciones por eventos cercanos y recordatorios de asistencia.</p>
+        <p class="nota">Fase 2, fuera del MVP.</p>
+      </article>
+      <article class="req" data-prio="Could">
+        <div class="req-top"><span class="req-id">RF13</span><span class="chip chip-could">Podría tener</span></div>
+        <h3>Compartir eventos</h3>
+        <p>Enlaces para compartir eventos en redes sociales.</p>
+        
+      </article>
+      <article class="req" data-prio="Should">
+        <div class="req-top"><span class="req-id">RF14</span><span class="chip chip-should">Debería tener</span></div>
+        <h3>Reportes y moderación</h3>
+        <p>Reportar eventos o usuarios, con revisión manual del equipo.</p>
+        
+      </article>
+      <article class="req" data-prio="Should">
+        <div class="req-top"><span class="req-id">RF15</span><span class="chip chip-should">Debería tener</span></div>
+        <h3>Panel de comercio</h3>
+        <p>Panel simple con conteos de asistentes y boletas vendidas.</p>
+        
+      </article>
+      <article class="req" data-prio="Won't">
+        <div class="req-top"><span class="req-id">RF16</span><span class="chip chip-wont">No en esta versión</span></div>
+        <h3>Puntos por participación</h3>
+        <p>Puntos por asistir, crear y promocionar eventos, según reglas configurables.</p>
+        <p class="nota">Hoja de ruta futura.</p>
+      </article>
+      <article class="req" data-prio="Won't">
+        <div class="req-top"><span class="req-id">RF17</span><span class="chip chip-wont">No en esta versión</span></div>
+        <h3>Canje de puntos</h3>
+        <p>Canje de puntos por descuentos en comercios aliados, con cupones.</p>
+        <p class="nota">Hoja de ruta futura.</p>
+      </article>
+      <article class="req" data-prio="Won't">
+        <div class="req-top"><span class="req-id">RF18</span><span class="chip chip-wont">No en esta versión</span></div>
+        <h3>Reputación de creadores</h3>
+        <p>Ranking, insignias y mayor visibilidad para quienes crean eventos.</p>
+        <p class="nota">Hoja de ruta futura.</p>
+      </article>
+      <article class="req" data-prio="Could">
+        <div class="req-top"><span class="req-id">RF19</span><span class="chip chip-could">Podría tener</span></div>
+        <h3>Parches en Vivo</h3>
+        <p>Eventos improvisados que se activan en menos de 2 horas y expiran solos.</p>
+        
+      </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Requerimientos no funcionales</h2>
+      <div class="reqs">
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF1</span></div>
+        <h3>Rendimiento</h3>
+        <p>El mapa carga los eventos visibles en menos de 2 segundos.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF2</span></div>
+        <h3>Escalabilidad</h3>
+        <p>Arquitectura desplegable en la nube, dimensionada para el piloto de la Escuela.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF3</span></div>
+        <h3>Disponibilidad</h3>
+        <p>Disponibilidad razonable para un piloto académico, sin acuerdo de nivel de servicio formal.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF4</span></div>
+        <h3>Seguridad</h3>
+        <p>Autenticación con tokens (JWT y OAuth2), cifrado en tránsito con HTTPS y en reposo para datos personales.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF5</span></div>
+        <h3>Privacidad</h3>
+        <p>Consentimiento explícito antes de usar la ubicación. Sin consentimiento se usa la ubicación predeterminada del piloto. Autorización de datos personales conforme a la Ley 1581 de 2012.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF6</span></div>
+        <h3>Pasarela de pagos</h3>
+        <p>Integración con la pasarela de pagos Wompi para la venta de boletería.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF7</span></div>
+        <h3>Anti-fraude</h3>
+        <p>El código QR es único por boleta o asistente y de un solo uso.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF8</span></div>
+        <h3>Costo de IA controlado</h3>
+        <p>Las descripciones se generan una vez y se guardan. Las recomendaciones tienen un límite por usuario y por minuto.</p>
+        <p class="nota">Implementado: 10 solicitudes de chat y 5 de descripción por minuto.</p>
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF9</span></div>
+        <h3>Eficiencia de recursos</h3>
+        <p>Funcionamiento fluido en dispositivos de gama media y baja, con consumo moderado de datos y batería.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF10</span></div>
+        <h3>Compatibilidad</h3>
+        <p>Una sola base de código en Flutter, con una interfaz que se adapta al tamaño de pantalla.</p>
+        <p class="nota">Distribución actual: Android, con APK.</p>
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF11</span></div>
+        <h3>Usabilidad</h3>
+        <p>Interfaz intuitiva, con validaciones claras para prevenir errores comunes.</p>
+        
+      </article>
+      <article class="req req-nf">
+        <div class="req-top"><span class="req-id">RNF12</span></div>
+        <h3>Mantenibilidad</h3>
+        <p>Arquitectura modular y documentada, con pruebas automatizadas en los flujos críticos: QR y pagos.</p>
+        
+      </article>
+      </div>
+    </section>
+
+    <script>
+      document.querySelectorAll('.filtros button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('.filtros button').forEach(function (x) { x.classList.remove('activo'); });
+          b.classList.add('activo');
+          var f = b.getAttribute('data-filtro');
+          document.querySelectorAll('#rf .req').forEach(function (c) {
+            c.hidden = !(f === 'todos' || c.getAttribute('data-prio') === f);
+          });
+        });
+      });
+    </script>
   </main>
 
   <footer class="pie">

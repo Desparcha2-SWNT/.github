@@ -333,3 +333,36 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
 .aviso strong { font-family: "Bricolage Grotesque", sans-serif; }
 /* Tablas de la página de servicios: ancho cómodo en escritorio y desplazamiento en móvil. */
 .doc table td code { white-space: nowrap; }
+/* Requisitos: resumen, filtros y tarjetas. */
+.req-page .req-hero { background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-lg); padding: var(--space-2xl) var(--space-xl); border-top: 8px solid var(--magenta-500); }
+.req-page .req-hero h1 { margin: var(--space-xs) 0; }
+.req-page .req-hero p { max-width: 62ch; }
+.stats { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: var(--space-xl); }
+.stat { border-radius: var(--radius-md); padding: var(--space-md) var(--space-lg); color: var(--ink-900); }
+.stat strong { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 2.4rem; line-height: 1; }
+.stat span { font-size: 0.9rem; font-weight: 600; }
+.stat-must { background: var(--magenta-500); }
+.stat-should { background: var(--mint); }
+.stat-could { background: var(--lilac); }
+.stat-wont { background: var(--ink-100); border: 1px dashed var(--ink-300, #B8B8C0); }
+.filtros { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: var(--space-md) 0 var(--space-lg); }
+.filtros button { font: inherit; font-weight: 700; font-size: 0.9rem; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--ink-200); background: var(--white); color: var(--ink-900); cursor: pointer; }
+.filtros button:hover { border-color: var(--magenta-500); }
+.filtros button.activo { background: var(--ink-900); color: var(--white); border-color: var(--ink-900); }
+.reqs { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.req { background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-md); padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-xs); transition: transform 0.15s ease, border-color 0.15s ease; }
+.req:hover { transform: translateY(-2px); border-color: var(--magenta-500); }
+.req[hidden] { display: none; }
+.req h3 { margin: 4px 0 0; font-size: 1.1rem; }
+.req p { margin: 0; font-size: 0.95rem; }
+.req-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
+.req-id { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; color: var(--ink-500); font-size: 0.9rem; letter-spacing: 0.04em; }
+.chip { font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.chip-must { background: var(--magenta-500); color: var(--ink-900); }
+.chip-should { background: var(--mint); color: var(--ink-900); }
+.chip-could { background: var(--lilac); color: var(--ink-900); }
+.chip-won\'t, .chip-wont { background: var(--ink-100); color: var(--ink-700); border: 1px dashed var(--ink-300); }
+.req .nota { margin-top: 4px; padding: 6px 10px; background: var(--magenta-50); border-left: 4px solid var(--magenta-500); border-radius: 6px; font-size: 0.85rem; color: var(--ink-900); }
+.req-nf { border-top: 6px solid var(--yellow); }
+.req-nf .req-id { color: var(--ink-900); }
+@media (max-width: 600px) { .req-page .req-hero { padding: var(--space-xl) var(--space-md); } .reqs { grid-template-columns: 1fr; } }
