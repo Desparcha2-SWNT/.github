@@ -514,3 +514,37 @@ code { overflow-wrap: anywhere; }
 }
 /* Sin el script, las tablas anchas se desplazan dentro de su caja y la página no. */
 @media (max-width: 960px) { html:not(.js) table { display: block; overflow-x: auto; } }
+
+/* ------------------------------------------------------------------ Manual de identidad */
+.identidad .lema { font-family: "Bricolage Grotesque", sans-serif; font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.1; font-weight: 800; color: var(--ink-900); }
+.identidad ul.muestras, .identidad ul.logos, .identidad ul.tipos, .identidad ul.escala { list-style: none; padding: 0; margin: var(--space-md) 0; max-width: none; }
+.identidad ul.muestras li, .identidad ul.logos li, .identidad ul.tipos li, .identidad ul.escala li { margin: 0; }
+.identidad ul.muestras { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.muestras li { display: flex; flex-direction: column; gap: 2px; }
+.muestras code { align-self: flex-start; }
+.muestras li > span:last-child { font-size: 0.8rem; color: var(--ink-500); }
+.muestra { height: 72px; border-radius: var(--radius-md); border: 1px solid var(--ink-200); }
+.identidad ul.logos { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.logos li { display: flex; flex-direction: column; gap: var(--space-xs); background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-lg); padding: var(--space-md); }
+.lienzo { display: flex; align-items: center; justify-content: center; height: 160px; background: var(--paper); border-radius: var(--radius-md); padding: var(--space-md); }
+.lienzo img { max-height: 100%; width: auto; }
+.lienzo-oscuro { background: var(--ink-900); }
+.reglas { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.reglas > div { border: 2px solid var(--ink-200); border-radius: var(--radius-lg); padding: var(--space-md); background: var(--white); }
+.reglas > div.si { border-color: #1E9E5A; }
+.reglas > div.no { border-color: #D64545; }
+.reglas p { margin-bottom: 0; }
+.ejemplo { display: inline-block; margin-right: var(--space-xs); padding: 2px 10px; border-radius: 6px; border: 1px solid var(--ink-200); font-weight: 700; }
+.identidad ul.tipos li { display: flex; align-items: baseline; gap: var(--space-md); padding: var(--space-sm) 0; border-top: 1px solid var(--ink-100); }
+.tipo-nombre { flex: 0 0 130px; font-size: 0.8rem; color: var(--ink-500); }
+.tipo-muestra { color: var(--ink-900); }
+.tipo-titulo { font-family: "Bricolage Grotesque", sans-serif; }
+.identidad ul.escala { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-lg); }
+.identidad ul.escala li { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); font-size: 0.8rem; color: var(--ink-500); }
+.cuadro { background: var(--magenta-500); }
+.radio { width: 64px; height: 64px; background: var(--magenta-100); border: 1px solid var(--magenta-500); }
+@media (max-width: 600px) {
+  .identidad ul.muestras { grid-template-columns: 1fr 1fr; }
+  .identidad ul.tipos li { flex-direction: column; gap: 4px; }
+  .tipo-nombre { flex: none; }
+}
