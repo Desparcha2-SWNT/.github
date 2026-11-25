@@ -211,3 +211,86 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
   .hero::after { display: none; }
   table { display: block; overflow-x: auto; }
 }
+/* Pie de página: logo, equipo y curso. */
+.pie {
+  margin-top: var(--space-2xl);
+  background: var(--ink-900);
+  color: var(--white);
+  border-top: 6px solid var(--magenta-500);
+}
+.pie-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+.pie-inner img { height: 56px; width: auto; background: var(--white); border-radius: var(--radius-md); padding: 6px; }
+.pie strong { font-family: "Bricolage Grotesque", sans-serif; font-size: 1.15rem; color: var(--magenta-500); }
+.pie p { margin: 4px 0 0; color: var(--ink-200); font-size: 0.95rem; }
+
+/* Página de equipo. */
+.kicker {
+  margin: 0;
+  color: var(--magenta-700);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+}
+.hero-equipo { background: var(--magenta-500); border-color: var(--magenta-500); }
+.hero-equipo h1 { color: var(--ink-900); max-width: none; }
+.hero-equipo p { color: var(--ink-900); }
+.hero-equipo .kicker { color: var(--ink-900); }
+.hero-equipo::after { display: none; }
+
+.equipo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+.miembro {
+  background: var(--white);
+  border: 1px solid var(--ink-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.miembro:hover { transform: translateY(-3px); border-color: var(--magenta-500); }
+.miembro img {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--magenta-500);
+  margin-bottom: var(--space-md);
+}
+.miembro strong {
+  display: block;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--ink-900);
+}
+
+.contacto {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.contacto > div {
+  background: var(--white);
+  border: 1px solid var(--ink-200);
+  border-left: 8px solid var(--mint);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+.contacto > div:last-child { border-left-color: var(--lilac); }
+.contacto strong { font-family: "Bricolage Grotesque", sans-serif; font-size: 1.1rem; }
+.contacto p { margin: var(--space-xs) 0 0; word-break: break-word; }
