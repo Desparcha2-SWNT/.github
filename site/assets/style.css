@@ -331,3 +331,5 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
   color: var(--ink-900);
 }
 .aviso strong { font-family: "Bricolage Grotesque", sans-serif; }
+/* Tablas de la página de servicios: ancho cómodo en escritorio y desplazamiento en móvil. */
+.doc table td code { white-space: nowrap; }

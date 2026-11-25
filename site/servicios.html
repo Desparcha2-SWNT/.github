@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Servicios · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html">Requisitos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="servicios.html" aria-current="page">Servicios</a>
+      <a href="decisiones.html">Decisiones</a>
+      <a href="sprints.html">Sprints</a>
+      <a href="contratos.html">Contratos</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="instalacion.html">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main class="doc">
+<h1>Servicios</h1>
+<p>Festa tiene ocho microservicios de negocio, un gateway y una base de datos por servicio. Ningún servicio lee la base de otro: se comunican por <strong>REST</strong> a través del gateway (llamadas que esperan respuesta) y por <strong>eventos en RabbitMQ</strong> (avisos que no esperan respuesta). Esta página describe cada servicio como está en <code>develop</code>.</p>
+<h2>Resumen</h2>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Responsabilidad</th>
+<th>Requisitos</th>
+<th>Tecnología</th>
+<th>Base de datos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>festa-gateway</code></td>
+<td>Punto de entrada: valida el JWT y limita solicitudes</td>
+<td>RNF8</td>
+<td>Kong 3.9 sin base de datos</td>
+<td>No tiene</td>
+</tr>
+<tr>
+<td><code>festa-auth-service</code></td>
+<td>Registro, inicio de sesión y emisión del JWT</td>
+<td>RF1</td>
+<td>Spring Boot 3.5</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><code>festa-user-service</code></td>
+<td>Perfiles, preferencias, consentimientos, comercios y moderación</td>
+<td>RF2, RF3, RF14</td>
+<td>Spring Boot 3.5</td>
+<td>PostgreSQL y Redis (caché)</td>
+</tr>
+<tr>
+<td><code>festa-event-service</code></td>
+<td>Eventos, mapa, búsqueda geográfica y Parches en Vivo</td>
+<td>RF4, RF5, RF6, RF19</td>
+<td>Node.js 20 y Express 5</td>
+<td>PostgreSQL con PostGIS</td>
+</tr>
+<tr>
+<td><code>festa-booking-service</code></td>
+<td>Asistencia, cupo y pases QR de un solo uso</td>
+<td>RF7, RF10</td>
+<td>Node.js 20 y Express 5</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><code>festa-payment-service</code></td>
+<td>Órdenes, cupo, cobro con Wompi, reembolsos y liquidación</td>
+<td>RF11</td>
+<td>Node.js 20 y Express 5</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td><code>festa-ai-service</code></td>
+<td>Chat de recomendaciones y descripciones con IA</td>
+<td>RF8, RF9</td>
+<td>Python y FastAPI</td>
+<td>MongoDB y Redis (límite por minuto)</td>
+</tr>
+<tr>
+<td><code>festa-analytics-service</code></td>
+<td>Métricas para el panel del comercio</td>
+<td>RF15</td>
+<td>Node.js 20 y Express 5</td>
+<td>MongoDB</td>
+</tr>
+<tr>
+<td><code>festa-notification-service</code></td>
+<td>Notificaciones push y bandeja</td>
+<td>RF12 (fase 2)</td>
+<td>Node.js 20 y Express 5</td>
+<td>MongoDB</td>
+</tr>
+</tbody>
+</table>
+<h2>Gateway (<code>festa-gateway</code>)</h2>
+<p>Kong 3.9 en modo DB-less: la configuración es un archivo declarativo, no una base de datos. Valida el JWT con la llave pública de <code>auth-service</code>, aplica límites por token o por IP y reenvía cada ruta al servicio que la atiende.</p>
+<table>
+<thead>
+<tr>
+<th>Ruta pública</th>
+<th>Servicio</th>
+<th>Token</th>
+<th>Límite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/auth/*</code> (registro, inicio de sesión, Google, renovación, cierre)</td>
+<td>auth-service</td>
+<td>No</td>
+<td>30/min y 300/h por IP</td>
+</tr>
+<tr>
+<td><code>/api/auth/me*</code>, <code>/api/auth/admin/*</code></td>
+<td>auth-service</td>
+<td>Sí</td>
+<td>120/min por token</td>
+</tr>
+<tr>
+<td><code>/api/users</code>, <code>/api/merchants</code>, <code>/api/reports</code></td>
+<td>user-service</td>
+<td>Sí</td>
+<td>120/min por token</td>
+</tr>
+<tr>
+<td><code>/api/events</code></td>
+<td>event-service</td>
+<td>Sí</td>
+<td>300/min por token</td>
+</tr>
+<tr>
+<td><code>/api/bookings</code></td>
+<td>booking-service</td>
+<td>Sí</td>
+<td>300/min por token</td>
+</tr>
+<tr>
+<td><code>/api/payments</code></td>
+<td>payment-service</td>
+<td>Sí</td>
+<td>30/min por token</td>
+</tr>
+<tr>
+<td><code>POST /webhooks/wompi</code></td>
+<td>payment-service (valida la firma de Wompi)</td>
+<td>No</td>
+<td>120/min por IP</td>
+</tr>
+<tr>
+<td><code>/api/ai</code></td>
+<td>ai-service</td>
+<td>Sí</td>
+<td>30/min por token</td>
+</tr>
+<tr>
+<td><code>/api/notifications</code></td>
+<td>notification-service</td>
+<td>Sí</td>
+<td>120/min por token</td>
+</tr>
+<tr>
+<td><code>/api/analytics</code></td>
+<td>analytics-service</td>
+<td>Sí</td>
+<td>120/min por token</td>
+</tr>
+</tbody>
+</table>
+<p>Kong reenvía el prefijo <code>/api</code> tal cual lo quita: <code>/api/events/...</code> llega a <code>event-service</code> como <code>/events/...</code>.</p>
+<hr />
+<h2>Autenticación (<code>festa-auth-service</code>)</h2>
+<p><strong>Tecnología:</strong> Spring Boot 3.5.16, PostgreSQL, RabbitMQ. <strong>Base:</strong> <code>auth_db</code>.</p>
+<p><strong>Tablas:</strong> <code>accounts</code>, <code>refresh_tokens</code>, <code>outbox</code>, <code>processed_events</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/register</code></td>
+<td>Registro con correo</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/login</code></td>
+<td>Inicio de sesión. Bloquea la cuenta tras 5 intentos fallidos</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/google</code></td>
+<td>Inicio de sesión con Google</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/refresh</code></td>
+<td>Renueva el token de acceso</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/logout</code></td>
+<td>Cierra la sesión</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/auth/me</code></td>
+<td>Cuenta de la sesión actual</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/auth/me/password</code></td>
+<td>Cambia la contraseña</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/auth/me</code></td>
+<td>Borra la cuenta</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/auth/admin/accounts/{id}</code></td>
+<td>Consulta una cuenta (admin)</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/auth/admin/accounts/{id}/role</code></td>
+<td>Cambia el rol (admin)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Publica:</strong> <code>account.registered</code>, <code>account.display_name_set</code>, <code>account.role_changed</code>, <code>account.deleted</code>.</li>
+<li><strong>Consume:</strong> <code>moderation.user_suspended</code> y <code>moderation.user_reinstated</code>, para suspender o reactivar el acceso.</li>
+</ul>
+<hr />
+<h2>Perfiles y moderación (<code>festa-user-service</code>)</h2>
+<p><strong>Tecnología:</strong> Spring Boot 3.5.16, PostgreSQL, Redis para la caché de perfiles y de comercios públicos, RabbitMQ. <strong>Base:</strong> <code>user_db</code>.</p>
+<p><strong>Tablas:</strong> <code>profiles</code>, <code>user_interests</code>, <code>user_preferences</code>, <code>user_preferred_zones</code>, <code>user_preferred_days</code>, <code>consents</code>, <code>merchant_profiles</code>, <code>merchant_verification_events</code>, <code>reports</code>, <code>outbox</code>, <code>processed_events</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code> / <code>PATCH</code></td>
+<td><code>/api/users/me</code></td>
+<td>Perfil propio</td>
+</tr>
+<tr>
+<td><code>GET</code> / <code>PUT</code></td>
+<td><code>/api/users/me/preferences</code></td>
+<td>Preferencias: zonas, días e intereses</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/users/me/interests</code></td>
+<td>Intereses</td>
+</tr>
+<tr>
+<td><code>GET</code> / <code>POST</code></td>
+<td><code>/api/users/me/consents</code></td>
+<td>Consentimientos (por ejemplo, ubicación)</td>
+</tr>
+<tr>
+<td><code>POST</code> / <code>GET</code> / <code>PATCH</code></td>
+<td><code>/api/users/me/merchant</code></td>
+<td>Perfil de comercio</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/merchants/{id}</code></td>
+<td>Perfil público de un comercio</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/admin/merchants</code></td>
+<td>Solicitudes de comercio (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users/admin/merchants/{id}/approve</code> y <code>/reject</code></td>
+<td>Verificar o rechazar un comercio (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/reports</code></td>
+<td>Reportar un evento</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/reports/mine</code></td>
+<td>Reportes propios</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/admin/reports</code></td>
+<td>Reportes pendientes (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users/admin/reports/{id}/resolve</code></td>
+<td>Resolver un reporte (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users/admin/moderation/events/{eventId}/hide</code> y <code>/restore</code></td>
+<td>Ocultar o restaurar un evento (admin)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users/admin/moderation/users/{userId}/suspend</code> y <code>/reinstate</code></td>
+<td>Suspender o reactivar una cuenta (admin)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Publica:</strong> <code>profile.updated</code>, <code>location_consent.granted</code>, <code>location_consent.revoked</code>, <code>merchant.submitted</code>, <code>merchant.updated</code>, <code>merchant.verified</code>, <code>merchant.rejected</code>, <code>report.created</code>, <code>report.resolved</code>, <code>moderation.event_hidden</code>, <code>moderation.event_restored</code>, <code>moderation.user_suspended</code>, <code>moderation.user_reinstated</code>.</li>
+<li><strong>Consume:</strong> <code>account.registered</code> y <code>account.deleted</code>.</li>
+</ul>
+<hr />
+<h2>Eventos y mapa (<code>festa-event-service</code>)</h2>
+<p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL con PostGIS. <strong>Base:</strong> <code>event_db</code>.</p>
+<p><strong>Tablas:</strong> <code>events</code>, <code>verified_merchants</code>, <code>suspended_users</code>, <code>outbox</code>, <code>processed_events</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events</code></td>
+<td>Crear un evento</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events</code></td>
+<td>Listar eventos con filtros</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events/clusters</code></td>
+<td>Agrupar eventos por zona para el mapa</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events/mine</code></td>
+<td>Eventos del organizador</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/events/{id}</code></td>
+<td>Detalle de un evento</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/events/{id}</code></td>
+<td>Editar un evento</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events/{id}/cancel</code></td>
+<td>Cancelar un evento</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/events/{id}/views</code> y <code>/shares</code></td>
+<td>Registrar una vista o un compartido</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Publica:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.rescheduled</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>event.sold_out</code>, <code>engagement.viewed</code>, <code>engagement.shared</code>.</li>
+<li><strong>Consume:</strong> <code>attendance.confirmed</code>, <code>attendance.cancelled</code>, <code>merchant.verified</code>, <code>merchant.updated</code>, <code>moderation.event_hidden</code>, <code>moderation.event_restored</code>, <code>moderation.user_suspended</code>, <code>moderation.user_reinstated</code>, <code>account.deleted</code>.</li>
+</ul>
+<hr />
+<h2>Asistencia y pases (<code>festa-booking-service</code>)</h2>
+<p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL, RabbitMQ. <strong>Base:</strong> <code>booking_db</code>.</p>
+<p><strong>Tablas:</strong> <code>event_projection</code> (copia de los datos del evento que necesita), <code>attendances</code>, <code>passes</code>, <code>closed_events</code>, <code>user_names</code>, <code>deleted_users</code>, <code>outbox</code>, <code>processed_events</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code> / <code>DELETE</code></td>
+<td><code>/api/bookings/events/{id}/attendance</code></td>
+<td>Confirmar o cancelar la asistencia a un evento gratis</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/events/{id}/attendance</code></td>
+<td>Estado de la asistencia propia</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/events/{id}/attendees</code></td>
+<td>Asistentes (organizador)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/attendances/mine</code></td>
+<td>Mis asistencias</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/passes/mine</code></td>
+<td>Mis pases con su QR</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/passes/{id}</code></td>
+<td>Un pase</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/bookings/passes/check-in</code></td>
+<td>Validar un QR en la entrada</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/bookings/events/{id}/check-ins</code></td>
+<td>Entradas validadas (organizador)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Publica:</strong> <code>attendance.confirmed</code>, <code>attendance.cancelled</code>, <code>pass.checked_in</code>, <code>pass.check_in_rejected</code>.</li>
+<li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>order.approved</code>, <code>order.refunded</code>, <code>account.display_name_set</code>, <code>account.deleted</code>.</li>
+</ul>
+<hr />
+<h2>Compras (<code>festa-payment-service</code>)</h2>
+<p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL, RabbitMQ, Wompi. <strong>Base:</strong> <code>payment_db</code>.</p>
+<p><strong>Tablas:</strong> <code>event_projection</code>, <code>merchants</code>, <code>orders</code>, <code>payouts</code>, <code>wompi_webhooks</code>, <code>payment_discrepancies</code>, <code>closed_events</code>, <code>deleted_accounts</code>, <code>outbox</code>, <code>processed_events</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/payments/events/{id}/quote</code></td>
+<td>Precio y comisión de Wompi, antes de comprar</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/payments/orders</code></td>
+<td>Crear una orden. Requiere <code>Idempotency-Key</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/payments/orders/mine</code></td>
+<td>Mis órdenes</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/payments/orders/{id}</code></td>
+<td>Una orden</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/payments/merchants/me/summary</code></td>
+<td>Resumen de ventas y liquidaciones del comercio</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/webhooks/wompi</code></td>
+<td>Confirmación de Wompi. Valida la firma antes de procesar</td>
+</tr>
+<tr>
+<td><code>GET</code> / <code>POST</code></td>
+<td><code>/api/payments/admin/refunds</code>, <code>/api/payments/admin/payouts</code> y acciones sobre órdenes</td>
+<td>Reembolsos y liquidaciones (admin)</td>
+</tr>
+</tbody>
+</table>
+<p>La simulación del pago (<code>POST /api/payments/orders/{id}/simulate</code>) solo responde si <code>PAYMENTS_ALLOW_SIMULATION=true</code> y el entorno no es producción. Sirve para probar el flujo completo sin la pasarela real.</p>
+<ul>
+<li><strong>Publica:</strong> <code>order.created</code>, <code>order.approved</code>, <code>order.failed</code>, <code>order.expired</code>, <code>order.refund_requested</code>, <code>order.refunded</code>, <code>payout.recorded</code>.</li>
+<li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>merchant.verified</code>, <code>merchant.updated</code>, <code>account.deleted</code>.</li>
+</ul>
+<hr />
+<h2>Chat y descripciones con IA (<code>festa-ai-service</code>)</h2>
+<p><strong>Tecnología:</strong> Python, FastAPI, Redis (límite por minuto), MongoDB, Gemini como modelo. <strong>Base:</strong> MongoDB (descripciones y sesiones de chat).</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/ai/chat</code></td>
+<td>Responde con eventos reales. Solo recomienda ids que existen</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/ai/chat/sessions/{id}</code></td>
+<td>Historial de una sesión</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/ai/chat/history</code></td>
+<td>Borra el historial propio</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/ai/descriptions</code></td>
+<td>Genera y guarda la descripción de un evento</td>
+</tr>
+</tbody>
+</table>
+<p>El límite es de 10 solicitudes de chat y 5 de descripción por minuto y por usuario. No acota el gasto diario.</p>
+<ul>
+<li><strong>Publica:</strong> <code>description.generated</code>, <code>recommendation.served</code>.</li>
+<li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>event.sold_out</code>, <code>merchant.updated</code>, <code>location_consent.granted</code>, <code>location_consent.revoked</code>, <code>profile.updated</code>, <code>account.deleted</code>.</li>
+</ul>
+<hr />
+<h2>Métricas del panel (<code>festa-analytics-service</code>)</h2>
+<p><strong>Tecnología:</strong> Node.js 20, Express 5, MongoDB, RabbitMQ. <strong>Base:</strong> MongoDB.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/analytics/merchants/me</code></td>
+<td>Métricas del comercio</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/analytics/events/{id}</code></td>
+<td>Métricas de un evento</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/analytics/admin/overview</code></td>
+<td>Resumen general (admin)</td>
+</tr>
+</tbody>
+</table>
+<p>No publica eventos. Consume los eventos de casi todos los servicios para calcular sus conteos.</p>
+<hr />
+<h2>Notificaciones (<code>festa-notification-service</code>)</h2>
+<p><strong>Tecnología:</strong> Node.js 20, Express 5, MongoDB, RabbitMQ, Firebase Cloud Messaging (push). <strong>Base:</strong> MongoDB.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code> / <code>DELETE</code></td>
+<td><code>/api/notifications/devices</code></td>
+<td>Registrar o quitar un dispositivo</td>
+</tr>
+<tr>
+<td><code>PUT</code> / <code>DELETE</code></td>
+<td><code>/api/notifications/location</code></td>
+<td>Ubicación para avisos cercanos, solo con consentimiento</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/notifications</code></td>
+<td>Bandeja de notificaciones</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/notifications/unread-count</code></td>
+<td>Cantidad sin leer</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/notifications/{id}/read</code> y <code>/read-all</code></td>
+<td>Marcar como leídas</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Publica:</strong> <code>push.sent</code>.</li>
+<li><strong>Consume:</strong> los eventos de publicación, asistencia, pagos, comercios, moderación, reportes y cuentas. Con ellos arma la bandeja y los recordatorios.</li>
+</ul>
+<hr />
+<h2>Estados</h2>
+<p><strong>Orden de compra:</strong> <code>PENDING</code> → <code>APPROVED</code> (pago aprobado), <code>DECLINED</code>, <code>ERROR</code> o <code>VOIDED</code> (anulada); <code>PENDING</code> → <code>EXPIRED</code> si vence el cupo retenido; <code>APPROVED</code> → <code>REFUND_REQUESTED</code> → <code>REFUNDED</code>.</p>
+<p><strong>Evento:</strong> <code>published</code> puede pasar a <code>hidden</code> (moderación), <code>cancelled</code> o <code>expired</code>.</p>
+<p><strong>Pase:</strong> <code>valid</code> → <code>used</code> (escaneado en la entrada) o <code>revoked</code> (orden reembolsada). Un pase <code>used</code> o <code>revoked</code> no lleva QR.</p>
+<p><strong>Asistencia:</strong> <code>rsvp</code> (gratis) o <code>ticket</code> (boleta comprada). Se confirma o se cancela.</p>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
