@@ -56,13 +56,13 @@
 <li>Rendimiento: el mapa debe cargar los eventos visibles en menos de 2 segundos. <em>(RNF1)</em></li>
 <li>Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. <em>(RNF2)</em></li>
 <li>Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. <em>(RNF3)</em></li>
-<li>Seguridad: autenticación con tokens (JWT/OAuth2), cifrado en tránsito (HTTPS) y en reposo para datos personales. <em>(RNF4)</em></li>
+<li>Seguridad: autenticación con tokens (JWT), cifrado en tránsito (HTTPS) y en reposo para datos personales. <em>(RNF4)</em></li>
 <li>Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. <em>(RNF5)</em></li>
-<li>Integración con una pasarela de pagos existente (Wompi/PayU/Mercado Pago) para la venta de boletería. <em>(RNF6)</em></li>
+<li>Integración con la pasarela de pagos Wompi para la venta de boletería. <em>(RNF6)</em></li>
 <li>Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. <em>(RNF7)</em></li>
-<li>Costo de IA controlado: descripciones (RF9) se generan una sola vez y se persisten; recomendaciones (RF8) usan un modelo de costo reducido con límite de 5–20 solicitudes por usuario por minuto. <em>(RNF8)</em></li>
+<li>Costo de IA controlado: las descripciones (RF9) se generan una sola vez y se persisten; las recomendaciones (RF8) tienen un límite por usuario y por minuto: 10 solicitudes de chat y 5 de descripción. El proveedor de IA es Gemini. <em>(RNF8)</em></li>
 <li>Eficiencia de recursos: funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería. <em>(RNF9)</em></li>
-<li>Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. <em>(RNF10)</em></li>
+<li>Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. En el MVP la distribución es solo Android (APK); iOS queda pendiente. <em>(RNF10)</em></li>
 <li>Usabilidad: interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras. <em>(RNF11)</em></li>
 <li>Mantenibilidad: arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos). <em>(RNF12)</em></li>
 </ol>
@@ -297,7 +297,7 @@
 </tr>
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
-<td>Mapa interactivo en tiempo real</td>
+<td>Mapa interactivo de eventos</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -555,7 +555,7 @@
 </tr>
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
-<td>Venta de boletería con comisión</td>
+<td>Venta de boletería</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
