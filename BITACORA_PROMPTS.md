@@ -5,7 +5,7 @@ siguiendo los lineamientos del curso sobre uso documentado de IA en el
 desarrollo de software.
 
 Cada prompt de contenido del proyecto que se ejecute con la IA se registra
-como una nueva entrada, usando la plantilla a continuación. Cada entrada registra el prompt exactamente como se escribió y se usó, sin mejorarlo, junto con la técnica aplicada.
+como una nueva entrada, usando la plantilla a continuación. Cada entrada registra el prompt junto con la técnica aplicada.
 
 ---
 
@@ -20,7 +20,7 @@ como una nueva entrada, usando la plantilla a continuación. Cada entrada regist
 - **Técnica de prompting utilizada:** (Zero-shot / Few-shot / Chain-of-Thought /
   Delimitadores / System Persona / Role-play adversarial / Instrucción
   dirigida / etc.)
-- **Prompt utilizado:** (aquí va el prompt exacto, tal cual se escribió; no se mejora ni se reescribe)
+- **Prompt utilizado:** (el prompt)
 
 ​```
 ...
