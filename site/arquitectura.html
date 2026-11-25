@@ -35,9 +35,6 @@
 <h2>Contenedores</h2><p><img alt="Contenedores del sistema: aplicación, gateway, microservicios, bases de datos y colas" src="assets/diagramas/contenedores.png" /></p>
 <p>Festa tiene una aplicación móvil y un gateway Kong que recibe todas sus peticiones. Detrás hay ocho microservicios de negocio, cada uno con su propia base de datos. Los servicios se comunican por RabbitMQ, que transporta los eventos entre ellos. Redis guarda la caché de perfiles y los límites de uso de la IA.</p>
 
-<h2>Casos de uso</h2><p><img alt="Casos de uso de Festa" src="assets/diagramas/casos_de_uso.png" /></p>
-<p>Los casos de uso cubren los 19 requerimientos funcionales. Los actores externos son los servicios con los que Festa se conecta.</p>
-
 <h2>Flujos principales</h2><h3>Compra de una boleta</h3>
 <p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
 <p>Festa nunca recibe datos de tarjeta. Devuelve un checkout firmado y la persona paga en Wompi. El webhook confirma el pago, payment-service publica <code>order.approved</code> y booking-service crea el pase.</p>
