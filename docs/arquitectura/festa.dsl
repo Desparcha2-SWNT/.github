@@ -226,8 +226,11 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
     }
 
     views {
-        systemContext festa "ContextoFesta" "C4 nivel 1: Festa frente a sus actores y sistemas externos." {
+        systemContext festa "ContextoFesta" "C4 nivel 1: Festa frente a sus actores y sistemas externos del MVP." {
             include *
+            # Fuera del MVP (decisión del equipo, 25-nov-2026): el inicio con Google y las notificaciones push.
+            # Siguen en el modelo porque auth-service y notification-service ya los integran (vistas de componentes).
+            exclude identidad notificaciones
             autolayout lr
         }
 
