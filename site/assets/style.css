@@ -617,3 +617,33 @@ code { overflow-wrap: break-word; }
 .boton:hover { background: var(--ink-900); color: var(--white); }
 .descarga .version { font-size: 0.9rem; color: var(--ink-500); }
 @media (max-width: 600px) { .descarga { justify-content: center; text-align: center; } .boton { width: 100%; } }
+
+/* ------------------------------------------------------------------ Requerimientos en tarjetas */
+.requerimientos .bloque { margin-bottom: var(--space-2xl); }
+.requerimientos h2[id], .requerimientos article[id] { scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px); }
+.requerimientos .stat span { display: block; margin-top: 4px; }
+.requerimientos .filtros[hidden] { display: none; }
+.filtros .abrir-todo { margin-left: auto; }
+.rf-lista { display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-md); }
+.rf { padding: var(--space-md) var(--space-lg); background: var(--white); border: 1px solid var(--ink-200); border-left: 8px solid var(--magenta-500); border-radius: var(--radius-lg); }
+.rf[data-prio="should"] { border-left-color: var(--mint); }
+.rf[data-prio="could"] { border-left-color: var(--lilac); }
+.rf[data-prio="wont"] { border-left-color: var(--ink-200); }
+.rf[hidden] { display: none; }
+.rf-cab { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
+.rf-nota { font-size: 0.8rem; color: var(--ink-500); }
+.rf h3, .rnf h3 { margin: var(--space-xs) 0 4px; font-size: 1.2rem; }
+.rf-actor { font-size: 0.9rem; }
+.rf .plegable { margin-top: var(--space-sm); }
+.rf .plegable > summary { min-height: 44px; font-size: 0.95rem; }
+.rf-condiciones { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+.rf-condiciones > div { padding: 0 var(--space-md) var(--space-xs); background: var(--paper); border-radius: var(--radius-md); }
+.rf-condiciones h4 { margin-top: var(--space-sm); }
+.requerimientos ul.rnf-lista { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); max-width: none; padding: 0; list-style: none; }
+.requerimientos ul.rnf-lista li { margin: 0; padding: var(--space-md) var(--space-lg); background: var(--white); border: 1px solid var(--ink-200); border-top: 6px solid var(--yellow); border-radius: var(--radius-lg); }
+.rnf p { margin: 0; font-size: 0.95rem; }
+@media (max-width: 600px) {
+  .rf { padding: var(--space-sm) var(--space-md); }
+  .requerimientos .stats { grid-template-columns: 1fr 1fr; }
+  .filtros .abrir-todo { margin-left: 0; }
+}

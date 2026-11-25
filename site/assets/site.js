@@ -119,4 +119,40 @@
     bar.appendChild(button);
     group.parentNode.insertBefore(bar, group);
   });
+
+  // 5. Requerimientos: filtro por prioridad y abrir o cerrar todos los detalles.
+  var filters = document.querySelector('.requerimientos .filtros');
+  if (filters) {
+    filters.hidden = false;
+    var cards = document.querySelectorAll('.rf');
+    var openAll = filters.querySelector('.abrir-todo');
+    var visibleBoxes = function () {
+      return document.querySelectorAll('.rf:not([hidden]) details');
+    };
+    var updateOpenAll = function () {
+      var boxes = visibleBoxes();
+      var all = boxes.length && Array.prototype.every.call(boxes, function (box) { return box.open; });
+      openAll.textContent = all ? 'Cerrar todo' : 'Abrir todo';
+    };
+    filters.addEventListener('click', function (event) {
+      var button = event.target.closest('button');
+      if (!button) return;
+      if (button === openAll) {
+        var open = openAll.textContent === 'Abrir todo';
+        visibleBoxes().forEach(function (box) { box.open = open; });
+        updateOpenAll();
+        return;
+      }
+      var level = button.getAttribute('data-filtro');
+      filters.querySelectorAll('[data-filtro]').forEach(function (other) {
+        other.classList.toggle('activo', other === button);
+        other.setAttribute('aria-pressed', String(other === button));
+      });
+      cards.forEach(function (card) {
+        card.hidden = level !== 'todos' && card.getAttribute('data-prio') !== level;
+      });
+      updateOpenAll();
+    });
+    document.querySelectorAll('.rf details').forEach(function (box) { box.addEventListener('toggle', updateOpenAll); });
+  }
 })();
