@@ -44,6 +44,8 @@
     var isRecord = titles.length === 2 && /^campo$/i.test(titles[0]);
     table.classList.add('apilable');
     if (isRecord) table.classList.add('ficha');
+    // Listas de rutas «Método | Ruta | …»: en celular van en tarjetas compactas.
+    if (/^m[eé]todo$/i.test(titles[0]) && /^ruta$/i.test(titles[1] || '')) table.classList.add('rutas');
     table.querySelectorAll('tbody tr').forEach(function (row) {
       Array.prototype.forEach.call(row.children, function (cell, index) {
         cell.setAttribute('data-titulo', titles[index] || '');

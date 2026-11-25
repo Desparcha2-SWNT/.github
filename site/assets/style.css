@@ -586,3 +586,25 @@ code { overflow-wrap: break-word; }
 .tecnologias img, .tec-inicial { width: 36px; height: 36px; }
 .tec-inicial { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--ink-900); color: var(--white); font-family: "Bricolage Grotesque", sans-serif; font-size: 1.15rem; }
 @media (max-width: 640px) { .arquitectura ul.tecnologias li { flex-basis: calc((100% - 2 * var(--space-sm)) / 3); } }
+
+/* ------------------------------------------------------------------ Ajustes para teléfono */
+.miembro .red, a[download] { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; }
+@media (max-width: 640px) {
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
+  .equipo { grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+  .miembro { padding: var(--space-md) var(--space-xs); }
+  .miembro img { width: 88px; height: 88px; margin-bottom: var(--space-sm); }
+  .miembro strong { font-size: 0.95rem; }
+  .miembro .red { max-width: 100%; padding-inline: var(--space-xs); font-size: 0.75rem; }
+  .indice { gap: 6px; }
+  .indice a { padding: 8px 10px; font-size: 0.8rem; }
+
+  /* Rutas: método y ruta en un renglón; la descripción debajo. */
+  table.rutas tr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: var(--space-xs); padding: var(--space-xs) var(--space-sm); }
+  table.rutas td, table.rutas tr:nth-child(even) td { width: auto; padding: 0; border: 0; background: none; }
+  table.rutas td::before { content: none; }
+  table.rutas td:first-child, table.rutas tr:nth-child(even) td:first-child { background: none; }
+  table.rutas td:first-child code { background: var(--ink-900); color: var(--white); }
+  table.rutas td:nth-child(2) { flex: 1 1 0; min-width: 60%; }
+  table.rutas td:nth-child(n + 3) { flex: 1 1 100%; font-size: 0.9rem; }
+}
