@@ -552,3 +552,29 @@ code { overflow-wrap: break-word; }
   .identidad ul.tipos li { flex-direction: column; gap: 4px; }
   .tipo-nombre { flex: none; }
 }
+
+/* ------------------------------------------------------------------ Arquitectura ordenada */
+.indice { position: sticky; top: var(--alto-encabezado, 0px); z-index: 10; display: flex; flex-wrap: nowrap; gap: var(--space-xs); overflow-x: auto; margin: var(--space-md) 0 var(--space-xl); padding: var(--space-xs) 0; background: var(--paper); border-bottom: 1px solid var(--ink-200); }
+.indice a { flex: 0 0 auto; padding: 8px 14px; border: 1px solid var(--ink-200); border-radius: 999px; background: var(--white); color: var(--ink-900); font-size: 0.9rem; font-weight: 700; text-decoration: none; }
+.indice a:hover, .indice a:focus-visible, .indice a[aria-current="true"] { background: var(--magenta-500); border-color: var(--magenta-500); }
+.arquitectura .bloque { margin-bottom: var(--space-2xl); }
+.arquitectura h2[id], .arquitectura h3[id], .arquitectura details[id] { scroll-margin-top: calc(var(--alto-encabezado, 0px) + 72px); }
+.figura { margin-bottom: var(--space-md); padding: var(--space-md) var(--space-lg); background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-lg); }
+.figura h3 { margin-top: 0; }
+.grupo { display: flex; flex-direction: column; gap: var(--space-xs); margin: var(--space-md) 0; }
+.herramientas { display: flex; justify-content: flex-end; margin-top: var(--space-xs); }
+.herramientas button { min-height: 36px; padding: 0 var(--space-md); border: 1px solid var(--ink-200); border-radius: 999px; background: var(--white); color: var(--ink-900); font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+.herramientas button:hover { border-color: var(--magenta-500); }
+.plegable { background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-md); }
+.plegable > summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); min-height: 52px; padding: var(--space-sm) var(--space-md); cursor: pointer; list-style: none; font-family: "Bricolage Grotesque", sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--ink-900); border-radius: var(--radius-md); }
+.plegable > summary::-webkit-details-marker { display: none; }
+.plegable > summary::before { content: "+"; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--magenta-100); font-weight: 800; }
+.plegable[open] > summary::before { content: "−"; background: var(--magenta-500); }
+.plegable > summary:hover { background: var(--magenta-50); }
+.plegable > summary code { font-size: 0.8rem; font-weight: 400; }
+.plegable-cuerpo { padding: var(--space-xs) var(--space-lg) var(--space-lg); border-top: 1px solid var(--ink-100); }
+.plegable-cuerpo h4 { margin: var(--space-xl) 0 var(--space-xs); font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; color: var(--ink-900); }
+.plegable-cuerpo h5 { margin: var(--space-md) 0 var(--space-xs); font-size: 0.95rem; color: var(--ink-500); }
+.arquitectura ul.estados { list-style: none; padding: 0; display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: none; }
+.arquitectura ul.estados li { margin: 0; padding: var(--space-md); background: var(--white); border: 1px solid var(--ink-200); border-left: 6px solid var(--lilac); border-radius: var(--radius-md); }
+@media (max-width: 640px) { .plegable-cuerpo, .figura { padding-inline: var(--space-sm); } }

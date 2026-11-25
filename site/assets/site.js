@@ -68,4 +68,53 @@
     hint.textContent = 'Ampliar';
     link.appendChild(hint);
   });
+
+  // 4. Secciones plegables: se abren al llegar por un enlace y se pueden abrir o cerrar todas.
+  var setHeaderHeight = function () {
+    var fixed = header && window.getComputedStyle(header).position === 'sticky';
+    document.documentElement.style.setProperty('--alto-encabezado', (fixed ? header.offsetHeight : 0) + 'px');
+  };
+  setHeaderHeight();
+  window.addEventListener('resize', setHeaderHeight);
+  window.addEventListener('load', setHeaderHeight);
+
+  var openTarget = function () {
+    var id = decodeURIComponent(window.location.hash.slice(1));
+    var target = id && document.getElementById(id);
+    var box = target && target.closest('details');
+    if (box) {
+      box.open = true;
+      target.scrollIntoView();
+    }
+  };
+  window.addEventListener('hashchange', openTarget);
+  window.addEventListener('load', openTarget);
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest('a[href^="#"]');
+    if (link && link.getAttribute('href') === window.location.hash) openTarget();
+  });
+
+  document.querySelectorAll('main .grupo').forEach(function (group) {
+    var boxes = group.querySelectorAll(':scope > details');
+    if (boxes.length < 2) return;
+    var bar = document.createElement('div');
+    bar.className = 'herramientas';
+    var button = document.createElement('button');
+    button.type = 'button';
+    var allOpen = function () {
+      return Array.prototype.every.call(boxes, function (box) { return box.open; });
+    };
+    var label = function () {
+      button.textContent = allOpen() ? 'Cerrar todo' : 'Abrir todo';
+    };
+    button.addEventListener('click', function () {
+      var open = !allOpen();
+      boxes.forEach(function (box) { box.open = open; });
+      label();
+    });
+    boxes.forEach(function (box) { box.addEventListener('toggle', label); });
+    label();
+    bar.appendChild(button);
+    group.parentNode.insertBefore(bar, group);
+  });
 })();

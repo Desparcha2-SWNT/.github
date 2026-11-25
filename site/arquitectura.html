@@ -23,34 +23,79 @@
     </nav>
   </header>
 
-  <main class="doc">
+  <main class="doc arquitectura">
 <h1>Arquitectura</h1>
 <p>Los diagramas de casos de uso, clases, modelo de datos, secuencias y despliegue están en el <a href="https://lucid.app/lucidchart/e18b5b62-ac62-4f8c-8e96-0049d0a7a8ee/view" target="_blank" rel="noopener">documento de Festa en Lucid</a> (se abre en otra pestaña).</p>
-<h2>Contexto del sistema</h2><p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
+
+<nav class="indice" aria-label="En esta página">
+<a href="#vision">Visión general</a>
+<a href="#flujos">Flujos</a>
+<a href="#servicios">Servicios</a>
+<a href="#estados">Estados y contratos</a>
+<a href="#decisiones-de-arquitectura">Decisiones</a>
+</nav>
+
+<section class="bloque" aria-labelledby="vision">
+<h2 id="vision">Visión general</h2>
+<article class="figura">
+<h3>Contexto del sistema</h3>
+<p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
 <p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Gemini para la IA, Wompi para los cobros, Google Identity para el acceso y Firebase Cloud Messaging para las notificaciones push.</p>
-
-<h2>Despliegue en AWS</h2><p><img alt="Servicios en ECS Fargate, bases de datos y gateway en AWS" src="assets/diagramas/despliegue.png" /></p>
+</article>
+<article class="figura">
+<h3>Despliegue en AWS</h3>
+<p><img alt="Servicios en ECS Fargate, bases de datos y gateway en AWS" src="assets/diagramas/despliegue.png" /></p>
 <p>Cada servicio corre como tarea en ECS Fargate y tiene su base de datos. El gateway recibe las peticiones por HTTPS y las reenvía al servicio que corresponde.</p>
-
-<h2>Contenedores</h2><p><img alt="Contenedores del sistema: aplicación, gateway, microservicios, bases de datos y colas" src="assets/diagramas/contenedores.png" /></p>
+</article>
+<article class="figura">
+<h3>Contenedores</h3>
+<p><img alt="Contenedores del sistema: aplicación, gateway, microservicios, bases de datos y colas" src="assets/diagramas/contenedores.png" /></p>
 <p>Festa tiene una aplicación móvil y un gateway Kong que recibe todas sus peticiones. Detrás hay ocho microservicios de negocio, cada uno con su propia base de datos. Los servicios se comunican por RabbitMQ, que transporta los eventos entre ellos. Redis guarda la caché de perfiles y los límites de uso de la IA.</p>
+</article>
+</section>
 
-<h2>Flujos principales</h2><h3>Compra de una boleta</h3>
+<section class="bloque" aria-labelledby="flujos">
+<h2 id="flujos">Flujos principales</h2>
+<div class="grupo">
+<details class="plegable" open>
+<summary>Compra de una boleta</summary>
+<div class="plegable-cuerpo">
 <p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
 <p>Festa nunca recibe datos de tarjeta. Devuelve un checkout firmado y la persona paga en Wompi. El webhook confirma el pago, payment-service publica <code>order.approved</code> y booking-service crea el pase.</p>
-<h3>Confirmar asistencia</h3>
+</div>
+</details>
+<details class="plegable">
+<summary>Confirmar asistencia</summary>
+<div class="plegable-cuerpo">
 <p><img alt="Secuencia para confirmar asistencia" src="assets/diagramas/secuencia_asistencia.png" /></p>
 <p>La confirmación descuenta el cupo y sube la versión de asistencia del evento en la misma operación. Los consumidores solo aplican una versión mayor a la guardada.</p>
-<h3>Crear evento</h3>
+</div>
+</details>
+<details class="plegable">
+<summary>Crear evento</summary>
+<div class="plegable-cuerpo">
 <p><img alt="Secuencia para crear un evento" src="assets/diagramas/secuencia_crear_evento.png" /></p>
 <p>Event-service guarda el evento y su fila de outbox en una misma transacción. Un publicador envía después el evento <code>event.published</code> a RabbitMQ.</p>
-<h3>Descripción con IA</h3>
+</div>
+</details>
+<details class="plegable">
+<summary>Descripción con IA</summary>
+<div class="plegable-cuerpo">
 <p><img alt="Secuencia para generar una descripción con IA" src="assets/diagramas/secuencia_descripcion_ia.png" /></p>
 <p>El servicio de IA le pide a Gemini la descripción solo con los datos del evento. Lo guarda y lo devuelve. Si el modelo falla, la app recibe un error controlado.</p>
-<h3>Validar el QR en la entrada</h3>
+</div>
+</details>
+<details class="plegable">
+<summary>Validar el QR en la entrada</summary>
+<div class="plegable-cuerpo">
 <p><img alt="Secuencia para validar un QR en la entrada" src="assets/diagramas/secuencia_qr.png" /></p>
 <p>El QR va firmado con HMAC. Booking-service verifica la firma, que el evento coincida y que el pase no se haya usado ni revocado. Lo marca como usado en la primera validación.</p>
+</div>
+</details>
+</div>
+</section>
 
+<section class="bloque" aria-labelledby="servicios">
 <h2 id="servicios">Servicios</h2>
 <p>Festa tiene ocho microservicios de negocio, un gateway y una base de datos por servicio. Ningún servicio lee la base de otro: se comunican por <strong>REST</strong> a través del gateway (llamadas que esperan respuesta) y por <strong>eventos en RabbitMQ</strong> (avisos que no esperan respuesta). Esta página describe cada servicio en su versión actual.</p>
 <h3>Resumen</h3>
@@ -66,63 +111,63 @@
 </thead>
 <tbody>
 <tr>
-<td><code>festa-gateway</code></td>
+<td><a href="#svc-gateway"><code>festa-gateway</code></a></td>
 <td>Punto de entrada: valida el JWT y limita solicitudes</td>
 <td>RNF8</td>
 <td>Kong 3.9 sin base de datos</td>
 <td>No tiene</td>
 </tr>
 <tr>
-<td><code>festa-auth-service</code></td>
+<td><a href="#svc-auth"><code>festa-auth-service</code></a></td>
 <td>Registro, inicio de sesión y emisión del JWT</td>
 <td>RF1</td>
 <td>Spring Boot 3.5</td>
 <td>PostgreSQL</td>
 </tr>
 <tr>
-<td><code>festa-user-service</code></td>
+<td><a href="#svc-user"><code>festa-user-service</code></a></td>
 <td>Perfiles, preferencias, consentimientos, comercios y moderación</td>
 <td>RF2, RF3, RF14</td>
 <td>Spring Boot 3.5</td>
 <td>PostgreSQL y Redis (caché)</td>
 </tr>
 <tr>
-<td><code>festa-event-service</code></td>
+<td><a href="#svc-event"><code>festa-event-service</code></a></td>
 <td>Eventos, mapa, búsqueda geográfica y Parches en Vivo</td>
 <td>RF4, RF5, RF6, RF19</td>
 <td>Node.js 20 y Express 5</td>
 <td>PostgreSQL con PostGIS</td>
 </tr>
 <tr>
-<td><code>festa-booking-service</code></td>
+<td><a href="#svc-booking"><code>festa-booking-service</code></a></td>
 <td>Asistencia, cupo y pases QR de un solo uso</td>
 <td>RF7, RF10</td>
 <td>Node.js 20 y Express 5</td>
 <td>PostgreSQL</td>
 </tr>
 <tr>
-<td><code>festa-payment-service</code></td>
+<td><a href="#svc-payment"><code>festa-payment-service</code></a></td>
 <td>Órdenes, cupo, cobro con Wompi, reembolsos y liquidación</td>
 <td>RF11</td>
 <td>Node.js 20 y Express 5</td>
 <td>PostgreSQL</td>
 </tr>
 <tr>
-<td><code>festa-ai-service</code></td>
+<td><a href="#svc-ai"><code>festa-ai-service</code></a></td>
 <td>Chat de recomendaciones y descripciones con IA</td>
 <td>RF8, RF9</td>
 <td>Python y FastAPI</td>
 <td>MongoDB y Redis (límite por minuto)</td>
 </tr>
 <tr>
-<td><code>festa-analytics-service</code></td>
+<td><a href="#svc-analytics"><code>festa-analytics-service</code></a></td>
 <td>Métricas para el panel del comercio</td>
 <td>RF15</td>
 <td>Node.js 20 y Express 5</td>
 <td>MongoDB</td>
 </tr>
 <tr>
-<td><code>festa-notification-service</code></td>
+<td><a href="#svc-notification"><code>festa-notification-service</code></a></td>
 <td>Notificaciones push y bandeja</td>
 <td>RF12 (fase 2)</td>
 <td>Node.js 20 y Express 5</td>
@@ -132,19 +177,11 @@
 </table>
 <h3 id="repositorios">Repositorios</h3>
 <p>El código está en la organización <a href="https://github.com/Desparcha2-SWNT" target="_blank" rel="noopener">Desparcha2-SWNT</a> en GitHub. Cada servicio de la tabla tiene un repositorio con su mismo nombre. Además están <code>festa-mobile</code> (la app en Flutter) y <code>festa-infra</code> (Docker Compose, contratos de mensajes y Terraform).</p>
-<h3>Índice de servicios</h3>
-<ul>
-<li><a href="#svc-gateway">Gateway (festa-gateway)</a></li>
-<li><a href="#svc-auth">Autenticación (festa-auth-service)</a></li>
-<li><a href="#svc-user">Perfiles y moderación (festa-user-service)</a></li>
-<li><a href="#svc-event">Eventos y mapa (festa-event-service)</a></li>
-<li><a href="#svc-booking">Asistencia y pases (festa-booking-service)</a></li>
-<li><a href="#svc-payment">Compras (festa-payment-service)</a></li>
-<li><a href="#svc-ai">Chat y descripciones con IA (festa-ai-service)</a></li>
-<li><a href="#svc-analytics">Métricas del panel (festa-analytics-service)</a></li>
-<li><a href="#svc-notification">Notificaciones (festa-notification-service)</a></li>
-</ul>
-<h2 id="svc-gateway">Gateway (<code>festa-gateway</code>)</h2>
+<h3>Detalle de cada servicio</h3>
+<div class="grupo">
+<details class="plegable servicio" id="svc-gateway">
+<summary><span class="svc-nombre">Gateway</span> <code>festa-gateway</code></summary>
+<div class="plegable-cuerpo">
 <p>Kong 3.9 en modo DB-less: la configuración es un archivo declarativo, no una base de datos. Valida el JWT con la llave pública de <code>auth-service</code>, aplica límites por token o por IP y reenvía cada ruta al servicio que la atiende.</p>
 <table>
 <thead>
@@ -219,15 +256,18 @@
 </tbody>
 </table>
 <p>Kong reenvía el prefijo <code>/api</code> tal cual lo quita: <code>/api/events/...</code> llega a <code>event-service</code> como <code>/events/...</code>.</p>
-<hr />
-<h3>Diagramas</h3>
+
+<h4>Diagramas</h4>
 <p>El gateway aparece en el diagrama de contenedores de la sección Contenedores.</p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-auth">Autenticación (<code>festa-auth-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-auth">
+<summary><span class="svc-nombre">Autenticación</span> <code>festa-auth-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Spring Boot 3.5.16, PostgreSQL, RabbitMQ. <strong>Base:</strong> <code>auth_db</code>.</p>
 <p><strong>Tablas:</strong> <code>accounts</code>, <code>refresh_tokens</code>, <code>outbox</code>, <code>processed_events</code>.</p>
 <table>
@@ -295,18 +335,21 @@
 <li><strong>Publica:</strong> <code>account.registered</code>, <code>account.display_name_set</code>, <code>account.role_changed</code>, <code>account.deleted</code>.</li>
 <li><strong>Consume:</strong> <code>moderation.user_suspended</code> y <code>moderation.user_reinstated</code>, para suspender o reactivar el acceso.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de autenticación" src="assets/diagramas/componentes_auth.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de auth" src="assets/diagramas/clases_auth.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-user">Perfiles y moderación (<code>festa-user-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-user">
+<summary><span class="svc-nombre">Perfiles y moderación</span> <code>festa-user-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Spring Boot 3.5.16, PostgreSQL, Redis para la caché de perfiles y de comercios públicos, RabbitMQ. <strong>Base:</strong> <code>user_db</code>.</p>
 <p><strong>Tablas:</strong> <code>profiles</code>, <code>user_interests</code>, <code>user_preferences</code>, <code>user_preferred_zones</code>, <code>user_preferred_days</code>, <code>consents</code>, <code>merchant_profiles</code>, <code>merchant_verification_events</code>, <code>reports</code>, <code>outbox</code>, <code>processed_events</code>.</p>
 <table>
@@ -394,18 +437,21 @@
 <li><strong>Publica:</strong> <code>profile.updated</code>, <code>location_consent.granted</code>, <code>location_consent.revoked</code>, <code>merchant.submitted</code>, <code>merchant.updated</code>, <code>merchant.verified</code>, <code>merchant.rejected</code>, <code>report.created</code>, <code>report.resolved</code>, <code>moderation.event_hidden</code>, <code>moderation.event_restored</code>, <code>moderation.user_suspended</code>, <code>moderation.user_reinstated</code>.</li>
 <li><strong>Consume:</strong> <code>account.registered</code> y <code>account.deleted</code>.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de perfiles y moderación" src="assets/diagramas/componentes_user.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de user" src="assets/diagramas/clases_user.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-event">Eventos y mapa (<code>festa-event-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-event">
+<summary><span class="svc-nombre">Eventos y mapa</span> <code>festa-event-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL con PostGIS. <strong>Base:</strong> <code>event_db</code>.</p>
 <p><strong>Tablas:</strong> <code>events</code>, <code>verified_merchants</code>, <code>suspended_users</code>, <code>outbox</code>, <code>processed_events</code>.</p>
 <table>
@@ -463,18 +509,21 @@
 <li><strong>Publica:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.rescheduled</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>event.sold_out</code>, <code>engagement.viewed</code>, <code>engagement.shared</code>.</li>
 <li><strong>Consume:</strong> <code>attendance.confirmed</code>, <code>attendance.cancelled</code>, <code>merchant.verified</code>, <code>merchant.updated</code>, <code>moderation.event_hidden</code>, <code>moderation.event_restored</code>, <code>moderation.user_suspended</code>, <code>moderation.user_reinstated</code>, <code>account.deleted</code>.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de eventos" src="assets/diagramas/componentes_event.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de event" src="assets/diagramas/clases_event.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-booking">Asistencia y pases (<code>festa-booking-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-booking">
+<summary><span class="svc-nombre">Asistencia y pases</span> <code>festa-booking-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL, RabbitMQ. <strong>Base:</strong> <code>booking_db</code>.</p>
 <p><strong>Tablas:</strong> <code>event_projection</code> (copia de los datos del evento que necesita), <code>attendances</code>, <code>passes</code>, <code>closed_events</code>, <code>user_names</code>, <code>deleted_users</code>, <code>outbox</code>, <code>processed_events</code>.</p>
 <table>
@@ -532,18 +581,21 @@
 <li><strong>Publica:</strong> <code>attendance.confirmed</code>, <code>attendance.cancelled</code>, <code>pass.checked_in</code>, <code>pass.check_in_rejected</code>.</li>
 <li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>order.approved</code>, <code>order.refunded</code>, <code>account.display_name_set</code>, <code>account.deleted</code>.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de asistencia y pases" src="assets/diagramas/componentes_booking.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de booking" src="assets/diagramas/clases_booking.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-payment">Compras (<code>festa-payment-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-payment">
+<summary><span class="svc-nombre">Compras</span> <code>festa-payment-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Node.js 20, Express 5, PostgreSQL, RabbitMQ, Wompi. <strong>Base:</strong> <code>payment_db</code>.</p>
 <p><strong>Tablas:</strong> <code>event_projection</code>, <code>merchants</code>, <code>orders</code>, <code>payouts</code>, <code>wompi_webhooks</code>, <code>payment_discrepancies</code>, <code>closed_events</code>, <code>deleted_accounts</code>, <code>outbox</code>, <code>processed_events</code>.</p>
 <table>
@@ -597,18 +649,21 @@
 <li><strong>Publica:</strong> <code>order.created</code>, <code>order.approved</code>, <code>order.failed</code>, <code>order.expired</code>, <code>order.refund_requested</code>, <code>order.refunded</code>, <code>payout.recorded</code>.</li>
 <li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>merchant.verified</code>, <code>merchant.updated</code>, <code>account.deleted</code>.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de compras" src="assets/diagramas/componentes_payment.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de payment" src="assets/diagramas/clases_payment.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-ai">Chat y descripciones con IA (<code>festa-ai-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-ai">
+<summary><span class="svc-nombre">Chat y descripciones con IA</span> <code>festa-ai-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Python, FastAPI, Redis (límite por minuto), MongoDB, Gemini como modelo. <strong>Base:</strong> MongoDB (descripciones y sesiones de chat).</p>
 <table>
 <thead>
@@ -646,18 +701,21 @@
 <li><strong>Publica:</strong> <code>description.generated</code>, <code>recommendation.served</code>.</li>
 <li><strong>Consume:</strong> <code>event.published</code>, <code>event.updated</code>, <code>event.cancelled</code>, <code>event.expired</code>, <code>event.sold_out</code>, <code>merchant.updated</code>, <code>location_consent.granted</code>, <code>location_consent.revoked</code>, <code>profile.updated</code>, <code>account.deleted</code>.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de IA" src="assets/diagramas/componentes_ai.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de ai" src="assets/diagramas/clases_ai.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-analytics">Métricas del panel (<code>festa-analytics-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-analytics">
+<summary><span class="svc-nombre">Métricas del panel</span> <code>festa-analytics-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Node.js 20, Express 5, MongoDB, RabbitMQ. <strong>Base:</strong> MongoDB.</p>
 <table>
 <thead>
@@ -686,18 +744,21 @@
 </tbody>
 </table>
 <p>No publica eventos. Consume los eventos de casi todos los servicios para calcular sus conteos.</p>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de métricas" src="assets/diagramas/componentes_analytics.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de analytics" src="assets/diagramas/clases_analytics.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
-
-<h2 id="svc-notification">Notificaciones (<code>festa-notification-service</code>)</h2>
+</div>
+</details>
+<details class="plegable servicio" id="svc-notification">
+<summary><span class="svc-nombre">Notificaciones</span> <code>festa-notification-service</code></summary>
+<div class="plegable-cuerpo">
 <p><strong>Tecnología:</strong> Node.js 20, Express 5, MongoDB, RabbitMQ, Firebase Cloud Messaging (push). <strong>Base:</strong> MongoDB.</p>
 <table>
 <thead>
@@ -739,29 +800,41 @@
 <li><strong>Publica:</strong> <code>push.sent</code>.</li>
 <li><strong>Consume:</strong> los eventos de publicación, asistencia, pagos, comercios, moderación, reportes y cuentas. Con ellos arma la bandeja y los recordatorios.</li>
 </ul>
-<hr />
-<h3>Diagramas</h3>
-<h4>Componentes</h4>
+
+<h4>Diagramas</h4>
+<h5>Componentes</h5>
 <p><img alt="Componentes del servicio de notificaciones" src="assets/diagramas/componentes_notification.png" /></p>
-<h4>Clases y modelo de datos</h4>
+<h5>Clases y modelo de datos</h5>
 <p><img alt="Clases y modelo de datos de notification" src="assets/diagramas/clases_notification.png" /></p>
-<h3>Decisiones</h3>
+<h4>Decisiones</h4>
 <ul>
 <li>Despliegue en AWS con ECS Fargate (ADR 0001, en <a href="#decisiones-de-arquitectura">Decisiones de arquitectura</a>).</li>
 </ul>
+</div>
+</details>
+</div>
+</section>
 
-<h2>Estados</h2>
-<p><strong>Orden de compra:</strong> <code>PENDING</code> → <code>APPROVED</code> (pago aprobado), <code>DECLINED</code>, <code>ERROR</code> o <code>VOIDED</code> (anulada); <code>PENDING</code> → <code>EXPIRED</code> si vence el cupo retenido; <code>APPROVED</code> → <code>REFUND_REQUESTED</code> → <code>REFUNDED</code>.</p>
-<p><strong>Evento:</strong> <code>published</code> puede pasar a <code>hidden</code> (moderación), <code>cancelled</code> o <code>expired</code>.</p>
-<p><strong>Pase:</strong> <code>valid</code> → <code>used</code> (escaneado en la entrada) o <code>revoked</code> (orden reembolsada). Un pase <code>used</code> o <code>revoked</code> no lleva QR.</p>
-<p><strong>Asistencia:</strong> <code>rsvp</code> (gratis) o <code>ticket</code> (boleta comprada). Se confirma o se cancela.</p>
-<h2 id="contratos">Contratos entre servicios</h2>
+<section class="bloque" aria-labelledby="estados">
+<h2 id="estados">Estados y contratos</h2>
+<h3>Estados</h3>
+<ul class="estados">
+<li><strong>Orden de compra:</strong> <code>PENDING</code> → <code>APPROVED</code> (pago aprobado), <code>DECLINED</code>, <code>ERROR</code> o <code>VOIDED</code> (anulada); <code>PENDING</code> → <code>EXPIRED</code> si vence el cupo retenido; <code>APPROVED</code> → <code>REFUND_REQUESTED</code> → <code>REFUNDED</code>.</li>
+<li><strong>Evento:</strong> <code>published</code> puede pasar a <code>hidden</code> (moderación), <code>cancelled</code> o <code>expired</code>.</li>
+<li><strong>Pase:</strong> <code>valid</code> → <code>used</code> (escaneado en la entrada) o <code>revoked</code> (orden reembolsada). Un pase <code>used</code> o <code>revoked</code> no lleva QR.</li>
+<li><strong>Asistencia:</strong> <code>rsvp</code> (gratis) o <code>ticket</code> (boleta comprada). Se confirma o se cancela.</li>
+</ul>
+<h3 id="contratos">Contratos entre servicios</h3>
 <p>El formato de los mensajes entre servicios y cómo evolucionan está en la página de <a href="contratos.html">Contratos</a>.</p>
+</section>
 
+<section class="bloque" aria-labelledby="decisiones-de-arquitectura">
 <h2 id="decisiones-de-arquitectura">Decisiones de arquitectura</h2>
-<h2>Registro de decisiones (ADR)</h2>
-<p>Cada decisión importante se registra en un archivo numerado,. Un ADR es corto (una página) y responde: qué decidimos, por qué y qué consecuencias tiene. Si la decisión cambia, se crea un ADR nuevo que reemplaza al anterior; no se borra el historial.</p>
-<h2>Decisiones pendientes (al 25 de octubre de 2026)</h2>
+<p>Cada decisión importante se registra en un archivo numerado. Un ADR es corto (una página) y responde: qué decidimos, por qué y qué consecuencias tiene. Si la decisión cambia, se crea un ADR nuevo que reemplaza al anterior; no se borra el historial.</p>
+<div class="grupo">
+<details class="plegable">
+<summary>Decisiones pendientes (al 25 de octubre de 2026)</summary>
+<div class="plegable-cuerpo">
 <table>
 <thead>
 <tr>
@@ -799,24 +872,27 @@
 </tbody>
 </table>
 <p>Decisiones ya tomadas que conviene documentar: arquitectura de microservicios según los repositorios <code>festa-*</code>, observabilidad con Prometheus y Grafana, flujo de ramas <code>main</code> / <code>develop</code> / <code>feature</code>.</p>
-<hr>
-<h2>ADR 0001 — Plataforma de despliegue: AWS</h2>
+</div>
+</details>
+<details class="plegable">
+<summary>ADR 0001 — Plataforma de despliegue: AWS</summary>
+<div class="plegable-cuerpo">
 <ul>
 <li><strong>Estado:</strong> Aceptada (ratificada por el equipo el 2026-11-07)</li>
 <li><strong>Fecha:</strong> 2026-11-07</li>
 <li><strong>Participantes:</strong> propuesto por Juan Sebastián Guayazán Clavijo; Brayan Loaiza (dueño de lo respaldó por los créditos de AWS. El equipo Desparcha2 lo confirmó el 2026-11-07 (comunicado por Juan; los nombres de quienes lo ratificaron no están anotados).</li>
 </ul>
-<h2>Contexto</h2>
+<h4>Contexto</h4>
 <p>La decisión del 25 de octubre fue Azure, y los repositorios nuevos no definen la nube. El profesor ofreció créditos de AWS si el proyecto se despliega allí; con Azure o GCP el costo sale del equipo. Los créditos son una cuenta de AWS Academy (Learner Lab) con permisos restringidos y sesiones que vencen, así que el entorno se apaga y hay que poder redesplegarlo con scripts desde cero.</p>
 <p>El 7 de noviembre de 2026 Brayan Loaiza verificó los permisos reales del Learner Lab (us-east-1), solo con consultas de lectura y simulación de permisos, sin crear recursos. Esa verificación cambió dos servicios de la propuesta inicial (Amazon MQ y DocumentDB).</p>
 <p>Había tres páginas de arquitectura (Azure, AWS y GCP) con el mismo contenido, y los diagramas daban respuestas distintas para el registro de imágenes y el LLM.</p>
-<h2>Opciones consideradas</h2>
+<h4>Opciones consideradas</h4>
 <ol>
 <li><strong>AWS:</strong> créditos que ofreció el profesor; ECS Fargate (servicios sin estado y autoescalado sin administrar un clúster), RDS, ElastiCache, API Gateway, balanceadores y Secrets Manager. La propuesta inicial incluía también Amazon MQ y DocumentDB, que el Learner Lab no permite (ver Decisión).</li>
 <li><strong>Azure:</strong> la decisión previa; AKS ofrece más control, pero el costo sale del equipo.</li>
 <li><strong>GCP:</strong> Cloud Run, Cloud SQL y Memorystore; tampoco tiene créditos.</li>
 </ol>
-<h2>Decisión</h2>
+<h4>Decisión</h4>
 <p>Se despliega en <strong>AWS</strong>, en la región us-east-1, con los servicios de la página "Despliegue en AWS (oficial)". Las páginas de Azure y GCP se eliminaron: AWS es la única plataforma vigente.</p>
 <ul>
 <li>Cómputo: Amazon ECS en Fargate, con las imágenes publicadas en GitHub Container Registry (GHCR) desde GitHub Actions. Los paquetes son públicos (los repositorios también), así que Fargate las descarga sin credenciales. Secrets Manager guarda solo los secretos de la aplicación: llaves JWT, contraseñas y llave PII.</li>
@@ -827,7 +903,7 @@
 <li>Red: las tareas van en las subredes públicas de la VPC por defecto con IP pública, sin NAT Gateway.</li>
 <li>LLM: Gemini, como API externa (ADR 0003).</li>
 </ul>
-<h2>Consecuencias</h2>
+<h4>Consecuencias</h4>
 <ul>
 <li>Los créditos de AWS solo aplican si se avisa al profesor con los correos del equipo.</li>
 <li>Hay que escribir la infraestructura como código y los scripts de redespliegue, y calcular el costo en AWS por transacción y uso proyectado, sin capas gratuitas.</li>
@@ -841,25 +917,28 @@
 <li><strong>El SNS de las notificaciones push</strong> (fase 2) no se verificó en el lab.</li>
 <li>Pendiente: la prueba de redespliegue completo desde cero y el tiempo que tarda.</li>
 </ul>
-<hr>
-<h2>ADR 0003 — Proveedor de LLM: Gemini</h2>
+</div>
+</details>
+<details class="plegable">
+<summary>ADR 0003 — Proveedor de LLM: Gemini</summary>
+<div class="plegable-cuerpo">
 <ul>
 <li><strong>Estado:</strong> Aceptada</li>
 <li><strong>Fecha:</strong> 2026-11-01</li>
 <li><strong>Participantes:</strong> decidido por Juan Sebastián Guayazán Clavijo; el equipo Desparcha2 debe ratificarlo.</li>
 </ul>
-<h2>Contexto</h2>
+<h4>Contexto</h4>
 <p><code>festa-ai-service</code> necesita un modelo de lenguaje para recomendar eventos (RF8) y generar descripciones (RF9), con límite de solicitudes por usuario y descripciones guardadas para no pagarlas dos veces (RNF8).</p>
 <p>Los diagramas daban tres respuestas distintas: Amazon Bedrock (AWS), Azure OpenAI (y C4, Azure) y Gemini (<code>festa-infra</code>, <code>.env.example</code> con <code>LLM_PROVIDER=gemini</code> y los contratos de eventos con <code>"provider": "gemini"</code>). El despliegue en la nube sigue abierto (ADR 0001), así que el proveedor del modelo no debería depender de la nube elegida.</p>
-<h2>Opciones consideradas</h2>
+<h4>Opciones consideradas</h4>
 <ol>
 <li><strong>Gemini (API de Google):</strong> ya está configurado en <code>festa-infra</code>; funciona igual desde Azure, AWS o GCP; el modelo <code>gemini-2.5-flash</code> es el más económico de la familia. Es un proveedor externo y sus datos salen de la nube del proyecto.</li>
 <li><strong>Azure OpenAI:</strong> integrado con Azure, pero obliga a esa nube y a pedir acceso al servicio.</li>
 <li><strong>Amazon Bedrock:</strong> integrado con AWS, con el mismo vínculo a una sola nube.</li>
 </ol>
-<h2>Decisión</h2>
+<h4>Decisión</h4>
 <p>Se usa <strong>Gemini</strong> como proveedor de LLM, llamado como API externa desde <code>festa-ai-service</code> con <code>LLM_PROVIDER=gemini</code> y <code>LLM_CHAT_MODEL</code> / <code>LLM_DESCRIPTION_MODEL</code> definidos en <code>festa-infra</code>. Azure OpenAI y Bedrock quedan descartados.</p>
-<h2>Consecuencias</h2>
+<h4>Consecuencias</h4>
 <ul>
 <li>Los diagramas (AWS, Azure, microservicios y casos de uso), el modelo de arquitectura y el alcance muestran "Google Gemini API" como sistema externo, sin ícono de la nube.</li>
 <li>La clave de la API va en el gestor de secretos de la nube (Key Vault o Secrets Manager), nunca en el código.</li>
@@ -868,6 +947,10 @@
 <li>Si en el futuro se cambia de proveedor, se crea un ADR nuevo; el código lo permite por la variable <code>LLM_PROVIDER</code>.</li>
 <li>Pendiente: calcular el costo por solicitud de Gemini para(sin capas gratuitas).</li>
 </ul>
+</div>
+</details>
+</div>
+</section>
   </main>
 
   <footer class="pie">
