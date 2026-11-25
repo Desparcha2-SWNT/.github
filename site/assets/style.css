@@ -308,3 +308,26 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
   word-break: break-all;
 }
 .miembro .red:hover { background: var(--magenta-500); }
+/* Páginas de documentación. */
+.doc h1 { font-size: 2.25rem; }
+.doc h2 { margin-top: var(--space-2xl); }
+.doc hr { border: 0; border-top: 2px dashed var(--ink-200); margin: var(--space-2xl) 0; }
+.doc ul, .doc ol { padding-left: var(--space-lg); }
+.doc li { margin: 6px 0; }
+.doc blockquote {
+  margin: var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--magenta-50);
+  border-left: 6px solid var(--magenta-500);
+  border-radius: var(--radius-md);
+}
+.aviso {
+  margin: var(--space-md) 0 var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--magenta-50);
+  border: 1px solid var(--magenta-100);
+  border-left: 8px solid var(--magenta-500);
+  border-radius: var(--radius-md);
+  color: var(--ink-900);
+}
+.aviso strong { font-family: "Bricolage Grotesque", sans-serif; }
