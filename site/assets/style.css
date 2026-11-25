@@ -608,3 +608,12 @@ code { overflow-wrap: break-word; }
   table.rutas td:nth-child(2) { flex: 1 1 0; min-width: 60%; }
   table.rutas td:nth-child(n + 3) { flex: 1 1 100%; font-size: 0.9rem; }
 }
+
+/* Descarga de la app. */
+.descarga { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xl); margin: var(--space-lg) 0; padding: var(--space-lg); background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-lg); }
+.descarga > img { width: 200px; height: 200px; border: 1px solid var(--ink-200); border-radius: var(--radius-md); }
+.descarga > div { flex: 1 1 240px; }
+.boton { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--space-xl); border-radius: 999px; background: var(--magenta-500); color: var(--ink-900); font-weight: 800; text-decoration: none; }
+.boton:hover { background: var(--ink-900); color: var(--white); }
+.descarga .version { font-size: 0.9rem; color: var(--ink-500); }
+@media (max-width: 600px) { .descarga { justify-content: center; text-align: center; } .boton { width: 100%; } }
