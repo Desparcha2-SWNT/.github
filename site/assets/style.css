@@ -578,3 +578,4 @@ code { overflow-wrap: break-word; }
 .arquitectura ul.estados { list-style: none; padding: 0; display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: none; }
 .arquitectura ul.estados li { margin: 0; padding: var(--space-md); background: var(--white); border: 1px solid var(--ink-200); border-left: 6px solid var(--lilac); border-radius: var(--radius-md); }
 @media (max-width: 640px) { .plegable-cuerpo, .figura { padding-inline: var(--space-sm); } }
+.figura-sub { margin: var(--space-lg) 0 var(--space-xs); font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; color: var(--ink-900); }
