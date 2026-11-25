@@ -647,3 +647,17 @@ code { overflow-wrap: break-word; }
   .requerimientos .stats { grid-template-columns: 1fr 1fr; }
   .filtros .abrir-todo { margin-left: 0; }
 }
+
+/* Índice de Arquitectura: nombre completo en pantallas anchas, corto en el teléfono. */
+.indice .solo-fono { display: none; }
+@media (max-width: 600px) {
+  .indice .solo-ancho { display: none; }
+  .indice .solo-fono { display: inline; }
+}
+.figura > .figura-sub:first-child, .figura > p:first-child { margin-top: 0; }
+@media (max-width: 600px) {
+  .requerimientos .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .requerimientos .stat { padding-inline: var(--space-sm); overflow-wrap: anywhere; }
+  .indice { gap: 4px; }
+  .indice a { padding-inline: 8px; }
+}

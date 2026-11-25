@@ -14,7 +14,6 @@
       <a href="index.html">Inicio</a>
       <a href="requisitos.html">Requerimientos</a>
       <a href="arquitectura.html" aria-current="page">Arquitectura</a>
-      <a href="contratos.html">Contratos</a>
       <a href="ia.html">Uso de IA</a>
       <a href="identidad.html">Identidad</a>
       <a href="instalacion.html">Instalar la app</a>
@@ -30,7 +29,7 @@
 <a href="#vision">Visión general</a>
 <a href="#flujos">Flujos</a>
 <a href="#servicios">Servicios</a>
-<a href="#estados">Estados</a>
+<a href="#estados"><span class="solo-ancho">Estados y contratos</span><span class="solo-fono">Estados</span></a>
 </nav>
 
 <section class="bloque" aria-labelledby="vision">
@@ -884,7 +883,17 @@
 <li><strong>Asistencia:</strong> <code>rsvp</code> (gratis) o <code>ticket</code> (boleta comprada). Se confirma o se cancela.</li>
 </ul>
 <h3 id="contratos">Contratos entre servicios</h3>
-<p>El formato de los mensajes entre servicios y cómo evolucionan está en la página de <a href="contratos.html">Contratos</a>.</p>
+<div class="figura">
+<p>Los servicios se comunican por RabbitMQ con mensajes definidos como JSON Schema en un catálogo común de contratos. Cada cambio incompatible sube la versión del contrato y el productor convive con la versión anterior hasta que todos los consumidores se actualizan.</p>
+
+<h4 class="figura-sub">Ejemplo: asistencia con versión</h4>
+<p>El conteo de asistentes usa <code>attendanceVersion</code>, un entero monotónico por evento. Un consumidor aplica el conteo solo si la versión recibida es mayor que la guardada, así un mensaje atrasado no sobrescribe uno más reciente.</p>
+<ul class="links">
+<li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/events/booking/attendance.confirmed.schema.json" target="_blank" rel="noopener">attendance.confirmed (esquema)</a></li>
+<li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/events/booking/attendance.cancelled.schema.json" target="_blank" rel="noopener">attendance.cancelled (esquema)</a></li>
+<li><a href="https://github.com/Desparcha2-SWNT/festa-infra/blob/develop/contracts/README.md#evoluci%C3%B3n" target="_blank" rel="noopener">Reglas de evolución de contratos</a></li>
+</ul>
+</div>
 </section>
   </main>
 
