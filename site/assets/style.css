@@ -404,7 +404,9 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
 
 /* ------------------------------------------------------------------ Adaptable: computador y celular */
 
-code { overflow-wrap: anywhere; }
+code { overflow-wrap: break-word; }
+/* En celular (tablas apiladas y texto corrido) un nombre largo sí puede partirse para no desbordar. */
+@media (max-width: 640px) { code { overflow-wrap: anywhere; } }
 .menu-boton { display: none; }
 
 /* Diagramas ampliables. */
@@ -512,6 +514,8 @@ code { overflow-wrap: anywhere; }
   th, td { padding: var(--space-xs); }
   .doc table td code { white-space: normal; }
 }
+/* Los métodos y rutas cortas de la primera columna no se parten cuando hay espacio. */
+@media (min-width: 720px) and (max-width: 1099px) { .doc table td:first-child code { white-space: nowrap; } }
 /* Sin el script, las tablas anchas se desplazan dentro de su caja y la página no. */
 @media (max-width: 960px) { html:not(.js) table { display: block; overflow-x: auto; } }
 
