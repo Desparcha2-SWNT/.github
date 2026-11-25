@@ -9,7 +9,7 @@
 <body>
   <header class="top">
     <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
-            <nav>
+    <nav>
       <a href="index.html">Inicio</a>
       <a href="requisitos.html">Requisitos</a>
       <a href="arquitectura.html" aria-current="page">Arquitectura</a>
@@ -23,82 +23,39 @@
     </nav>
   </header>
 
-  <main>
-    <h1>Arquitectura</h1>
-    <p>Microservicios detrás de un gateway Kong. Cada servicio tiene su propia base de datos. La app habla con Kong por HTTPS; los servicios se comunican por RabbitMQ con contratos versionados.</p>
-
-    <h2>Diagramas C4</h2>
-    <p>Los diagramas fuente están en <a href="https://github.com/Desparcha2-SWNT/.github/tree/main/docs/arquitectura">docs/arquitectura</a> del repositorio de documentación (modelo en <code>festa.dsl</code>).</p>
-
-    <h3>1. Contexto</h3>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/01-contexto/ContextoFesta.png" alt="Diagrama de contexto de Festa">
-    </figure>
-
-    <h3>2. Contenedores</h3>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/02-contenedores/ContenedoresFesta.png" alt="Diagrama de contenedores de Festa">
-    </figure>
-
-    <h3>3. Componentes</h3>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesBooking.png" alt="Componentes de booking-service">
-      <figcaption>booking-service</figcaption>
-    </figure>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesPayment.png" alt="Componentes de payment-service">
-      <figcaption>payment-service</figcaption>
-    </figure>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/03-componentes/ComponentesAI.png" alt="Componentes de ai-service">
-      <figcaption>ai-service</figcaption>
-    </figure>
-
-    <h3>4. Dinámica: compra de boleta</h3>
-    <figure>
-      <img src="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/04-dinamicas/CompraBoleto.png" alt="Flujo de compra de boleta">
-    </figure>
-
-    <h3>5. Clases y base de datos</h3>
-    <p>Un diagrama de clases y uno de base de datos por servicio con base propia.</p>
-    <ul class="links">
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/auth-service.png">Clases: auth-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/user-service.png">Clases: user-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/event-service.png">Clases: event-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/booking-service.png">Clases: booking-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/payment-service.png">Clases: payment-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/ai-service.png">Clases: ai-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/analytics-service.png">Clases: analytics-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/05-clases/notification-service.png">Clases: notification-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/auth-service.png">Base de datos: auth-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/user-service.png">Base de datos: user-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/event-service.png">Base de datos: event-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/booking-service.png">Base de datos: booking-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/payment-service.png">Base de datos: payment-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/ai-service.png">Base de datos: ai-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/analytics-service.png">Base de datos: analytics-service</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/06-base-de-datos/notification-service.png">Base de datos: notification-service</a></li>
-    </ul>
-
-    <h3>6. Secuencias, proceso y despliegue</h3>
-    <ul class="links">
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/RegistroInicioSesion.png">Secuencia: registro e inicio de sesión</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/CrearEvento.png">Secuencia: crear evento</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/ConfirmarAsistencia.png">Secuencia: confirmar asistencia</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/DescripcionIA.png">Secuencia: descripción con IA</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/ComprarBoleta.png">Secuencia: comprar boleta</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/07-secuencias/ValidarQR.png">Secuencia: validar QR</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/08-proceso/ProcesoBPMN.png">Proceso de negocio (BPMN)</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/09-despliegue/ArquitecturaMicroservicios.png">Arquitectura de microservicios</a></li>
-      <li><a href="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/docs/arquitectura/diagramas/09-despliegue/DespliegueAWS.png">Despliegue en AWS</a></li>
-    </ul>
-
-    <h2>Decisiones de arquitectura</h2>
-    <ul class="links">
-      <li><a href="https://github.com/Desparcha2-SWNT/.github/blob/main/docs/adr/0001-plataforma-aws.md">ADR 0001: plataforma AWS</a></li>
-      <li><a href="https://github.com/Desparcha2-SWNT/.github/blob/main/docs/adr/0003-proveedor-llm-gemini.md">ADR 0003: proveedor de LLM (Gemini)</a></li>
-    </ul>
+  <main class="doc">
+<h1>Arquitectura</h1>
+<p>Festa es un conjunto de microservicios detrás de un gateway Kong. Cada servicio tiene su propia base de datos. La app habla solo con el gateway por HTTPS. Los servicios se comunican de dos formas: con llamadas REST que esperan respuesta, y con eventos en RabbitMQ que no la esperan. Los eventos tienen contratos versionados.</p>
+<h2>Contexto del sistema</h2>
+<p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
+<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Gemini para la IA, Wompi para los cobros, Google Identity para el acceso y Firebase Cloud Messaging para las notificaciones push.</p>
+<h2>Despliegue en AWS</h2>
+<p><img alt="Servicios en ECS Fargate, bases de datos y gateway en AWS" src="assets/diagramas/despliegue.png" /></p>
+<p>Cada servicio corre como tarea en ECS Fargate y tiene su base de datos. El gateway recibe las peticiones por HTTPS y las reenvía al servicio que corresponde.</p>
+<h2>Flujos principales</h2>
+<h3>Compra de una boleta</h3>
+<p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
+<p>Festa nunca recibe datos de tarjeta. Devuelve un checkout firmado y la persona paga en Wompi. El webhook confirma el pago, payment-service publica <code>order.approved</code> y booking-service crea el pase.</p>
+<h3>Confirmar asistencia</h3>
+<p><img alt="Secuencia para confirmar asistencia" src="assets/diagramas/secuencia_asistencia.png" /></p>
+<p>La confirmación descuenta el cupo y sube la versión de asistencia del evento en la misma operación. Los consumidores solo aplican una versión mayor a la guardada.</p>
+<h3>Crear evento</h3>
+<p><img alt="Secuencia para crear un evento" src="assets/diagramas/secuencia_crear_evento.png" /></p>
+<p>Event-service guarda el evento y su fila de outbox en una misma transacción. Un publicador envía después el evento <code>event.published</code> a RabbitMQ.</p>
+<h3>Descripción con IA</h3>
+<p><img alt="Secuencia para generar una descripción con IA" src="assets/diagramas/secuencia_descripcion_ia.png" /></p>
+<p>El servicio de IA le pide a Gemini la descripción solo con los datos del evento. Lo guarda y lo devuelve. Si el modelo falla, la app recibe un error controlado.</p>
+<h3>Validar el QR en la entrada</h3>
+<p><img alt="Secuencia para validar un QR en la entrada" src="assets/diagramas/secuencia_qr.png" /></p>
+<p>El QR va firmado con HMAC. Booking-service verifica la firma, que el evento coincida y que el pase no se haya usado ni revocado. Lo marca como usado en la primera validación.</p>
+<h2>Servicios, contratos y decisiones</h2>
+<ul>
+<li><a href="servicios.html">Servicios</a>: endpoints, tablas, eventos y estados de cada microservicio.</li>
+<li><a href="contratos.html">Contratos</a>: formato de los mensajes entre servicios y cómo evolucionan.</li>
+<li><a href="decisiones.html">Decisiones de arquitectura</a>: por qué se eligió AWS y Gemini, y qué se descartó.</li>
+</ul>
   </main>
+
   <footer class="pie">
     <div class="pie-inner">
       <img src="assets/images/logo_festa.png" alt="Festa">
