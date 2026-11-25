@@ -60,6 +60,35 @@
 <h3>Inteligencia artificial (ai-service)</h3>
 <p><img alt="Componentes del servicio de IA" src="assets/diagramas/componentes_ai.png" /></p>
 <p>El servicio de IA responde el chat y genera las descripciones de eventos. Antes de responder, verifica el límite de uso de cada usuario en Redis. Las recomendaciones solo pueden citar eventos que existan en la base.</p>
+<h2>Clases y modelo de datos</h2>
+<p>Cada servicio tiene su diagrama de clases y su modelo de datos. Las tablas o colecciones son las de su propia base.</p>
+<h3>Autenticación (auth-service)</h3>
+<p><img alt="Clases y modelo de datos de auth" src="assets/diagramas/clases_auth.png" /></p>
+<p>Cuentas, refresh tokens, eventos procesados y la bandeja de salida.</p>
+<h3>Perfiles y moderación (user-service)</h3>
+<p><img alt="Clases y modelo de datos de user" src="assets/diagramas/clases_user.png" /></p>
+<p>Perfiles, preferencias, intereses, consentimientos, comercios verificados y reportes.</p>
+<h3>Eventos (event-service)</h3>
+<p><img alt="Clases y modelo de datos de event" src="assets/diagramas/clases_event.png" /></p>
+<p>Eventos con su ubicación, comercios verificados y usuarios suspendidos.</p>
+<h3>Asistencia y pases (booking-service)</h3>
+<p><img alt="Clases y modelo de datos de booking" src="assets/diagramas/clases_booking.png" /></p>
+<p>Asistencias, pases con su QR y la copia de los eventos que necesita.</p>
+<h3>Compras (payment-service)</h3>
+<p><img alt="Clases y modelo de datos de payment" src="assets/diagramas/clases_payment.png" /></p>
+<p>Órdenes, liquidaciones, notificaciones de Wompi y discrepancias de pago.</p>
+<h3>Inteligencia artificial (ai-service)</h3>
+<p><img alt="Clases y modelo de datos de ai" src="assets/diagramas/clases_ai.png" /></p>
+<p>Descripciones generadas, sesiones de chat y preferencias, en MongoDB.</p>
+<h3>Métricas (analytics-service)</h3>
+<p><img alt="Clases y modelo de datos de analytics" src="assets/diagramas/clases_analytics.png" /></p>
+<p>Conteos de eventos, comercios, reportes y actividad, en MongoDB.</p>
+<h3>Notificaciones (notification-service)</h3>
+<p><img alt="Clases y modelo de datos de notification" src="assets/diagramas/clases_notification.png" /></p>
+<p>Dispositivos, avisos, recordatorios y asistentes, en MongoDB.</p>
+<h2>Casos de uso</h2>
+<p><img alt="Casos de uso de Festa" src="assets/diagramas/casos_de_uso.png" /></p>
+<p>Los casos de uso cubren los 19 requerimientos funcionales. Los actores externos son los servicios con los que Festa se conecta.</p>
 <h2>Flujos principales</h2>
 <h3>Compra de una boleta</h3>
 <p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
