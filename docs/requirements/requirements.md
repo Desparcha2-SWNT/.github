@@ -37,13 +37,13 @@ El sistema de Festa debe tener:
 1. Rendimiento: el mapa debe cargar los eventos visibles en menos de 2 segundos. *(RNF1)*
 2. Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. *(RNF2)*
 3. Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. *(RNF3)*
-4. Seguridad: autenticación con tokens (JWT/OAuth2), cifrado en tránsito (HTTPS) y en reposo para datos personales. *(RNF4)*
+4. Seguridad: autenticación con tokens (JWT), cifrado en tránsito (HTTPS) y en reposo para datos personales. *(RNF4)*
 5. Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. *(RNF5)*
-6. Integración con una pasarela de pagos existente (Wompi/PayU/Mercado Pago) para la venta de boletería. *(RNF6)*
+6. Integración con la pasarela de pagos Wompi para la venta de boletería. *(RNF6)*
 7. Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. *(RNF7)*
-8. Costo de IA controlado: descripciones (RF9) se generan una sola vez y se persisten; recomendaciones (RF8) usan un modelo de costo reducido con límite de 5–20 solicitudes por usuario por minuto. *(RNF8)*
+8. Costo de IA controlado: las descripciones (RF9) se generan una sola vez y se persisten; las recomendaciones (RF8) tienen un límite por usuario y por minuto: 10 solicitudes de chat y 5 de descripción. El proveedor de IA es Gemini. *(RNF8)*
 9. Eficiencia de recursos: funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería. *(RNF9)*
-10. Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. *(RNF10)*
+10. Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. En el MVP la distribución es solo Android (APK); iOS queda pendiente. *(RNF10)*
 11. Usabilidad: interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras. *(RNF11)*
 12. Mantenibilidad: arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos). *(RNF12)*
 
@@ -119,7 +119,7 @@ El sistema de Festa debe tener:
 | Campo | Descripción |
 |------|-------------|
 | **ID** | RF-05 |
-| **Nombre del requerimiento** | Mapa interactivo en tiempo real |
+| **Nombre del requerimiento** | Mapa interactivo de eventos |
 | **Descripción** | El sistema debe mostrar en un mapa interactivo los eventos activos y próximos, agrupados en clústeres por zona, cargando lo visible en menos de 2 segundos (RNF1). En el MVP el mapa se actualiza al abrirse y al moverse; no es en tiempo real (sin WebSockets). |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado su consentimiento explícito antes de acceder a la ubicación del dispositivo (RNF5). |
 | **Actor** | Usuario |
@@ -197,7 +197,7 @@ El sistema de Festa debe tener:
 | Campo | Descripción |
 |------|-------------|
 | **ID** | RF-11 |
-| **Nombre del requerimiento** | Venta de boletería con comisión |
+| **Nombre del requerimiento** | Venta de boletería |
 | **Descripción** | El sistema debe permitir vender boletería dentro de la app para eventos que lo requieran, a través de Wompi. La comisión de la pasarela la descuenta Wompi del pago que recibe el comercio; el comprador paga solo el precio de la boleta. Indicación explícita del profesor. |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y un evento de pago con cupo disponible. |
 | **Actor** | Usuario (comprador) |
