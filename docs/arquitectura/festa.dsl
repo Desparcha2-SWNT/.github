@@ -22,9 +22,59 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
             festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa, con recomendaciones por IA y venta de boletería." {
                 mobile = container "festa-mobile" "App del usuario y vista de comercio: mapa, chat con IA, compra, pases QR, escáner y panel (RF15). Caché local del último listado." "Flutter (Android)" "Mobile"
                 gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Kong 3.9 DB-less (tarea en Amazon ECS Fargate)"
-                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (tarea en Amazon ECS Fargate)"
-                user = container "festa-user-service" "RF2, RF3 y RF14: perfiles, preferencias, verificación manual de comercios, reportes y moderación." "Spring Boot (tarea en Amazon ECS Fargate)"
-                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, búsqueda geográfica, filtros y Parches en Vivo." "Node.js (tarea en Amazon ECS Fargate)"
+                auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (tarea en Amazon ECS Fargate)" {
+                    api = component "Controlador de autenticación" "Endpoints REST: registro, inicio y cierre de sesión, renovación, Google, datos propios y roles de administrador." "REST"
+                    servicio = component "Servicio de autenticación" "Crea cuentas, valida credenciales y bloquea la cuenta tras 5 intentos fallidos." "Servicio"
+                    tokens = component "Emisor de tokens" "Emite JWT firmados con RS256 y gestiona los tokens de renovación." "Servicio"
+                    verificador = component "Verificador de Google" "Valida el id_token de Google antes de abrir o crear la sesión." "Servicio"
+                    cuentas = component "Repositorio de cuentas" "Guarda cuentas, roles y tokens de renovación." "Repositorio"
+                    privacidad = component "Autorización de datos" "Registra la autorización de datos personales conforme a la Ley 1581 y cifra los datos sensibles." "Servicio"
+                    publicador = component "Publicador (outbox)" "Publica los eventos guardados en la base." "Productor AMQP"
+                    consumidor = component "Consumidor (inbox)" "Procesa una sola vez los eventos de moderación." "Consumidor AMQP"
+
+                    api -> servicio "Registra, inicia y cierra sesión"
+                    servicio -> tokens "Pide un JWT"
+                    servicio -> verificador "Valida el token de Google"
+                    verificador -> identidad "Valida con Google"
+                    servicio -> cuentas "Lee y escribe cuentas"
+                    servicio -> privacidad "Registra la autorización"
+                    servicio -> publicador "Guarda el evento en la misma transacción"
+                    consumidor -> servicio "Suspende o reactiva la cuenta"
+                }
+                user = container "festa-user-service" "RF2, RF3 y RF14: perfiles, preferencias, verificación manual de comercios, reportes y moderación." "Spring Boot (tarea en Amazon ECS Fargate)" {
+                    api = component "Controladores REST" "Perfil, preferencias, intereses, consentimientos, comercios, reportes y moderación." "REST"
+                    perfiles = component "Servicios de perfil" "Perfil, preferencias, intereses y consentimientos." "Servicio"
+                    comercios = component "Servicios de comercio" "Solicitud, verificación manual y perfil público del comercio." "Servicio"
+                    moderacion = component "Servicio de moderación" "Ocultar o restaurar eventos, suspender o reactivar cuentas y resolver reportes." "Servicio"
+                    perfilCache = component "Caché de perfiles" "Guarda perfiles en Redis para no consultarlos en cada petición." "Caché"
+                    manejadores = component "Manejadores de eventos (inbox)" "Procesa una sola vez el registro y la eliminación de cuentas." "Consumidor AMQP"
+                    publicador = component "Publicador (outbox)" "Publica los cambios de perfil, comercio y moderación." "Productor AMQP"
+
+                    api -> perfiles "Perfil, preferencias e intereses"
+                    api -> comercios "Solicitud y verificación de comercio"
+                    api -> moderacion "Moderación (administración)"
+                    perfiles -> perfilCache "Lee y actualiza el perfil"
+                    perfiles -> publicador "Guarda el evento en la misma transacción"
+                }
+                event = container "festa-event-service" "RF4, RF5, RF6 y RF19: CRUD de eventos, búsqueda geográfica, filtros y Parches en Vivo." "Node.js (tarea en Amazon ECS Fargate)" {
+                    api = component "Rutas REST de eventos" "Crear, listar, buscar por zona, editar, cancelar y registrar vistas." "REST"
+                    autenticacion = component "Middleware de autenticación" "Verifica el JWT de cada petición." "Middleware"
+                    ciclo = component "Ciclo de vida" "Reglas de estado: publicado, oculto, cancelado y expirado." "Servicio"
+                    busqueda = component "Búsqueda geográfica" "Filtros por categoría, fecha y distancia, y agrupación por zona con PostGIS." "Servicio"
+                    repo = component "Repositorio de eventos" "Guarda y consulta eventos en PostgreSQL." "Repositorio"
+                    expira = component "Expiración de eventos" "Marca como expirados los eventos vencidos." "Trabajo programado"
+                    inbox = component "Consumidor (inbox)" "Procesa una sola vez asistencia, comercios, moderación y cuentas." "Consumidor AMQP"
+                    outbox = component "Publicador (outbox)" "Publica los cambios de evento." "Productor AMQP"
+
+                    api -> autenticacion "Verifica el JWT"
+                    api -> ciclo "Aplica las reglas de estado"
+                    api -> busqueda "Busca y filtra"
+                    ciclo -> repo "Lee y escribe"
+                    busqueda -> repo "Consulta"
+                    expira -> repo "Marca eventos vencidos"
+                    inbox -> repo "Actualiza el evento"
+                    repo -> outbox "Guarda el cambio en la misma transacción"
+                }
                 booking = container "festa-booking-service" "RF7 y RF10: confirmación de asistencia y QR único de un solo uso." "Node.js (tarea en Amazon ECS Fargate)" {
                     api = component "API de asistencia y pases" "Endpoints REST: confirmar y cancelar asistencia, listar planes y pases, y hacer check-in." "REST"
                     asistencia = component "Gestor de asistencia" "Confirma asistencia con cupo y sube attendanceVersion en la misma transacción (RF7)." "Servicio"
@@ -66,8 +116,29 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     chat -> cliente "Envía el prompt"
                     descripciones -> cliente "Envía el prompt"
                 }
-                notification = container "festa-notification-service" "RF12: push, bandeja en la app y recordatorios (fase 2)." "Node.js (tarea en Amazon ECS Fargate)"
-                analytics = container "festa-analytics-service" "RF15: consume eventos y calcula las métricas del panel de comercio." "Node.js (tarea en Amazon ECS Fargate)"
+                notification = container "festa-notification-service" "RF12: push, bandeja en la app y recordatorios (fase 2)." "Node.js (tarea en Amazon ECS Fargate)" {
+                    api = component "Rutas de notificaciones" "Registra dispositivos, guarda la ubicación con consentimiento, muestra la bandeja y marca lecturas." "REST"
+                    notificador = component "Notificador" "Decide a quién enviar cada aviso y evita enviarlo dos veces." "Servicio"
+                    push = component "Envío push (FCM)" "Entrega las notificaciones push a los dispositivos Android." "Cliente FCM"
+                    recordatorios = component "Recordatorios" "Programa recordatorios de asistencia a eventos confirmados." "Trabajo programado"
+                    manejadores = component "Manejadores de eventos (inbox)" "Procesa una sola vez eventos de publicación, asistencia, pagos, comercios y reportes." "Consumidor AMQP"
+                    publicador = component "Publicador (outbox)" "Publica el evento push.sent." "Productor AMQP"
+
+                    manejadores -> notificador "Genera avisos"
+                    recordatorios -> notificador "Envía recordatorios"
+                    notificador -> push "Envía el aviso"
+                    push -> notificaciones "Envía a FCM"
+                    notificador -> publicador "Registra el envío"
+                }
+                analytics = container "festa-analytics-service" "RF15: consume eventos y calcula las métricas del panel de comercio." "Node.js (tarea en Amazon ECS Fargate)" {
+                    api = component "Rutas de métricas" "Métricas del comercio, de un evento y resumen de administración." "REST"
+                    acceso = component "Control de acceso" "Verifica que cada comercio vea solo sus métricas y que el resumen sea de administración." "Middleware"
+                    consultas = component "Consultas de métricas" "Calcula conteos de asistentes y boletos vendidos." "Servicio"
+                    manejadores = component "Manejadores de eventos (inbox)" "Aplica cada evento una sola vez y solo si su versión es mayor a la guardada." "Consumidor AMQP"
+
+                    api -> acceso "Verifica el rol"
+                    api -> consultas "Pide las métricas"
+                }
 
                 # festa-infra
                 broker = container "RabbitMQ" "Mensajería asíncrona entre microservicios con contratos versionados." "RabbitMQ (contenedor en ECS Fargate)" "Queue"
@@ -176,6 +247,31 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         }
 
         component festa.ai "ComponentesAI" "C4 nivel 3: festa-ai-service (recomendaciones y descripciones con límite de uso)." {
+            include *
+            autolayout lr
+        }
+
+        component festa.auth "ComponentesAuth" "C4 nivel 3: festa-auth-service (registro, inicio de sesión y emisión del JWT)." {
+            include *
+            autolayout lr
+        }
+
+        component festa.user "ComponentesUser" "C4 nivel 3: festa-user-service (perfiles, comercios, consentimientos y moderación)." {
+            include *
+            autolayout lr
+        }
+
+        component festa.event "ComponentesEvent" "C4 nivel 3: festa-event-service (eventos, mapa y Parches en Vivo)." {
+            include *
+            autolayout lr
+        }
+
+        component festa.analytics "ComponentesAnalytics" "C4 nivel 3: festa-analytics-service (métricas del panel de comercio)." {
+            include *
+            autolayout lr
+        }
+
+        component festa.notification "ComponentesNotification" "C4 nivel 3: festa-notification-service (push, bandeja y recordatorios)." {
             include *
             autolayout lr
         }
