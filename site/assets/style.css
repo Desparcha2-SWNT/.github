@@ -680,3 +680,22 @@ code { overflow-wrap: break-word; }
 .prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
 .prompt .plegable-cuerpo { overflow-wrap: anywhere; }
 @media (max-width: 600px) { .bitacora-filtros select { flex: 1 1 100%; } .prompt > summary .prompt-tecnica { padding-left: 0; white-space: normal; } }
+
+/* ------------------------------------------------------------------ Calidad */
+.calidad .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-md); margin-top: var(--space-lg); }
+.calidad .stat span { display: block; margin-top: 4px; }
+.calidad ol.pasos { max-width: none; padding: 0; list-style: none; counter-reset: paso; display: flex; flex-direction: column; gap: var(--space-xs); }
+.calidad ol.pasos li { position: relative; counter-increment: paso; margin: 0; padding: var(--space-md) var(--space-md) var(--space-md) 64px; background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-md); }
+.calidad ol.pasos li::before { content: counter(paso); position: absolute; left: var(--space-md); top: var(--space-md); display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--magenta-500); color: var(--ink-900); font-weight: 800; }
+.calidad ol.pasos strong { display: block; color: var(--ink-900); }
+.calidad ul.calidad-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: var(--space-md); max-width: none; padding: 0; list-style: none; }
+.calidad ul.calidad-lista li { margin: 0; padding: var(--space-md) var(--space-lg); background: var(--white); border: 1px solid var(--ink-200); border-top: 6px solid var(--mint); border-radius: var(--radius-lg); }
+.calidad ul.calidad-lista li.q-parcial { border-top-color: var(--yellow); }
+.calidad ul.calidad-lista li.q-pendiente { border-top-color: var(--ink-200); }
+.q h3 { margin: var(--space-xs) 0 4px; font-size: 1.1rem; }
+.q p { margin: 0 0 var(--space-xs); font-size: 0.95rem; }
+.q-chip { background: var(--mint); color: var(--ink-900); }
+.q-parcial .q-chip { background: var(--yellow); }
+.q-pendiente .q-chip { background: var(--ink-100); border: 1px dashed var(--ink-500); }
+.q .q-falta { color: var(--ink-500); font-size: 0.88rem; }
+@media (max-width: 600px) { .calidad .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .calidad .stat { padding-inline: var(--space-sm); overflow-wrap: anywhere; } }
