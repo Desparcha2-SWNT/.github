@@ -579,3 +579,10 @@ code { overflow-wrap: break-word; }
 .arquitectura ul.estados li { margin: 0; padding: var(--space-md); background: var(--white); border: 1px solid var(--ink-200); border-left: 6px solid var(--lilac); border-radius: var(--radius-md); }
 @media (max-width: 640px) { .plegable-cuerpo, .figura { padding-inline: var(--space-sm); } }
 .figura-sub { margin: var(--space-lg) 0 var(--space-xs); font-family: "Bricolage Grotesque", sans-serif; font-size: 1.05rem; color: var(--ink-900); }
+
+/* Tecnologías de cada servicio. */
+.arquitectura ul.tecnologias { display: flex; flex-wrap: wrap; gap: var(--space-sm); max-width: none; margin: var(--space-sm) 0 var(--space-md); padding: 0; list-style: none; }
+.arquitectura ul.tecnologias li { display: flex; flex: 0 0 104px; flex-direction: column; align-items: center; gap: 6px; margin: 0; padding: var(--space-sm) var(--space-xs); background: var(--paper); border: 1px solid var(--ink-200); border-radius: var(--radius-md); color: var(--ink-900); font-size: 0.78rem; font-weight: 600; line-height: 1.25; text-align: center; }
+.tecnologias img, .tec-inicial { width: 36px; height: 36px; }
+.tec-inicial { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--ink-900); color: var(--white); font-family: "Bricolage Grotesque", sans-serif; font-size: 1.15rem; }
+@media (max-width: 640px) { .arquitectura ul.tecnologias li { flex-basis: calc((100% - 2 * var(--space-sm)) / 3); } }
