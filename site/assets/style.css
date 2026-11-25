@@ -661,3 +661,22 @@ code { overflow-wrap: break-word; }
   .indice { gap: 4px; }
   .indice a { padding-inline: 8px; }
 }
+
+/* ------------------------------------------------------------------ Bitácora en vivo */
+.bitacora-filtros { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: var(--space-md) 0 var(--space-xs); }
+.bitacora-filtros input, .bitacora-filtros select { min-height: 44px; max-width: 100%; padding: 0 var(--space-md); border: 1px solid var(--ink-200); border-radius: 999px; background: var(--white); color: var(--ink-900); font: inherit; font-size: 0.95rem; }
+.bitacora-filtros input { flex: 1 1 220px; }
+.bitacora-filtros select { flex: 0 1 220px; }
+.bitacora-cuenta { font-size: 0.9rem; color: var(--ink-500); }
+.bitacora-aviso { padding: var(--space-md); background: var(--white); border: 1px dashed var(--ink-200); border-radius: var(--radius-md); }
+.prompt[hidden] { display: none; }
+.prompt > summary .prompt-id { font-size: 1.15rem; }
+.chip-fase { background: var(--lilac); color: var(--ink-900); font-family: "Plus Jakarta Sans", sans-serif; }
+.prompt-meta { font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--ink-500); }
+.prompt > summary .prompt-tecnica { flex-basis: 100%; padding-left: 34px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--ink-700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.prompt-datos { display: grid; gap: 0 var(--space-lg); grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); margin-top: var(--space-sm); padding: 0 var(--space-md) var(--space-xs); background: var(--paper); border-radius: var(--radius-md); }
+.prompt-datos h4 { margin-top: var(--space-sm); }
+.prompt-datos p { margin: 0 0 var(--space-xs); font-size: 0.9rem; }
+.prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
+.prompt .plegable-cuerpo { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .bitacora-filtros select { flex: 1 1 100%; } .prompt > summary .prompt-tecnica { padding-left: 0; white-space: normal; } }
