@@ -10,17 +10,17 @@ El sistema de Festa tiene los siguientes requerimientos (descripción a alto niv
 
 El sistema de Festa debe tener la capacidad de:
 
-1. Registrar e iniciar sesión (correo o Google) — usuarios y comercios. *(RF1 — Must)*
+1. Registrar e iniciar sesión con correo electrónico — usuarios y comercios. *(RF1 — Must; el inicio de sesión con Google queda en versión futura, RF1.1)*
 2. Gestionar un perfil de usuario con intereses y preferencias de plan. *(RF2 — Must)*
 3. Gestionar un perfil de comercio/organizador, con verificación manual del equipo Festa. *(RF3 — Must)*
 4. Crear, editar y cancelar eventos (fecha, lugar, categoría, cupo, descripción). *(RF4 — Must)*
-5. Mostrar un mapa interactivo en tiempo real con eventos activos y próximos, agrupados en clústeres por zona. *(RF5 — Must)*
+5. Mostrar un mapa interactivo con eventos activos y próximos, agrupados en clústeres por zona. En el MVP se actualiza al abrirse y al moverse, sin tiempo real. *(RF5 — Must)*
 6. Buscar y filtrar eventos por categoría, zona y fecha. *(RF6 — Should, alcance reducido)*
 7. Confirmar asistencia a un evento, con conteo de asistentes. *(RF7 — Should, alcance reducido)*
 8. Generar recomendaciones personalizadas de eventos en lenguaje natural mediante IA Generativa conversacional. *(RF8 — Must, requisito del profesor)*
 9. Generar automáticamente, a partir de datos básicos del comercio, una descripción atractiva del evento redactada por IA Generativa. *(RF9 — Must, requisito del profesor)*
 10. Validar asistencia mediante código QR generado por evento, de un solo uso. *(RF10 — Must, indicación del profesor)*
-11. Vender boletería dentro de la app, reteniendo una comisión por cada entrada vendida. *(RF11 — Must, indicación del profesor)*
+11. Vender boletería dentro de la app. La comisión de la pasarela la asume el comercio, que recibe el valor neto de cada entrada. *(RF11 — Must, indicación del profesor)*
 12. Enviar notificaciones push por eventos cercanos y recordatorios de asistencia. *(RF12 — Should, fase 2; fuera del MVP actual)*
 13. Compartir eventos mediante enlaces hacia redes sociales externas. *(RF13 — Could)*
 14. Reportar eventos o usuarios, con revisión manual del equipo. *(RF14 — Should)*
@@ -55,12 +55,25 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-01 |
 | **Nombre del requerimiento** | Registro e inicio de sesión |
-| **Descripción** | El sistema debe permitir a un usuario o comercio registrarse e iniciar sesión mediante correo electrónico y contraseña, o mediante autenticación con Google (OAuth2). |
+| **Descripción** | El sistema debe permitir a un usuario o comercio registrarse e iniciar sesión mediante correo electrónico y contraseña. El inicio de sesión con Google (OAuth2) queda como RF-1.1, en versión futura. |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y disponible. |
 | **Actor** | Usuario, Comercio/Organizador |
-| **Flujo principal** | 1. El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".<br>2. Para registrarse, el actor consulta el aviso de privacidad y autoriza el tratamiento de sus datos personales conforme a la Ley 1581 de 2012.<br>3. El actor elige el método: correo/contraseña o Google.<br>4. El sistema valida las credenciales (o el token de Google).<br>5. El sistema genera un token JWT de sesión.<br>6. El sistema redirige al actor a su pantalla principal. |
+| **Flujo principal** | 1. El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".<br>2. Para registrarse, el actor consulta el aviso de privacidad y autoriza el tratamiento de sus datos personales conforme a la Ley 1581 de 2012.<br>3. El actor ingresa su correo y contraseña.<br>4. El sistema valida las credenciales.<br>5. El sistema genera un token JWT de sesión.<br>6. El sistema redirige al actor a su pantalla principal. |
 | **Diagrama de caso de uso** | ![Caso de uso RF-01](./casos-de-uso/RF01.png) |
 | **Poscondiciones** | Se espera como resultado que el actor quede autenticado con una sesión válida (JWT) y pueda acceder a las funcionalidades según su rol. |
+
+### 2.1.1 Requerimiento Funcional 1.1 (versión futura)
+
+| Campo | Descripción |
+|------|-------------|
+| **ID** | RF-1.1 |
+| **Nombre del requerimiento** | Inicio de sesión con Google |
+| **Descripción** | El sistema debe permitir iniciar sesión con una cuenta de Google (OAuth2). Queda fuera de la versión actual (Won't). |
+| **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y el registro con correo (RF-01). |
+| **Actor** | Usuario, Comercio/Organizador |
+| **Flujo principal** | 1. El actor elige iniciar sesión con Google.<br>2. El sistema valida el token de Google.<br>3. El sistema genera un token JWT de sesión. |
+| **Diagrama de caso de uso** | No aplica en esta versión. |
+| **Poscondiciones** | Se espera como resultado que el actor inicie sesión con su cuenta de Google. |
 
 ### 2.2 Requerimiento Funcional 2
 
@@ -107,7 +120,7 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-05 |
 | **Nombre del requerimiento** | Mapa interactivo en tiempo real |
-| **Descripción** | El sistema debe mostrar en un mapa interactivo los eventos activos y próximos, agrupados en clústeres por zona, cargando lo visible en menos de 2 segundos (RNF1). |
+| **Descripción** | El sistema debe mostrar en un mapa interactivo los eventos activos y próximos, agrupados en clústeres por zona, cargando lo visible en menos de 2 segundos (RNF1). En el MVP el mapa se actualiza al abrirse y al moverse; no es en tiempo real (sin WebSockets). |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado su consentimiento explícito antes de acceder a la ubicación del dispositivo (RNF5). |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. El actor abre la pantalla principal (mapa).<br>2. Si el actor consiente, el sistema obtiene la ubicación del dispositivo; si la rechaza o no está disponible, informa y usa la ubicación predeterminada del piloto ECI.<br>3. El sistema consulta los eventos activos/próximos cercanos.<br>4. El sistema agrupa eventos cercanos en clústeres y los renderiza.<br>5. El actor puede hacer zoom/pan; el sistema recalcula clústeres. |
@@ -177,7 +190,7 @@ El sistema de Festa debe tener:
 | **Actor** | Usuario (presenta el QR), Comercio/Organizador (escanea el QR) |
 | **Flujo principal** | 1. El sistema genera un código QR único cuando el usuario confirma asistencia a un evento gratuito (RF-07) o cuando se completa la compra de una entrada para un evento pago (RF-11).<br>2. El actor presenta el QR al ingreso del evento.<br>3. El comercio escanea el QR con la app.<br>4. El sistema valida que el QR sea auténtico, corresponda al evento y no haya sido usado antes.<br>5. El sistema marca el QR como usado y registra el check-in. |
 | **Diagrama de caso de uso** | ![Caso de uso RF-10](./casos-de-uso/RF10.png) |
-| **Poscondiciones** | Se espera como resultado que el check-in quede registrado de forma única e irrepetible, visible en tiempo real para el organizador. |
+| **Poscondiciones** | Se espera como resultado que el check-in quede registrado de forma única e irrepetible. |
 
 ### 2.11 Requerimiento Funcional 11
 
@@ -185,12 +198,12 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-11 |
 | **Nombre del requerimiento** | Venta de boletería con comisión |
-| **Descripción** | El sistema debe permitir vender boletería dentro de la app para eventos que lo requieran, reteniendo una comisión por cada entrada vendida (split payment vía Wompi). Indicación explícita del profesor. |
+| **Descripción** | El sistema debe permitir vender boletería dentro de la app para eventos que lo requieran, a través de Wompi. La comisión de la pasarela la descuenta Wompi del pago que recibe el comercio; el comprador paga solo el precio de la boleta. Indicación explícita del profesor. |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y un evento de pago con cupo disponible. |
 | **Actor** | Usuario (comprador) |
-| **Flujo principal** | 1. El actor abre el detalle de un evento de pago y selecciona "Comprar entrada".<br>2. El sistema inicia el pago con Wompi, indicando el split entre organizador y comisión Festa.<br>3. El actor completa el pago.<br>4. Wompi confirma el pago al sistema.<br>5. El sistema distribuye el pago automáticamente.<br>6. El sistema genera el boleto con su QR (RF-10) y descuenta el cupo. |
+| **Flujo principal** | 1. El actor abre el detalle de un evento de pago y selecciona "Comprar entrada".<br>2. El sistema inicia el pago con Wompi por el precio de la boleta.<br>3. El actor completa el pago.<br>4. Wompi confirma el pago al sistema.<br>5. El sistema liquida al organizador el valor neto, descontada la comisión de la pasarela.<br>6. El sistema genera el boleto con su QR (RF-10) y descuenta el cupo. |
 | **Diagrama de caso de uso** | ![Caso de uso RF-11](./casos-de-uso/RF11.png) |
-| **Poscondiciones** | Se espera como resultado que el actor quede con un boleto válido (con QR) y el pago distribuido entre el organizador y Festa según la comisión acordada. |
+| **Poscondiciones** | Se espera como resultado que el actor quede con un boleto válido (con QR) y el organizador reciba el valor neto de la venta. |
 
 ### 2.12 Requerimiento Funcional 12
 
@@ -198,7 +211,7 @@ El sistema de Festa debe tener:
 |------|-------------|
 | **ID** | RF-12 |
 | **Nombre del requerimiento** | Notificaciones push |
-| **Descripción** | Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados mediante Azure Notification Hubs, con entrega a dispositivos iOS y Android. |
+| **Descripción** | Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados con entrega a dispositivos iOS y Android (Firebase Cloud Messaging y APNs). |
 | **Precondiciones** | Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y con permiso de notificaciones otorgado en el dispositivo. |
 | **Actor** | Usuario |
 | **Flujo principal** | 1. Ocurre un evento relevante en el sistema (evento nuevo cercano, o recordatorio de un evento confirmado).<br>2. El sistema encola la notificación correspondiente.<br>3. El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging (Android) o APNs (iOS).<br>4. El actor recibe la notificación y puede tocarla para ir al detalle del evento. |
@@ -299,5 +312,7 @@ El sistema de Festa debe tener:
 ## 3. Preguntas
 
 - ¿El piloto en ECI requiere registro en el RNBD (Registro Nacional de Bases de Datos) ante la SIC antes del lanzamiento, o solo si se supera cierto volumen de usuarios? *(ver RN6)*
-- ¿Wompi permite configurar el split payment (RF-11) directamente desde el ambiente de pruebas/sandbox para la sustentación, o requiere cuenta comercial verificada?
-- ¿Cuál es el límite exacto de solicitudes de IA por usuario/minuto que se va a implementar en el MVP (RNF8 menciona un rango de 5–20)?
+- ¿Wompi permite probar el cobro de boletas (RF-11) y el reembolso desde el ambiente de pruebas/sandbox para la sustentación, o requiere cuenta comercial verificada? Falta confirmar el IVA de la comisión.
+- ¿Se mantiene una comisión de Festa por boleta (RF-11), o el modelo de ingresos es solo la suscripción Festa Pro? SCRUM-27 sigue abierto.
+- ¿Se confirma Firebase Cloud Messaging para las notificaciones push (RF-12)? La distribución de la app no usa Firebase; el equipo debe aclarar si esa restricción aplica solo a App Distribution y Hosting.
+- ¿Se confirma el límite de IA del MVP por usuario y minuto (RNF8): 10 solicitudes de chat y 5 de descripción?
