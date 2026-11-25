@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Requisitos · Festa</title>
+  <title>Requerimientos · Festa</title>
   <link rel="stylesheet" href="assets/style.css">
   <script src="assets/site.js" defer></script>
 </head>
@@ -12,7 +12,7 @@
     <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
         <nav>
       <a href="index.html">Inicio</a>
-      <a href="requisitos.html" aria-current="page">Requisitos</a>
+      <a href="requisitos.html" aria-current="page">Requerimientos</a>
       <a href="arquitectura.html">Arquitectura</a>
       <a href="sprints.html">Sprints</a>
       <a href="contratos.html">Contratos</a>
@@ -26,49 +26,8 @@
   <main class="doc">
 <h1>📄 Requerimientos del Sistema</h1>
 <p>Fuente: <code>Requerimientos.docx</code> (especificación completa, con priorización MoSCoW).</p>
-<h2>1. Lista general de requerimientos</h2>
-<p>El sistema de Festa tiene los siguientes requerimientos (descripción a alto nivel):</p>
-<h3>1.1 Requerimientos funcionales</h3>
-<p>El sistema de Festa debe tener la capacidad de:</p>
-<ol>
-<li>Registrar e iniciar sesión con correo electrónico — usuarios y comercios. <em>(RF1 — Must; el inicio de sesión con Google queda en versión futura, RF1.1)</em></li>
-<li>Gestionar un perfil de usuario con intereses y preferencias de plan. <em>(RF2 — Must)</em></li>
-<li>Gestionar un perfil de comercio/organizador, con verificación manual del equipo Festa. <em>(RF3 — Must)</em></li>
-<li>Crear, editar y cancelar eventos (fecha, lugar, categoría, cupo, descripción). <em>(RF4 — Must)</em></li>
-<li>Mostrar un mapa interactivo con eventos activos y próximos, agrupados en clústeres por zona. En el MVP se actualiza al abrirse y al moverse, sin tiempo real. <em>(RF5 — Must)</em></li>
-<li>Buscar y filtrar eventos por categoría, zona y fecha. <em>(RF6 — Should, alcance reducido)</em></li>
-<li>Confirmar asistencia a un evento, con conteo de asistentes. <em>(RF7 — Should, alcance reducido)</em></li>
-<li>Generar recomendaciones personalizadas de eventos en lenguaje natural mediante IA Generativa conversacional. <em>(RF8 — Must, requisito del profesor)</em></li>
-<li>Generar automáticamente, a partir de datos básicos del comercio, una descripción atractiva del evento redactada por IA Generativa. <em>(RF9 — Must, requisito del profesor)</em></li>
-<li>Validar asistencia mediante código QR generado por evento, de un solo uso. <em>(RF10 — Must, indicación del profesor)</em></li>
-<li>Vender boletería dentro de la app. La comisión de la pasarela la asume el comercio, que recibe el valor neto de cada entrada. <em>(RF11 — Must, indicación del profesor)</em></li>
-<li>Enviar notificaciones push por eventos cercanos y recordatorios de asistencia. <em>(RF12 — Should, fase 2; fuera del MVP actual)</em></li>
-<li>Compartir eventos mediante enlaces hacia redes sociales externas. <em>(RF13 — Could)</em></li>
-<li>Reportar eventos o usuarios, con revisión manual del equipo. <em>(RF14 — Should)</em></li>
-<li>Mostrar un panel de comercio simple para medir retorno (conteos de asistentes y boletos vendidos). <em>(RF15 — Should)</em></li>
-<li>Otorgar XP por asistir, crear y promocionar eventos, según reglas configurables. <em>(RF16 — Won't / roadmap futuro)</em></li>
-<li>Permitir canje de puntos por descuentos en comercios aliados, con generación y redención de cupones. <em>(RF17 — Won't / roadmap futuro)</em></li>
-<li>Mantener un sistema de reputación para creadores de eventos (ranking, insignias, mayor visibilidad). <em>(RF18 — Won't / roadmap futuro)</em></li>
-<li>Habilitar "Parches en Vivo": eventos improvisados que se activan en menos de 2 horas y expiran automáticamente. <em>(RF19 — Could)</em></li>
-</ol>
-<h3>1.2 Requerimientos no funcionales</h3>
-<p>El sistema de Festa debe tener:</p>
-<ol>
-<li>Rendimiento: el mapa debe cargar los eventos visibles en menos de 2 segundos. <em>(RNF1)</em></li>
-<li>Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. <em>(RNF2)</em></li>
-<li>Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. <em>(RNF3)</em></li>
-<li>Seguridad: autenticación con tokens (JWT), cifrado en tránsito (HTTPS) y en reposo para datos personales. <em>(RNF4)</em></li>
-<li>Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. <em>(RNF5)</em></li>
-<li>Integración con la pasarela de pagos Wompi para la venta de boletería. <em>(RNF6)</em></li>
-<li>Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. <em>(RNF7)</em></li>
-<li>Costo de IA controlado: las descripciones (RF9) se generan una sola vez y se persisten; las recomendaciones (RF8) tienen un límite por usuario y por minuto: 10 solicitudes de chat y 5 de descripción. El proveedor de IA es Gemini. <em>(RNF8)</em></li>
-<li>Eficiencia de recursos: funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería. <em>(RNF9)</em></li>
-<li>Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. En el MVP la distribución es solo Android (APK); iOS queda pendiente. <em>(RNF10)</em></li>
-<li>Usabilidad: interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras. <em>(RNF11)</em></li>
-<li>Mantenibilidad: arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos). <em>(RNF12)</em></li>
-</ol>
-<h2>2. Diagramas de caso de uso</h2>
-<h3>2.1 Requerimiento Funcional 1</h3>
+<h2>1. Requerimientos funcionales</h2>
+<h3>1.1 Requerimiento Funcional 1</h3>
 <table>
 <thead>
 <tr>
@@ -84,6 +43,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Registro e inicio de sesión</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -111,7 +74,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.1.1 Requerimiento Funcional 1.1 (versión futura)</h3>
+<h3>1.1.1 Requerimiento Funcional 1.1 (versión futura)</h3>
 <table>
 <thead>
 <tr>
@@ -127,6 +90,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Inicio de sesión con Google</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Won't (versión futura)</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -154,7 +121,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.2 Requerimiento Funcional 2</h3>
+<h3>1.2 Requerimiento Funcional 2</h3>
 <table>
 <thead>
 <tr>
@@ -170,6 +137,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Perfil de usuario</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -197,7 +168,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.3 Requerimiento Funcional 3</h3>
+<h3>1.3 Requerimiento Funcional 3</h3>
 <table>
 <thead>
 <tr>
@@ -213,6 +184,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Perfil de comercio/organizador</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -240,7 +215,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.4 Requerimiento Funcional 4</h3>
+<h3>1.4 Requerimiento Funcional 4</h3>
 <table>
 <thead>
 <tr>
@@ -256,6 +231,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Gestión de eventos (crear, editar, cancelar)</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -283,7 +262,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.5 Requerimiento Funcional 5</h3>
+<h3>1.5 Requerimiento Funcional 5</h3>
 <table>
 <thead>
 <tr>
@@ -299,6 +278,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Mapa interactivo de eventos</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -326,7 +309,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.6 Requerimiento Funcional 6</h3>
+<h3>1.6 Requerimiento Funcional 6</h3>
 <table>
 <thead>
 <tr>
@@ -342,6 +325,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Búsqueda y filtrado de eventos</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Should, alcance reducido</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -369,7 +356,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.7 Requerimiento Funcional 7</h3>
+<h3>1.7 Requerimiento Funcional 7</h3>
 <table>
 <thead>
 <tr>
@@ -385,6 +372,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Confirmación de asistencia</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Should, alcance reducido</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -412,7 +403,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.8 Requerimiento Funcional 8</h3>
+<h3>1.8 Requerimiento Funcional 8</h3>
 <table>
 <thead>
 <tr>
@@ -430,8 +421,12 @@
 <td>Recomendaciones personalizadas por IA Generativa</td>
 </tr>
 <tr>
+<td><strong>Prioridad</strong></td>
+<td>Must, requerimiento del profesor</td>
+</tr>
+<tr>
 <td><strong>Descripción</strong></td>
-<td>El sistema debe generar recomendaciones de eventos en lenguaje natural, conversando con el usuario sobre sus intereses del momento, en vez de mostrar solo una lista filtrada. Requisito explícito del profesor.</td>
+<td>El sistema debe generar recomendaciones de eventos en lenguaje natural, conversando con el usuario sobre sus intereses del momento, en vez de mostrar solo una lista filtrada. Requerimiento explícito del profesor.</td>
 </tr>
 <tr>
 <td><strong>Precondiciones</strong></td>
@@ -455,7 +450,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.9 Requerimiento Funcional 9</h3>
+<h3>1.9 Requerimiento Funcional 9</h3>
 <table>
 <thead>
 <tr>
@@ -473,8 +468,12 @@
 <td>Descripción de evento generada por IA</td>
 </tr>
 <tr>
+<td><strong>Prioridad</strong></td>
+<td>Must, requerimiento del profesor</td>
+</tr>
+<tr>
 <td><strong>Descripción</strong></td>
-<td>El sistema debe generar automáticamente, a partir de datos básicos ingresados por el comercio, una descripción atractiva del evento redactada por IA Generativa. Requisito explícito del profesor.</td>
+<td>El sistema debe generar automáticamente, a partir de datos básicos ingresados por el comercio, una descripción atractiva del evento redactada por IA Generativa. Requerimiento explícito del profesor.</td>
 </tr>
 <tr>
 <td><strong>Precondiciones</strong></td>
@@ -498,7 +497,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.10 Requerimiento Funcional 10</h3>
+<h3>1.10 Requerimiento Funcional 10</h3>
 <table>
 <thead>
 <tr>
@@ -514,6 +513,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Validación de asistencia por QR</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must, indicación del profesor</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -541,7 +544,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.11 Requerimiento Funcional 11</h3>
+<h3>1.11 Requerimiento Funcional 11</h3>
 <table>
 <thead>
 <tr>
@@ -557,6 +560,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Venta de boletería</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Must, indicación del profesor</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -584,7 +591,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.12 Requerimiento Funcional 12</h3>
+<h3>1.12 Requerimiento Funcional 12</h3>
 <table>
 <thead>
 <tr>
@@ -600,6 +607,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Notificaciones push</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Should, fase 2; fuera del MVP actual</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -627,7 +638,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.13 Requerimiento Funcional 13</h3>
+<h3>1.13 Requerimiento Funcional 13</h3>
 <table>
 <thead>
 <tr>
@@ -643,6 +654,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Compartir eventos en redes sociales</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Could</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -670,7 +685,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.14 Requerimiento Funcional 14</h3>
+<h3>1.14 Requerimiento Funcional 14</h3>
 <table>
 <thead>
 <tr>
@@ -686,6 +701,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Reporte de eventos o usuarios</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Should</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -713,7 +732,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.15 Requerimiento Funcional 15</h3>
+<h3>1.15 Requerimiento Funcional 15</h3>
 <table>
 <thead>
 <tr>
@@ -729,6 +748,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Panel de comercio</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Should</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -756,7 +779,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.16 Requerimiento Funcional 16</h3>
+<h3>1.16 Requerimiento Funcional 16</h3>
 <table>
 <thead>
 <tr>
@@ -772,6 +795,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Otorgamiento de XP (roadmap futuro)</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Won't / roadmap futuro</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -799,7 +826,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.17 Requerimiento Funcional 17</h3>
+<h3>1.17 Requerimiento Funcional 17</h3>
 <table>
 <thead>
 <tr>
@@ -815,6 +842,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Canje de puntos por descuentos (roadmap futuro)</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Won't / roadmap futuro</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -842,7 +873,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.18 Requerimiento Funcional 18</h3>
+<h3>1.18 Requerimiento Funcional 18</h3>
 <table>
 <thead>
 <tr>
@@ -858,6 +889,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Sistema de reputación (roadmap futuro)</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Won't / roadmap futuro</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -885,7 +920,7 @@
 </tr>
 </tbody>
 </table>
-<h3>2.19 Requerimiento Funcional 19</h3>
+<h3>1.19 Requerimiento Funcional 19</h3>
 <table>
 <thead>
 <tr>
@@ -901,6 +936,10 @@
 <tr>
 <td><strong>Nombre del requerimiento</strong></td>
 <td>Parches en Vivo</td>
+</tr>
+<tr>
+<td><strong>Prioridad</strong></td>
+<td>Could</td>
 </tr>
 <tr>
 <td><strong>Descripción</strong></td>
@@ -928,6 +967,22 @@
 </tr>
 </tbody>
 </table>
+<h2>2. Requerimientos no funcionales</h2>
+<p>El sistema de Festa debe tener:</p>
+<ol>
+<li>Rendimiento: el mapa debe cargar los eventos visibles en menos de 2 segundos. <em>(RNF1)</em></li>
+<li>Escalabilidad: arquitectura desplegable en la nube, dimensionada para el piloto en ECI. <em>(RNF2)</em></li>
+<li>Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa. <em>(RNF3)</em></li>
+<li>Seguridad: autenticación con tokens (JWT), cifrado en tránsito (HTTPS) y en reposo para datos personales. <em>(RNF4)</em></li>
+<li>Privacidad: solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012. <em>(RNF5)</em></li>
+<li>Integración con la pasarela de pagos Wompi para la venta de boletería. <em>(RNF6)</em></li>
+<li>Anti-fraude: el código QR de validación debe ser único por boleto/asistente y de un solo uso. <em>(RNF7)</em></li>
+<li>Costo de IA controlado: las descripciones (RF9) se generan una sola vez y se persisten; las recomendaciones (RF8) tienen un límite por usuario y por minuto: 10 solicitudes de chat y 5 de descripción. El proveedor de IA es Gemini. <em>(RNF8)</em></li>
+<li>Eficiencia de recursos: funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería. <em>(RNF9)</em></li>
+<li>Compatibilidad y adaptabilidad: soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. En el MVP la distribución es solo Android (APK); iOS queda pendiente. <em>(RNF10)</em></li>
+<li>Usabilidad: interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras. <em>(RNF11)</em></li>
+<li>Mantenibilidad: arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos). <em>(RNF12)</em></li>
+</ol>
 <h2>3. Preguntas</h2>
 <ul>
 <li>¿El piloto en ECI requiere registro en el RNBD (Registro Nacional de Bases de Datos) ante la SIC antes del lanzamiento, o solo si se supera cierto volumen de usuarios? <em>(ver RN6)</em></li>
