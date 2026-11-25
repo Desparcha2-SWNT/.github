@@ -31,6 +31,20 @@
 <h2>Despliegue en AWS</h2>
 <p><img alt="Servicios en ECS Fargate, bases de datos y gateway en AWS" src="assets/diagramas/despliegue.png" /></p>
 <p>Cada servicio corre como tarea en ECS Fargate y tiene su base de datos. El gateway recibe las peticiones por HTTPS y las reenvía al servicio que corresponde.</p>
+<h2>Contenedores</h2>
+<p><img alt="Contenedores del sistema: aplicación, gateway, microservicios, bases de datos y colas" src="assets/diagramas/contenedores.png" /></p>
+<p>Festa tiene una aplicación móvil y un gateway Kong que recibe todas sus peticiones. Detrás hay ocho microservicios de negocio, cada uno con su propia base de datos. Los servicios se comunican por RabbitMQ, que transporta los eventos entre ellos. Redis guarda la caché de perfiles y los límites de uso de la IA.</p>
+<h2>Componentes</h2>
+<p>Cada servicio tiene piezas internas que cumplen una función concreta. Estos son los diagramas de los tres servicios con más lógica.</p>
+<h3>Asistencia y pases (booking-service)</h3>
+<p><img alt="Componentes del servicio de asistencia y pases" src="assets/diagramas/componentes_booking.png" /></p>
+<p>La API recibe las confirmaciones y los escaneos. El gestor de asistencia descuenta el cupo y sube la versión del evento en la misma transacción. El gestor de pases emite el QR firmado con HMAC y lo marca como usado en la primera validación. El publicador y el consumidor usan una bandeja de salida y otra de entrada para no perder ni repetir eventos.</p>
+<h3>Compras (payment-service)</h3>
+<p><img alt="Componentes del servicio de compras" src="assets/diagramas/componentes_payment.png" /></p>
+<p>Las órdenes reservan el cupo mientras se paga. Wompi confirma el pago por un webhook que se valida con su firma. Si el pago se aprueba, se emiten los pases; si se rechaza, se libera el cupo.</p>
+<h3>Inteligencia artificial (ai-service)</h3>
+<p><img alt="Componentes del servicio de IA" src="assets/diagramas/componentes_ai.png" /></p>
+<p>El servicio de IA responde el chat y genera las descripciones de eventos. Antes de responder, verifica el límite de uso de cada usuario en Redis. Las recomendaciones solo pueden citar eventos que existan en la base.</p>
 <h2>Flujos principales</h2>
 <h3>Compra de una boleta</h3>
 <p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
