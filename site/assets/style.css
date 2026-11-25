@@ -294,3 +294,17 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
 .contacto > div:last-child { border-left-color: var(--lilac); }
 .contacto strong { font-family: "Bricolage Grotesque", sans-serif; font-size: 1.1rem; }
 .contacto p { margin: var(--space-xs) 0 0; word-break: break-word; }
+/* Enlaces de contacto de cada integrante. */
+.miembro .red {
+  display: inline-block;
+  margin-top: var(--space-xs);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--ink-100);
+  color: var(--ink-900);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  word-break: break-all;
+}
+.miembro .red:hover { background: var(--magenta-500); }
