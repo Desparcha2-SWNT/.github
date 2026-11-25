@@ -35,10 +35,25 @@
 <p><img alt="Contenedores del sistema: aplicación, gateway, microservicios, bases de datos y colas" src="assets/diagramas/contenedores.png" /></p>
 <p>Festa tiene una aplicación móvil y un gateway Kong que recibe todas sus peticiones. Detrás hay ocho microservicios de negocio, cada uno con su propia base de datos. Los servicios se comunican por RabbitMQ, que transporta los eventos entre ellos. Redis guarda la caché de perfiles y los límites de uso de la IA.</p>
 <h2>Componentes</h2>
-<p>Cada servicio tiene piezas internas que cumplen una función concreta. Estos son los diagramas de los tres servicios con más lógica.</p>
+<p>Cada servicio tiene piezas internas que cumplen una función concreta. Cada servicio tiene su propio diagrama de componentes.</p>
 <h3>Asistencia y pases (booking-service)</h3>
 <p><img alt="Componentes del servicio de asistencia y pases" src="assets/diagramas/componentes_booking.png" /></p>
 <p>La API recibe las confirmaciones y los escaneos. El gestor de asistencia descuenta el cupo y sube la versión del evento en la misma transacción. El gestor de pases emite el QR firmado con HMAC y lo marca como usado en la primera validación. El publicador y el consumidor usan una bandeja de salida y otra de entrada para no perder ni repetir eventos.</p>
+<h3>Autenticación (auth-service)</h3>
+<p><img alt="Componentes del servicio de autenticación" src="assets/diagramas/componentes_auth.png" /></p>
+<p>El controlador expone el registro, el inicio y el cierre de sesión. El servicio crea cuentas y bloquea la cuenta tras 5 intentos fallidos. El emisor firma los JWT con RS256.</p>
+<h3>Perfiles y moderación (user-service)</h3>
+<p><img alt="Componentes del servicio de perfiles y moderación" src="assets/diagramas/componentes_user.png" /></p>
+<p>Los servicios de perfil, de comercio y de moderación responden las peticiones REST. Los perfiles se leen desde una caché en Redis. Los eventos de cuenta se procesan una sola vez.</p>
+<h3>Eventos y mapa (event-service)</h3>
+<p><img alt="Componentes del servicio de eventos" src="assets/diagramas/componentes_event.png" /></p>
+<p>Las rutas REST crean, editan y buscan eventos. Las reglas de estado deciden si un evento está publicado, oculto, cancelado o expirado. La búsqueda geográfica usa PostGIS.</p>
+<h3>Métricas del panel (analytics-service)</h3>
+<p><img alt="Componentes del servicio de métricas" src="assets/diagramas/componentes_analytics.png" /></p>
+<p>Las rutas de métricas verifican el rol antes de calcular los conteos. Cada evento se aplica una sola vez, y solo si su versión es mayor a la guardada.</p>
+<h3>Notificaciones (notification-service)</h3>
+<p><img alt="Componentes del servicio de notificaciones" src="assets/diagramas/componentes_notification.png" /></p>
+<p>El notificador decide a quién enviar cada aviso y evita enviarlo dos veces. El envío push usa Firebase Cloud Messaging. Los recordatorios de asistencia se programan aparte.</p>
 <h3>Compras (payment-service)</h3>
 <p><img alt="Componentes del servicio de compras" src="assets/diagramas/componentes_payment.png" /></p>
 <p>Las órdenes reservan el cupo mientras se paga. Wompi confirma el pago por un webhook que se valida con su firma. Si el pago se aprueba, se emiten los pases; si se rechaza, se libera el cupo.</p>
