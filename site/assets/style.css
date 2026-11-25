@@ -400,3 +400,117 @@ figcaption { color: var(--ink-500); font-size: 0.9rem; margin-top: var(--space-x
 .req-nf { border-top: 6px solid var(--yellow); }
 .req-nf .req-id { color: var(--ink-900); }
 @media (max-width: 600px) { .req-page .req-hero { padding: var(--space-xl) var(--space-md); } .reqs { grid-template-columns: 1fr; } }
+
+
+/* ------------------------------------------------------------------ Adaptable: computador y celular */
+
+code { overflow-wrap: anywhere; }
+.menu-boton { display: none; }
+
+/* Diagramas ampliables. */
+.ampliar { position: relative; display: block; text-align: center; }
+.ampliar img { display: block; margin: 0 auto; }
+.ampliar-nota {
+  display: inline-block;
+  margin-top: var(--space-xs);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-200);
+  background: var(--white);
+  color: var(--ink-900);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.ampliar:hover .ampliar-nota, .ampliar:focus-visible .ampliar-nota { background: var(--magenta-500); border-color: var(--magenta-500); }
+
+/* Computador: encabezado fijo, alineado con el contenido. Las pestañas se ven siempre. */
+@media (min-width: 900px) {
+  .top { position: sticky; top: 0; z-index: 20; padding-inline: max(var(--space-lg), calc((100% - 1040px) / 2)); }
+  html { scroll-padding-top: 96px; }
+}
+@media (min-width: 1100px) {
+  main.doc { max-width: 1040px; }
+  main.doc > p, main.doc > ul, main.doc > ol { max-width: 80ch; }
+}
+
+/* Solo teléfono: las pestañas se convierten en menú. */
+@media (max-width: 600px) {
+  .js .top { flex-wrap: wrap; }
+  .js .menu-boton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 44px;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--ink-200);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--ink-900);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .js .top nav { display: none; width: 100%; }
+  .js .top.abierto nav { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs); }
+  .js .top nav a { display: flex; align-items: center; min-height: 44px; padding: 6px var(--space-md); border: 1px solid var(--ink-200); }
+  .js .top nav a[aria-current="page"] { border-color: var(--magenta-500); }
+  .filtros button { min-height: 44px; }
+}
+
+/* Celular: las tablas se apilan, una tarjeta por fila, sin desplazamiento lateral. */
+@media (max-width: 640px) {
+  table.apilable { display: block; overflow: visible; background: none; border: 0; }
+  table.apilable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  table.apilable tbody, table.apilable tr, table.apilable td { display: block; width: 100%; }
+  table.apilable tr {
+    margin-bottom: var(--space-md);
+    background: var(--white);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  table.apilable td { padding: var(--space-xs) var(--space-sm); border-top: 1px solid var(--ink-100); background: var(--white); }
+  table.apilable tr:nth-child(even) td { background: var(--white); }
+  table.apilable td::before {
+    content: attr(data-titulo);
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  table.apilable td:first-child { border-top: 0; }
+  table.apilable td:first-child, table.apilable tr:nth-child(even) td:first-child { background: var(--ink-900); color: var(--white); font-weight: 700; }
+  table.apilable td:first-child::before { color: var(--ink-200); }
+  table.apilable td:first-child code { color: var(--ink-900); }
+  .doc table.apilable td code { white-space: normal; }
+
+  /* Fichas de requisito: el nombre del campo arriba y su contenido debajo, a todo el ancho. */
+  table.ficha { margin-bottom: var(--space-xl); background: var(--white); border: 1px solid var(--ink-200); border-radius: var(--radius-md); overflow: hidden; }
+  table.ficha tr { margin: 0; border: 0; border-radius: 0; border-top: 1px solid var(--ink-200); }
+  table.ficha td:first-child, table.ficha tr:nth-child(even) td:first-child {
+    padding-bottom: 0;
+    background: var(--white);
+    color: var(--magenta-700);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table.ficha td::before { content: none; }
+  table.ficha td:last-child { border-top: 0; padding-top: 4px; }
+  table.ficha tr:first-child { background: var(--ink-900); }
+  table.ficha tr:first-child td, table.ficha tr:first-child td:first-child { background: var(--ink-900); color: var(--white); }
+
+  .doc ul, .doc ol { padding-left: var(--space-lg); }
+  .doc h1 { font-size: 2rem; }
+}
+
+/* Entre celular y escritorio: tablas compactas para que quepan completas. */
+@media (min-width: 640.02px) and (max-width: 1099px) {
+  table { font-size: 0.85rem; }
+  th, td { padding: var(--space-xs); }
+  .doc table td code { white-space: normal; }
+}
+/* Sin el script, las tablas anchas se desplazan dentro de su caja y la página no. */
+@media (max-width: 960px) { html:not(.js) table { display: block; overflow-x: auto; } }
