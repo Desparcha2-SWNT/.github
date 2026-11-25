@@ -37,7 +37,7 @@
 <article class="figura">
 <h3>Contexto del sistema</h3>
 <p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
-<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Gemini para la IA, Wompi para los cobros, Google Identity para el acceso y Firebase Cloud Messaging para las notificaciones push.</p>
+<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Gemini para la IA, Wompi para los cobros y Firebase Cloud Messaging para las notificaciones push.</p>
 </article>
 <article class="figura">
 <h3>Despliegue en AWS</h3>
@@ -181,7 +181,7 @@
 </thead>
 <tbody>
 <tr>
-<td><code>POST /api/auth/*</code> (registro, inicio de sesión, Google, renovación, cierre)</td>
+<td><code>POST /api/auth/*</code> (registro, inicio de sesión, renovación y cierre)</td>
 <td>auth-service</td>
 <td>No</td>
 <td>30/min y 300/h por IP</td>
@@ -285,7 +285,7 @@
 <tr>
 <td><code>POST</code></td>
 <td><code>/api/auth/google</code></td>
-<td>Inicio de sesión con Google</td>
+<td>Inicio de sesión con Google (versión futura: existe en el código, pero el MVP usa solo correo)</td>
 </tr>
 <tr>
 <td><code>POST</code></td>

@@ -395,7 +395,7 @@
 <span class="rf-nota">fase 2; fuera del MVP actual</span>
 </header>
 <h3>Notificaciones push</h3>
-<p>Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados con entrega a dispositivos iOS y Android (Firebase Cloud Messaging y APNs).</p>
+<p>Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados con entrega a dispositivos Android mediante Firebase Cloud Messaging. iOS queda fuera de esta versión.</p>
 <p class="rf-actor"><strong>Actor:</strong> Usuario</p>
 <details class="plegable">
 <summary>Ver el detalle</summary>
@@ -408,7 +408,7 @@
 <ol>
 <li>Ocurre un evento relevante en el sistema (evento nuevo cercano, o recordatorio de un evento confirmado).</li>
 <li>El sistema encola la notificación correspondiente.</li>
-<li>El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging (Android) o APNs (iOS).</li>
+<li>El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging (Android).</li>
 <li>El actor recibe la notificación y puede tocarla para ir al detalle del evento.</li>
 </ol>
 <h4>Diagrama de caso de uso</h4>
