@@ -1,0 +1,17 @@
+# Plantilla de CODEOWNERS. GitHub NO la hereda desde el repo .github de la organización:
+# hay que copiarla a cada repositorio (en .github/CODEOWNERS o en la raíz) y completar los responsables.
+# Cada línea: ruta + uno o más usuarios (@usuario) o equipos (@Desparcha2-SWNT/equipo).
+# Los responsables son quienes deben revisar los cambios en esa ruta.
+#
+# Miembros actuales de la organización: 0x0000cbsx, brloa05, cmpiedrahita, cntrIsaac, JuanGuayazanC, MAGG0059.
+
+# Por defecto, el equipo del servicio revisa todo (REEMPLAZAR por los responsables reales):
+# *                       @responsable1 @responsable2
+
+# Seguridad y automatización: revisión adicional obligatoria
+# /.github/               @responsable1
+# /Dockerfile             @responsable1
+# /docs/adr/              @responsable1 @responsable2
+
+# Contratos entre servicios (solo en festa-infra)
+# /contracts/             @responsable1 @responsable2

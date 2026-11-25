@@ -1,0 +1,151 @@
+# CI reutilizable para los repositorios festa-*.
+# Se llama desde cada repo con:  uses: Desparcha2-SWNT/.github/.github/workflows/ci-reusable.yml@main
+# Qué hace: (1) escaneo de secretos y vulnerabilidades, (2) build y pruebas según el stack (Node.js, Maven,
+# Gradle o Flutter; si no hay ninguno detectable el job FALLA, o se omite con `stack: none`), (3) CodeQL opcional.
+name: CI reutilizable
+
+on:
+  workflow_call:
+    inputs:
+      stack:
+        description: Cómo compilar y probar. auto (detecta por archivo), node, maven, gradle, flutter o none (el repo compila y prueba en otro job y este se omite)
+        type: string
+        default: auto
+      node-version:
+        description: Versión de Node.js para build y pruebas
+        type: string
+        default: "20"
+      java-version:
+        description: Versión de Java (Temurin) para Maven y Gradle
+        type: string
+        default: "21"
+      working-directory:
+        description: Carpeta del proyecto dentro del repositorio
+        type: string
+        default: "."
+      enable-codeql:
+        description: Activa el análisis estático con CodeQL (requiere repo público o GitHub Advanced Security)
+        type: boolean
+        default: false
+      codeql-language:
+        description: Lenguaje para CodeQL (javascript-typescript, python, java-kotlin, ...)
+        type: string
+        default: javascript-typescript
+      codeql-build-mode:
+        description: Modo de extracción de CodeQL. "none" analiza el código fuente sin compilar (sirve para Java, JavaScript y Python)
+        type: string
+        default: none
+
+permissions:
+  contents: read
+
+jobs:
+  seguridad:
+    name: Secretos y vulnerabilidades
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Trivy (secretos, dependencias y configuración)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+
+  build-y-pruebas:
+    name: Build y pruebas
+    # Con `stack: none` el job se omite (queda "skipped", nunca en verde): el repo compila y prueba en otro job.
+    if: ${{ inputs.stack != 'none' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Detectar el stack del proyecto
+        id: stack
+        env:
+          STACK_PEDIDO: ${{ inputs.stack }}
+        run: |
+          if [ "$STACK_PEDIDO" != "auto" ]; then stack="$STACK_PEDIDO"
+          elif [ -f package.json ]; then stack=node
+          elif [ -f pom.xml ]; then stack=maven
+          elif [ -f build.gradle ] || [ -f build.gradle.kts ]; then stack=gradle
+          elif [ -f pubspec.yaml ]; then stack=flutter
+          else stack=ninguno
+          fi
+          echo "stack=$stack" >> "$GITHUB_OUTPUT"
+          echo "Stack: $stack"
+      - name: Fallar si no hay cómo compilar y probar
+        if: steps.stack.outputs.stack == 'ninguno'
+        run: |
+          echo "::error::No se encontró package.json, pom.xml, build.gradle ni pubspec.yaml. Un CI en verde sin compilar ni probar no cuenta para la Definition of Done. Indica el stack con 'stack:' o usa 'stack: none' si este repo compila y prueba en otro job."
+          exit 1
+
+      # Node.js
+      - uses: actions/setup-node@v7
+        if: steps.stack.outputs.stack == 'node'
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - name: Node.js, instalar dependencias
+        if: steps.stack.outputs.stack == 'node'
+        run: npm ci
+      - name: Node.js, linter
+        if: steps.stack.outputs.stack == 'node'
+        run: npm run lint --if-present
+      - name: Node.js, pruebas
+        if: steps.stack.outputs.stack == 'node'
+        run: npm test --if-present
+      - name: Node.js, build
+        if: steps.stack.outputs.stack == 'node'
+        run: npm run build --if-present
+
+      # Java (Maven o Gradle)
+      - uses: actions/setup-java@v6
+        if: steps.stack.outputs.stack == 'maven' || steps.stack.outputs.stack == 'gradle'
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          cache: ${{ steps.stack.outputs.stack }}
+      - name: Maven, compilar y probar
+        if: steps.stack.outputs.stack == 'maven'
+        run: mvn -B -ntp verify
+      - name: Gradle, compilar y probar
+        if: steps.stack.outputs.stack == 'gradle'
+        run: ./gradlew --no-daemon build
+
+      # Flutter
+      - uses: subosito/flutter-action@v2
+        if: steps.stack.outputs.stack == 'flutter'
+        with:
+          channel: stable
+          cache: true
+      - name: Flutter, dependencias
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter pub get
+      - name: Flutter, análisis estático
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter analyze --no-fatal-infos
+      - name: Flutter, pruebas
+        if: steps.stack.outputs.stack == 'flutter'
+        run: flutter test
+
+  codeql:
+    name: Análisis estático (CodeQL)
+    if: ${{ inputs.enable-codeql }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ inputs.codeql-language }}
+          build-mode: ${{ inputs.codeql-build-mode }}
+      - uses: github/codeql-action/analyze@v4
