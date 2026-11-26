@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instalar la app · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+                    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html">Requerimientos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="calidad.html">Calidad</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="identidad.html">Identidad</a>
+      <a href="instalacion.html" aria-current="page">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Instalar la app en Android</h1>
+    <p>La app se distribuye como APK firmado desde GitHub Releases. Escanea el código QR desde el celular o abre el enlace.</p>
+
+    <div class="descarga">
+      <img src="assets/images/qr_descarga.svg" alt="Código QR que abre la descarga de la app" width="200" height="200">
+      <div>
+        <a class="boton" href="https://github.com/Desparcha2-SWNT/festa-mobile/releases/latest" target="_blank" rel="noopener">Descargar la app</a>
+        <p>Abre la página del último release en GitHub. Ahí, toca el archivo <code>.apk</code>.</p>
+        <p class="version">La versión publicada es del 10 de noviembre de 2026 y todavía no incluye el chat, la compra de boletas ni los pases QR.</p>
+      </div>
+    </div>
+
+    <h2>Pasos</h2>
+    <ol>
+      <li>Escanea el código QR de esta página o abre la descarga de la app.</li>
+      <li>Descarga el archivo <code>.apk</code> más reciente.</li>
+      <li>Si Android lo pide, permite instalar desde esta fuente.</li>
+      <li>Abre Festa e inicia sesión o regístrate.</li>
+    </ol>
+
+    <h2>Nota</h2>
+    <p>El APK apunta al backend desplegado. Si el backend cambia de dirección, se publica un release nuevo con su QR. Esta página se actualizará con la versión vigente.</p>
+    <p class="pending">Pendiente: publicar un release nuevo desde <code>main</code>. Para firmarlo hacen falta los secretos de firma del repositorio <code>festa-mobile</code> (al 25 de noviembre de 2026 no están creados); sin ellos el flujo de publicación se detiene.</p>
+  </main>
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

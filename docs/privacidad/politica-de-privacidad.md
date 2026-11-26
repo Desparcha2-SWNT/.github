@@ -45,7 +45,7 @@ Solo con los proveedores necesarios para que Festa funcione, que los tratan por 
 - Amazon Web Services (AWS), proveedor de la nube donde se despliega el servicio y se guardan las bases de datos, en la región de Virginia del Norte (Estados Unidos) ([ADR 0001](../adr/0001-plataforma-aws.md));
 - Wompi, para procesar los pagos (Festa no almacena números de tarjeta);
 - Mapbox, para mostrar el mapa;
-- Google, como proveedor del modelo de lenguaje de las recomendaciones (API de Gemini, [ADR 0003](../adr/0003-proveedor-llm-gemini.md)) y, si eliges iniciar sesión con tu cuenta de Google, también como proveedor de esa autenticación.
+- Groq, como proveedor del modelo de lenguaje de las recomendaciones y de las descripciones con IA ([ADR 0006](../adr/0006-proveedor-llm-groq.md)).
 
 Tus datos se almacenan en servidores de AWS ubicados en Estados Unidos, así que se transfieren fuera de Colombia. Lo mismo puede ocurrir con los demás proveedores cuando operen en otro país. Lo hacemos con las garantías que exige la ley.
 

@@ -2,16 +2,16 @@
 
 Basado en `Requerimientos.docx`, en [`requirements.md`](../requirements/requirements.md) y en el modelo C4 de [`festa.dsl`](./festa.dsl). Este documento reúne y explica todos los diagramas de arquitectura de Festa: contexto, contenedores, componentes, vista dinámica, clases y base de datos.
 
-> **Estado:** la arquitectura sigue los repositorios `Desparcha2-SWNT/festa-*` (24-oct-2026), que al 25 de octubre solo tienen README, y el despliegue en AWS decidido el 7-nov-2026 (ADR 0001). Los componentes internos, las clases y las tablas son una **propuesta de diseño**; lo que depende del almacén de datos de cada servicio queda pendiente del ADR 0002.
+> **Estado (23-nov-2026):** los diagramas se contrastaron con la rama `develop` de cada repositorio `Desparcha2-SWNT/festa-*` y con el Terraform de `festa-infra`. Lo que todavía está en un PR abierto se indica como tal y no se dibuja como hecho. El despliegue sigue el ADR 0001 (AWS).
 
 ## 1. Sistema
 
 * **Nombre del sistema:** Festa
-* **Objetivo:** El sistema tiene como objetivo centralizar el descubrimiento de eventos y planes en un mapa interactivo en tiempo real, ofrecer recomendaciones personalizadas mediante Inteligencia Artificial Generativa, y dar visibilidad a comercios y organizadores locales — validado mediante un piloto con estudiantes de la Escuela Colombiana de Ingeniería Julio Garavito (ECI).
+* **Objetivo:** El sistema tiene como objetivo centralizar el descubrimiento de eventos y planes en un mapa interactivo que se actualiza al abrirse y al moverse, ofrecer recomendaciones personalizadas mediante Inteligencia Artificial Generativa, y dar visibilidad a comercios y organizadores locales. El piloto se valida con la comunidad de la Escuela Colombiana de Ingeniería Julio Garavito, pero el producto no es exclusivo de ella.
 
 ## 2. Problema a resolver
 
-Los planes y eventos locales se pierden entre publicaciones de redes sociales sin trazabilidad temporal clara, y los comercios pequeños no pueden competir por visibilidad frente a otros negocios sin pagar pauta publicitaria en Instagram o TikTok. Festa resuelve esto centralizando el descubrimiento de eventos en un mapa en tiempo real con recomendaciones de IA, y dando a los comercios un canal de visibilidad y monetización (boletería con comisión, posicionamiento destacado) que no depende de pauta paga en redes sociales externas.
+Los planes y eventos locales se pierden entre publicaciones de redes sociales sin trazabilidad temporal clara, y los comercios pequeños no pueden competir por visibilidad frente a otros negocios sin pagar pauta publicitaria en Instagram o TikTok. Festa resuelve esto centralizando el descubrimiento de eventos en un mapa con recomendaciones de IA, y dando a los comercios un canal de visibilidad con la suscripción Festa Pro y venta de boletas, sin depender de pauta paga en redes sociales externas.
 
 ## 3. Diagrama de Contexto
 
@@ -27,7 +27,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 | Actor / Rol | Descripción |
 |---|:---:|
-| Persona interesada en eventos | Descubre eventos y planes en un mapa en tiempo real, recibe recomendaciones personalizadas y confirma su asistencia. |
+| Persona interesada en eventos | Descubre eventos y planes en un mapa, recibe recomendaciones personalizadas, confirma su asistencia y compra boletas. |
 | Comercio / organizador | Crea y gestiona eventos, vende boletería y mide el retorno obtenido desde su panel. |
 | Administrador de la plataforma | Verifica comercios y modera eventos publicados; soporte interno del producto (equipo Festa). |
 | Equipo de plataforma (DevOps) | Perfil técnico interno: despliega, configura y monitorea la infraestructura de Festa. |
@@ -36,9 +36,9 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 | Sistema | Descripción |
 |---|:---:|
-| Wompi (pasarela de pagos) | Servicio externo que procesa el cobro de boletos y distribuye la comisión entre el organizador (92 %) y Festa (8 %) mediante split payment. |
-| Google Gemini API | Modelo de lenguaje externo (proveedor decidido en el ADR 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
-| FCM / APNs | Servicios de Google y Apple que entregan las notificaciones push al dispositivo; Festa los usa a través de Amazon SNS (fase 2). |
+| Wompi (pasarela de pagos) | Servicio externo donde la persona paga en un checkout firmado; confirma el resultado a Festa por webhook. Su comisión la paga el comercio: se descuenta de lo que recibe. |
+| Groq API | Modelo de lenguaje externo (proveedor decidido en el ADR 0006, que reemplaza al 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
+| Firebase Cloud Messaging | Servicio de Google que entrega las notificaciones push al dispositivo Android; `festa-notification-service` lo llama directamente con `firebase-admin`. |
 | Google Identity | Proveedor externo (OAuth2) de autenticación federada para iniciar sesión. |
 | Mapbox | Servicio externo de mapas que usa la app para mostrar eventos y clústeres. |
 
@@ -47,10 +47,10 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 ### 4.1 Dentro del sistema
 
 - Registro e inicio de sesión de usuarios y comercios (correo o autenticación federada con Google).
-- Creación, edición, cancelación y publicación de eventos en un mapa interactivo en tiempo real, con búsqueda y filtrado.
+- Creación, edición, cancelación y publicación de eventos en un mapa interactivo que se actualiza al abrirse y al moverse (sin WebSockets en el MVP), con búsqueda y filtrado.
 - Generación de recomendaciones personalizadas de eventos y de descripciones de eventos mediante Inteligencia Artificial Generativa.
 - Validación de asistencia mediante código QR de un solo uso, escaneado al ingreso del evento.
-- Venta de boletería dentro de la app, con retención de una comisión por cada entrada vendida.
+- Venta de boletería dentro de la app con el checkout de Wompi. La comisión de la pasarela se descuenta de lo que recibe el comercio.
 - Verificación manual de comercios y moderación de eventos/usuarios reportados por parte del administrador de la plataforma.
 - Notificaciones push por eventos cercanos y recordatorios de asistencia.
 - Panel de comercio con conteos simples de asistentes y boletos vendidos, para medir retorno.
@@ -59,7 +59,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 - Procesamiento directo de pagos con tarjeta o custodia de datos de tarjetahabientes: se delega íntegramente a la pasarela de pagos externa (Wompi), evitando el alcance regulatorio de PCI-DSS.
 - Infraestructura de autenticación propia: la autenticación federada (Google) se delega a un proveedor de identidad externo; solo el correo/contraseña es gestionado directamente por Festa.
-- Envío físico de notificaciones push: la entrega al dispositivo se delega a Firebase Cloud Messaging y APNs; Festa solo solicita el envío.
+- Envío físico de notificaciones push: la entrega al dispositivo se delega a Firebase Cloud Messaging; Festa solo solicita el envío.
 - Gamificación y economía de puntos (otorgamiento de XP, canje de puntos por descuentos, sistema de reputación con ranking e insignias): queda fuera del MVP de este semestre, es roadmap post-piloto (*Won't* en la priorización MoSCoW).
 
 ## 5. Diagrama de Contenedores
@@ -76,31 +76,31 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 
 | Contenedor (repositorio) | Tecnología | Responsabilidad | Requisitos |
 |---|:---:|---|:---:|
-| `festa-mobile` | Flutter (iOS y Android) | App del usuario y vista de comercio: mapa, escáner y generador de QR, caché local del QR. | RF5, RF15, RNF10 |
+| `festa-mobile` | Flutter (Android, APK de release) | App del usuario y vista de comercio: mapa, perfil, eventos, asistencia y planes. Compra, pase QR y escáner están en PR abiertos. | RF5, RF15, RNF10 |
 | `festa-gateway` | Kong 3.9 DB-less (tarea en Amazon ECS Fargate) | Punto de entrada único: enruta, valida el JWT y aplica rate limiting. | RNF4, RNF8 |
 | `festa-auth-service` | Spring Boot 3.5 (tarea en Amazon ECS Fargate) | Registro e inicio de sesión con correo y Google; emite el JWT. | RF1 |
 | `festa-user-service` | Tarea en Amazon ECS Fargate | Perfiles de usuario y comercio, preferencias y verificación manual de comercios. | RF2, RF3 |
 | `festa-event-service` | Tarea en Amazon ECS Fargate | CRUD de eventos, mapa con clústeres, búsqueda y filtros, Parches en Vivo. | RF4, RF5, RF6, RF19 |
 | `festa-booking-service` | Tarea en Amazon ECS Fargate | Confirmación de asistencia y QR de un solo uso. | RF7, RF10, RNF7 |
-| `festa-payment-service` | Tarea en Amazon ECS Fargate | Boletería con Wompi y split de pago (comisión del 8 %). | RF11, RNF6 |
+| `festa-payment-service` | Tarea en Amazon ECS Fargate | Órdenes de boletas, checkout firmado de Wompi, webhook, liquidación al comercio y reembolsos. | RF11, RNF6 |
 | `festa-ai-service` | Tarea en Amazon ECS Fargate | Recomendaciones y descripciones con IA; límite de solicitudes por usuario. | RF8, RF9, RNF8 |
-| `festa-notification-service` | Tarea en Amazon ECS Fargate | Envío de notificaciones push (fase 2). | RF12 |
+| `festa-notification-service` | Tarea en Amazon ECS Fargate | Envío de notificaciones push con Firebase Cloud Messaging y recordatorios. | RF12 |
 | `festa-analytics-service` | Tarea en Amazon ECS Fargate | Conteos de asistentes y boletos vendidos para el panel de comercio. | RF15 |
 | RabbitMQ | RabbitMQ | Mensajería asíncrona entre microservicios y contratos de mensajes. | RNF2 |
-| Una base de datos por servicio | PostgreSQL (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB como contenedor en Fargate con EFS (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. Motor por servicio: el que define `festa-infra` (rama `develop`); falta confirmarlo con el equipo (ADR 0002). | RNF1 |
-| Redis | Amazon ElastiCache for Redis (una instancia, con cluster mode disabled para poder usar las bases 0, 1 y 2) | Bases lógicas separadas: caché del mapa de `festa-event-service` (db 0), límite de solicitudes de `festa-ai-service` (db 1) y caché de perfiles de `festa-user-service` (db 2). La validación rápida de QR de booking es una propuesta. El rate limit del gateway lo lleva Kong. | RNF1, RNF7, RNF8 |
-| Prometheus + Grafana | Prometheus y Grafana | Métricas, tableros y alertas de los servicios. | RNF3 |
+| Una base de datos por servicio | PostgreSQL 16 en Amazon RDS (`auth_db`, `user_db`, `event_db` con PostGIS, `booking_db`, `payment_db`) y MongoDB 7 sin replica set, como contenedor en Fargate con EFS (`ai_db`, `notification_db`, `analytics_db`) | Cada servicio es dueño de su base y de su modelo de datos; ninguno lee la base de otro. | RNF1 |
+| Redis | Amazon ElastiCache for Redis | Lo usan dos servicios: `festa-user-service` (caché de perfiles) y `festa-ai-service` (límite de 10 mensajes de chat y 5 descripciones por usuario y minuto). El rate limit del gateway lo lleva Kong. | RNF1, RNF8 |
+| Prometheus + Grafana | Prometheus y Grafana (solo en Docker Compose) | Métricas y tableros en el ambiente local; no se despliegan en AWS. | RNF3 |
 
 ### 5.3 Relaciones principales
 
 - La app llama solo al gateway (HTTPS); el gateway enruta a cada servicio por REST.
-- `festa-auth-service` se federa con Google Identity; `festa-payment-service` cobra con Wompi; `festa-ai-service` consulta a la API de Gemini; `festa-notification-service` envía push a FCM/APNs; la app muestra el mapa con Mapbox.
-- Los servicios publican y consumen eventos en RabbitMQ: pago aprobado, confirmaciones y QR, eventos de dominio y métricas.
-- El equipo de plataforma observa el sistema a través de Prometheus + Grafana.
+- `festa-auth-service` se federa con Google Identity; `festa-payment-service` firma el checkout y recibe el webhook de Wompi; `festa-ai-service` consulta a la API de Groq; `festa-notification-service` envía push a Firebase Cloud Messaging; la app muestra el mapa con Mapbox.
+- Los servicios publican y consumen eventos versionados en RabbitMQ con outbox e inbox: pagos, asistencia, cuentas, perfiles y eventos de dominio.
+- En Docker Compose, el equipo de plataforma observa el sistema con Prometheus + Grafana.
 
 ## 6. Diagramas de Componentes
 
-Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. Se hizo solo para los tres servicios con la lógica más crítica del proyecto. Los componentes son una propuesta de diseño.
+Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. Se hizo para los tres servicios con la lógica más crítica del proyecto y refleja el código de `develop`.
 
 ### 6.1 `festa-booking-service` (asistencia y QR de un solo uso)
 
@@ -108,26 +108,27 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 
 | Componente | Responsabilidad |
 |---|---|
-| API de asistencia y QR | Endpoints REST: confirmar asistencia, obtener el QR y validarlo en la puerta. |
-| Gestor de asistencia | Confirma la asistencia (RF7) y registra el ingreso al evento. |
-| Generador de QR | Crea el token firmado de un solo uso para cada boleto (RF10). |
-| Validador de QR | Verifica firma y vigencia y marca el QR como usado; rechaza los repetidos (RNF7). |
-| Consumidor de pagos | Escucha el pago aprobado en RabbitMQ y emite el boleto. |
-| Repositorio | Lee y escribe asistencias y boletos; el validador consulta Redis para bloquear el reuso. |
+| API de asistencia y pases | Endpoints REST: confirmar y cancelar asistencia, listar asistentes y planes, obtener y validar pases. |
+| Gestor de asistencia | Confirma o cancela la asistencia y sube `attendanceVersion` en la misma transacción. |
+| Gestor de pases | Emite un pase por boleta, lo marca como usado una sola vez y lo revoca en un reembolso. |
+| Códec de QR | Genera y verifica el QR firmado (RNF7). |
+| Consumidor (inbox) | Procesa sin duplicar los eventos de cuentas, eventos y pagos. |
+| Publicador (outbox) | Publica los eventos de asistencia en RabbitMQ. |
 
-### 6.2 `festa-payment-service` (cobro y split con Wompi)
+### 6.2 `festa-payment-service` (órdenes y checkout con Wompi)
 
 ![Componentes de festa-payment-service](./diagramas/03-componentes/ComponentesPayment.png)
 
 | Componente | Responsabilidad |
 |---|---|
-| API de pagos | Endpoints REST para iniciar la compra y consultar su estado. |
-| Servicio de cobro | Orquesta la compra de un boleto (RF11). |
-| Calculador de split | Divide el valor: 8 % para Festa y 92 % para el organizador. |
-| Cliente Wompi | Crea el cobro con split en la pasarela. |
+| API de pagos | Endpoints REST: cotizar, crear y consultar órdenes, reembolsos y liquidaciones. |
+| Gestor de órdenes | Crea la orden con `Idempotency-Key`, retiene el cupo y aplica el resultado del pago (RF11). |
+| Calculador de precios | Calcula el total y la comisión de Wompi que se descuenta al comercio. |
+| Checkout Wompi | Firma la referencia y arma la URL del checkout; Festa no crea la transacción. |
 | Receptor de webhooks | Recibe la confirmación del pago y verifica su firma. |
-| Publicador de eventos | Publica pago aprobado o rechazado en RabbitMQ. |
-| Repositorio | Lee y escribe pagos y comisiones. |
+| Expirador de órdenes | Libera el cupo de las órdenes pendientes vencidas. |
+| Consumidor (inbox) | Mantiene las copias de eventos y comercios verificados. |
+| Publicador (outbox) | Publica los eventos de pago en RabbitMQ. |
 
 ### 6.3 `festa-ai-service` (recomendaciones y descripciones con límite de uso)
 
@@ -135,11 +136,13 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 
 | Componente | Responsabilidad |
 |---|---|
-| API de IA | Endpoints REST para pedir recomendaciones y descripciones. |
-| Limitador de solicitudes | Aplica el tope por usuario y por minuto, con contadores en Redis (RNF8). |
-| Orquestador de prompts | Arma el prompt con el contexto del evento y del usuario (RF8, RF9). |
-| Persistencia de descripciones | Guarda las descripciones generadas para no volver a pedirlas (RNF8). |
-| Cliente Gemini | Llama al modelo y maneja errores y reintentos. |
+| API de IA | Endpoints REST de chat y descripciones. |
+| Limitador de solicitudes | Aplica el tope por usuario y por minuto con contadores en Redis (RNF8). |
+| Chat de recomendaciones | Arma el contexto con el catálogo y descarta los eventos que el modelo no puede respaldar (RF8). |
+| Generador de descripciones | Genera la descripción y la guarda para no volver a pedirla (RF9, RNF8). |
+| Cliente LLM (Groq) | Llama al modelo y maneja sus errores. |
+| Consumidor (inbox) | Mantiene el catálogo, las preferencias y el borrado de cuentas. |
+| Publicador (outbox) | Publica el uso de IA en RabbitMQ. |
 
 ## 7. Vista Dinámica: compra de un boleto
 
@@ -154,119 +157,71 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 | Paso | De → a | Qué ocurre |
 |:---:|---|---|
 | 1 | Persona → app | Elige un evento de pago y pulsa Comprar. |
-| 2 | App → gateway → payment | La app envía la compra con el JWT; el gateway la enruta. |
-| 3 | payment → Wompi | Se crea el cobro con split (8 % / 92 %). |
-| 4 | Wompi → payment | La pasarela confirma el pago aprobado. |
-| 5 | payment → RabbitMQ → booking | Se publica "pago aprobado" y el servicio de reservas lo recibe. |
-| 6 | App → gateway → booking | La app consulta su boleto. |
-| 7 | booking → gateway → app | Se devuelve el QR único; la app lo guarda en caché local. |
+| 2 | App → gateway → payment | Crea la orden con `Idempotency-Key`; payment retiene el cupo. |
+| 3 | payment → app | Devuelve los datos firmados del checkout de Wompi. |
+| 4 | Persona → Wompi | Paga en el checkout; Festa no toca los datos de la tarjeta. |
+| 5 | Wompi → payment | El webhook firmado confirma el resultado. |
+| 6 | payment → RabbitMQ → booking | Se publica el pago aprobado y booking emite un pase por boleta. |
+| 7 | App → gateway → booking | La app consulta sus pases y muestra el QR. |
 
 ## 8. Diagramas de Clases por Microservicio
 
-Cada microservicio tiene su propio diagrama de clases (no hay uno único para todo el proyecto). Las clases muestran atributos y métodos; las líneas llevan multiplicidad; en amarillo van las enumeraciones. Las referencias a datos de otro servicio (por ejemplo `cuentaId`) son identificadores, no relaciones directas. Son una propuesta de diseño.
+Cada microservicio tiene su propio diagrama de clases, hecho a partir de su código en `develop`. Las referencias a datos de otro servicio (por ejemplo `userId`) son identificadores, no relaciones directas.
 
-### 8.1 `festa-auth-service` (RF1)
-
-![Diagrama de clases de festa-auth-service](./diagramas/05-clases/auth-service.png)
-
-Cuenta de acceso con proveedor (correo o Google) y rol, y las sesiones que se abren con el JWT y el token de renovación.
-
-### 8.2 `festa-user-service` (RF2, RF3)
-
-![Diagrama de clases de festa-user-service](./diagramas/05-clases/user-service.png)
-
-Perfil del usuario con sus intereses y consentimientos (Ley 1581, RNF5), y el comercio con su estado de verificación manual.
-
-### 8.3 `festa-event-service` (RF4, RF5, RF6, RF9, RF19)
-
-![Diagrama de clases de festa-event-service](./diagramas/05-clases/event-service.png)
-
-Categorías y eventos (con Parches en Vivo que expiran) y la descripción generada por IA, que se guarda una sola vez (RNF8).
-
-### 8.4 `festa-booking-service` (RF7, RF10)
-
-![Diagrama de clases de festa-booking-service](./diagramas/05-clases/booking-service.png)
-
-Confirmación de asistencia y boletos, cada uno con su código QR de un solo uso (RNF7).
-
-### 8.5 `festa-payment-service` (RF11)
-
-![Diagrama de clases de festa-payment-service](./diagramas/05-clases/payment-service.png)
-
-Pago con el reparto de comisión (8 % Festa, 92 % organizador) y los eventos de webhook recibidos de Wompi.
-
-### 8.6 `festa-ai-service` (RF8)
-
-![Diagrama de clases de festa-ai-service](./diagramas/05-clases/ai-service.png)
-
-Historial de recomendaciones y el límite de solicitudes por usuario, que vive en Redis y no en MongoDB (RNF8). Su base `ai_db` es MongoDB, según `festa-infra`.
-
-`festa-notification-service` (RF12, fase 2) y `festa-analytics-service` (RF15) no tienen todavía un modelo propio definido: el primero solo reenvía avisos y el segundo se alimenta de los eventos de RabbitMQ. Ambos usan MongoDB según `festa-infra` y se modelarán cuando tengan código.
+| Servicio | Requisitos | Diagrama |
+|---|---|---|
+| `festa-auth-service` | RF1 | [clases](./diagramas/05-clases/auth-service.png) |
+| `festa-user-service` | RF2, RF3 | [clases](./diagramas/05-clases/user-service.png) |
+| `festa-event-service` | RF4, RF5, RF6, RF19 | [clases](./diagramas/05-clases/event-service.png) |
+| `festa-booking-service` | RF7, RF10 | [clases](./diagramas/05-clases/booking-service.png) |
+| `festa-payment-service` | RF11 | [clases](./diagramas/05-clases/payment-service.png) |
+| `festa-ai-service` | RF8, RF9 | [clases](./diagramas/05-clases/ai-service.png) |
+| `festa-analytics-service` | RF15 | [clases](./diagramas/05-clases/analytics-service.png) |
+| `festa-notification-service` | RF12 | [clases](./diagramas/05-clases/notification-service.png) |
 
 ## 9. Modelos de Base de Datos por Microservicio
 
-Cada servicio tiene su propia base de datos y es dueño de su esquema de PostgreSQL (`auth`, `usuarios`, `eventos`, `reservas`, `pagos`) y es el único que lo modifica. `festa-ai-service`, `festa-notification-service` y `festa-analytics-service` usan MongoDB (colecciones). PK es clave primaria y FK clave foránea; las puntas de las líneas indican cardinalidad.
+Cada servicio es dueño de su base y es el único que la modifica. Auth, user, event, booking y payment usan PostgreSQL 16; ai, analytics y notification usan MongoDB 7 sin replica set, por lo que sus escrituras atómicas son condicionales sobre un solo documento.
 
-### 9.1 `festa-auth-service`
+| Servicio | Motor | Modelo |
+|---|---|---|
+| `festa-auth-service` | PostgreSQL | [`auth_db`](./diagramas/06-base-de-datos/auth-service.png) |
+| `festa-user-service` | PostgreSQL | [`user_db`](./diagramas/06-base-de-datos/user-service.png) |
+| `festa-event-service` | PostgreSQL + PostGIS | [`event_db`](./diagramas/06-base-de-datos/event-service.png) |
+| `festa-booking-service` | PostgreSQL | [`booking_db`](./diagramas/06-base-de-datos/booking-service.png) |
+| `festa-payment-service` | PostgreSQL | [`payment_db`](./diagramas/06-base-de-datos/payment-service.png) |
+| `festa-ai-service` | MongoDB | [`ai_db`](./diagramas/06-base-de-datos/ai-service.png) |
+| `festa-analytics-service` | MongoDB | [`analytics_db`](./diagramas/06-base-de-datos/analytics-service.png) |
+| `festa-notification-service` | MongoDB | [`notification_db`](./diagramas/06-base-de-datos/notification-service.png) |
 
-![Modelo de base de datos de festa-auth-service](./diagramas/06-base-de-datos/auth-service.png)
-
-La tabla `auth.sesiones` guarda solo el hash del token de renovación y si fue revocado.
-
-### 9.2 `festa-user-service`
-
-![Modelo de base de datos de festa-user-service](./diagramas/06-base-de-datos/user-service.png)
-
-`usuarios.intereses_usuario` es la tabla puente entre el perfil y las categorías, que pertenecen al servicio de eventos.
-
-### 9.3 `festa-event-service`
-
-![Modelo de base de datos de festa-event-service](./diagramas/06-base-de-datos/event-service.png)
-
-`eventos.eventos.ubicacion` es un `geography(Point)` para el mapa y los clústeres con PostGIS.
-
-### 9.4 `festa-booking-service`
-
-![Modelo de base de datos de festa-booking-service](./diagramas/06-base-de-datos/booking-service.png)
-
-Solo se guarda el hash del token del QR (`token_hash` único) y la bandera `usado`.
-
-### 9.5 `festa-payment-service`
-
-![Modelo de base de datos de festa-payment-service](./diagramas/06-base-de-datos/payment-service.png)
-
-`pagos.webhooks_recibidos.evento_wompi_id` es único para no procesar dos veces el mismo aviso.
-
-### 9.6 `festa-ai-service`
-
-![Modelo de base de datos de festa-ai-service](./diagramas/06-base-de-datos/ai-service.png)
-
-Es una colección de MongoDB (`ai_db.recomendaciones`) y el esquema es una propuesta, porque `festa-ai-service` todavía no tiene código. Las descripciones de eventos (RF9) se guardan en el servicio de eventos, no aquí.
-
-**Nota sobre las claves entre servicios.** Las referencias de un esquema a otro (por ejemplo `reservas.boletos.evento_id`) son lógicas, sin clave foránea, y se validan en el código o con eventos de RabbitMQ. Esto, junto con el uso de MongoDB y Redis, se decide en el ADR 0002.
+**Nota sobre las claves entre servicios.** Las referencias de una base a otra son lógicas, sin clave foránea, y se mantienen con eventos de RabbitMQ.
 
 Los diagramas editables están en el documento de Lucid del proyecto, páginas "Clases y BD · …" de cada servicio.
 
-## 10. Decisiones pendientes y supuestos
+## 10. Otras vistas
+
+| Vista | Imagen |
+|---|---|
+| Proceso de negocio (BPMN) | [ProcesoBPMN](./diagramas/08-proceso/ProcesoBPMN.png) |
+| Arquitectura de microservicios | [ArquitecturaMicroservicios](./diagramas/09-despliegue/ArquitecturaMicroservicios.png) |
+| Despliegue en AWS | [DespliegueAWS](./diagramas/09-despliegue/DespliegueAWS.png) |
+| Secuencia: registro e inicio de sesión | [RegistroInicioSesion](./diagramas/07-secuencias/RegistroInicioSesion.png) |
+| Secuencia: crear evento | [CrearEvento](./diagramas/07-secuencias/CrearEvento.png) |
+| Secuencia: confirmar asistencia | [ConfirmarAsistencia](./diagramas/07-secuencias/ConfirmarAsistencia.png) |
+| Secuencia: descripción con IA | [DescripcionIA](./diagramas/07-secuencias/DescripcionIA.png) |
+| Secuencia: comprar boleta | [ComprarBoleta](./diagramas/07-secuencias/ComprarBoleta.png) |
+| Secuencia: validar QR | [ValidarQR](./diagramas/07-secuencias/ValidarQR.png) |
+
+## 11. Decisiones pendientes
 
 | Tema | Estado |
 |---|---|
-| Plataforma de despliegue: AWS (ADR 0001, 7-nov-2026); faltan la infraestructura como código y los scripts de redespliegue (SCRUM-134). | Lucid, página "Despliegue en AWS (oficial)" (la única vigente; las páginas de Azure y GCP se eliminaron) |
-| Almacén de datos: una base de datos por servicio (retroalimentación del profesor, 26-oct-2026). Los motores actuales son los de `festa-infra`; falta confirmarlos con el equipo (ADR 0002). | Decidido el aislamiento; motor por confirmar |
-| Proveedor de LLM: Gemini (ADR 0003). | Decidido (falta ratificar con el equipo) |
-| Contratos de mensajes de RabbitMQ (ADR 0004). | Hechos y fusionados en `develop` de `festa-infra` (38 eventos); falta registrar el ADR |
-| RF13, RF14 y RF16-RF18 no tienen repositorio asignado (ADR 0005). | Pendiente |
+| Quién paga el chat de IA del público (tope por usuario o cupo de Festa Pro). | Pendiente del equipo; hoy el tope es por minuto |
+| Reparto del 8 % de SCRUM-27 frente a Festa Pro. | Discrepancia abierta en Jira; el modelo oficial es Festa Pro |
+| Replica set de MongoDB (SCRUM-130). | Pendiente del equipo |
+| Alcance de «sin Firebase»: notification usa Firebase Cloud Messaging. | Pendiente de aclarar |
+| RF13, RF14 y RF16-RF18 sin repositorio asignado (ADR 0005). | Pendiente |
 
-El despliegue en AWS está en el documento de Lucid del proyecto, página "Despliegue en AWS (oficial)", que incluye la entrada HTTPS por API Gateway y cómo se distribuye la app (APK con QR); no se modela en C4. Las páginas de Azure y GCP se eliminaron.
+### 11.1 Estado de los repositorios (23-nov-2026)
 
-### 10.1 Estado de los repositorios (7-nov-2026)
-
-El trabajo ya está en `develop` de `festa-infra`, `festa-auth-service`, `festa-gateway`, `festa-user-service`, `festa-event-service` y `festa-mobile`. `main` de todos los repositorios sigue con solo el README. `festa-booking-service`, `festa-payment-service`, `festa-ai-service`, `festa-notification-service` y `festa-analytics-service` solo tienen el README.
-
-| Repositorio | Rama | Qué incluye |
-|---|---|---|
-| `festa-infra` | `develop` | Docker Compose local: PostgreSQL con PostGIS (auth, user, event, booking y payment), MongoDB (ai, notification y analytics), Redis, RabbitMQ con su topología, Prometheus y Grafana. Contratos de 38 eventos con validador. |
-| `festa-auth-service` | `develop` | RF1: registro, login con correo y Google, refresh y logout, JWT RS256 y JWKS, borrado de cuenta (Ley 1581), cifrado de datos personales, outbox y pruebas. Spring Boot 3.5. |
-| `festa-gateway` | `develop` | Kong 3.9 DB-less con validación de JWT, límite de peticiones por ruta, correlation-id y cabeceras de seguridad. |
-
-Hoy todo corre en Docker Compose local. El despliegue en AWS (ECS Fargate) y sus scripts siguen pendientes (SCRUM-134).
+El código de los servicios está en `develop`. La promoción a `main` está en PR abiertos y se aprueba cuando el despliegue en AWS esté encendido. En la app, la compra, el pase QR y el escáner siguen en PR abiertos.

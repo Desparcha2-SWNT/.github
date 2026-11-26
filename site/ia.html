@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Uso de IA · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+  <script src="assets/bitacora.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+        <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html">Requerimientos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="calidad.html">Calidad</a>
+      <a href="ia.html" aria-current="page">Uso de IA</a>
+      <a href="identidad.html">Identidad</a>
+      <a href="instalacion.html">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main class="doc uso-ia">
+<h1>Uso de IA en el proyecto</h1>
+<p>El equipo usó asistentes de IA para análisis, diseño, implementación, pruebas, despliegue y documentación. Cada prompt se registra en la bitácora con su fecha, la herramienta y el modelo, la fase del ciclo de desarrollo, la técnica de prompting, el resultado y la validación humana.</p>
+<h2>Bitácora de prompts</h2>
+<p>Se lee en vivo del archivo <code>BITACORA_PROMPTS.md</code> del repositorio: lo que el equipo registre allí aparece aquí. Un cambio puede tardar unos minutos en verse.</p>
+<p><a class="boton" href="https://github.com/Desparcha2-SWNT/.github/blob/main/BITACORA_PROMPTS.md" target="_blank" rel="noopener">Ver el archivo en GitHub</a></p>
+<div id="bitacora" data-fuente="https://raw.githubusercontent.com/Desparcha2-SWNT/.github/main/BITACORA_PROMPTS.md" aria-live="polite">
+<p class="bitacora-aviso">Cargando la bitácora…</p>
+<noscript><p>Para verla aquí hace falta JavaScript. También está en el enlace de arriba.</p></noscript>
+</div>
+
+<h2>Principios de validación</h2>
+<ul>
+<li>Cada resultado de IA se revisa contra el código, los contratos y el estado real del proyecto antes de usarlo.</li>
+<li>Ningún integrante aprueba su propio cambio; las aprobaciones las da otro integrante.</li>
+<li>Cuando un diagrama se hizo después del código, la bitácora lo declara en la validación.</li>
+</ul>
+
+  </main>
+
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

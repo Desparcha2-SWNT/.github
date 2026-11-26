@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Requerimientos · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+        <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html" aria-current="page">Requerimientos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="calidad.html">Calidad</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="identidad.html">Identidad</a>
+      <a href="instalacion.html">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main class="doc requerimientos">
+<h1>Requerimientos del Sistema</h1>
+<p>Fuente: <code>Requerimientos.docx</code> (especificación completa, con priorización MoSCoW).</p>
+
+<nav class="indice" aria-label="En esta página">
+<a href="#funcionales">Funcionales</a>
+<a href="#no-funcionales">No funcionales</a>
+</nav>
+
+<section class="bloque" aria-labelledby="funcionales">
+<h2 id="funcionales">1. Requerimientos funcionales</h2>
+<div class="stats">
+<div class="stat stat-must"><strong>8</strong><span>Must: imprescindibles</span></div>
+<div class="stat stat-should"><strong>5</strong><span>Should: importantes</span></div>
+<div class="stat stat-could"><strong>2</strong><span>Could: deseables</span></div>
+<div class="stat stat-wont"><strong>5</strong><span>Won't: fuera de esta versión</span></div>
+</div>
+<div class="filtros" role="group" aria-label="Filtrar por prioridad" hidden>
+<button type="button" data-filtro="todos" aria-pressed="true" class="activo">Todos</button>
+<button type="button" data-filtro="must" aria-pressed="false">Must</button>
+<button type="button" data-filtro="should" aria-pressed="false">Should</button>
+<button type="button" data-filtro="could" aria-pressed="false">Could</button>
+<button type="button" data-filtro="wont" aria-pressed="false">Won't</button>
+<button type="button" class="abrir-todo">Abrir todo</button>
+</div>
+<div class="rf-lista">
+<article class="rf" data-prio="must" id="rf-01">
+<header class="rf-cab">
+<span class="rf-id">RF-01</span>
+<span class="chip chip-must">Must</span>
+</header>
+<h3>Registro e inicio de sesión</h3>
+<p>El sistema debe permitir a un usuario o comercio registrarse e iniciar sesión mediante correo electrónico y contraseña. El inicio de sesión con Google (OAuth2) queda como RF-1.1, en versión futura.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y disponible.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor quede autenticado con una sesión válida (JWT) y pueda acceder a las funcionalidades según su rol.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre la app y selecciona "Registrarse" o "Iniciar sesión".</li>
+<li>Para registrarse, el actor consulta el aviso de privacidad y autoriza el tratamiento de sus datos personales conforme a la Ley 1581 de 2012.</li>
+<li>El actor ingresa su correo y contraseña.</li>
+<li>El sistema valida las credenciales.</li>
+<li>El sistema genera un token JWT de sesión.</li>
+<li>El sistema redirige al actor a su pantalla principal.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-01" src="assets/casos-de-uso/RF01.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="wont" id="rf-1.1">
+<header class="rf-cab">
+<span class="rf-id">RF-1.1</span>
+<span class="chip chip-wont">Won't</span>
+<span class="rf-nota">(versión futura)</span>
+</header>
+<h3>Inicio de sesión con Google</h3>
+<p>El sistema debe permitir iniciar sesión con una cuenta de Google (OAuth2). Queda fuera de la versión actual (Won't).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el servicio de autenticación (Auth Service) desplegado y el registro con correo (RF-01).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor inicie sesión con su cuenta de Google.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor elige iniciar sesión con Google.</li>
+<li>El sistema valida el token de Google.</li>
+<li>El sistema genera un token JWT de sesión.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p>No aplica en esta versión.</p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-02">
+<header class="rf-cab">
+<span class="rf-id">RF-02</span>
+<span class="chip chip-must">Must</span>
+</header>
+<h3>Perfil de usuario</h3>
+<p>El sistema debe permitir al usuario configurar y editar un perfil con sus intereses y preferencias de plan (cultural, musical, deportivo, gastronómico).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario registrado e identificado (RF-01).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el perfil quede actualizado con los intereses del usuario, disponibles para el motor de recomendaciones de IA (RF-08).</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor accede a "Mi perfil".</li>
+<li>El sistema muestra las categorías de interés disponibles.</li>
+<li>El actor selecciona una o varias categorías.</li>
+<li>El sistema persiste las preferencias asociadas al usuario.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-02" src="assets/casos-de-uso/RF02.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-03">
+<header class="rf-cab">
+<span class="rf-id">RF-03</span>
+<span class="chip chip-must">Must</span>
+</header>
+<h3>Perfil de comercio/organizador</h3>
+<p>El sistema debe permitir a un comercio u organizador crear un perfil con datos del negocio, ubicación y categoría, sujeto a verificación manual del equipo Festa (piloto en ECI).</p>
+<p class="rf-actor"><strong>Actor:</strong> Comercio/Organizador, Equipo Festa (revisor manual)</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio registrado e identificado (RF-01).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el comercio quede con un perfil verificado (o pendiente/rechazado) que determina si puede publicar eventos (RF-04).</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor accede a "Crear perfil de comercio".</li>
+<li>El actor ingresa nombre, ubicación, categoría y descripción del negocio.</li>
+<li>El sistema guarda el perfil con estado "pendiente de verificación".</li>
+<li>El equipo Festa revisa manualmente la solicitud.</li>
+<li>El sistema notifica al actor el resultado (aprobado/rechazado).</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-03" src="assets/casos-de-uso/RF03.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-04">
+<header class="rf-cab">
+<span class="rf-id">RF-04</span>
+<span class="chip chip-must">Must</span>
+</header>
+<h3>Gestión de eventos (crear, editar, cancelar)</h3>
+<p>El sistema debe permitir a usuarios y comercios crear, editar y cancelar eventos, especificando fecha, lugar, categoría, cupo y descripción.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y, si es comercio, con perfil verificado (RF-03).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el evento quede creado, actualizado o cancelado, y visible (o no) en el mapa según corresponda.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor selecciona "Crear evento".</li>
+<li>El actor ingresa título, fecha/hora, lugar, categoría, cupo y descripción (opcionalmente generada por IA, RF-09).</li>
+<li>El sistema valida los datos obligatorios.</li>
+<li>El sistema guarda el evento y lo publica en el mapa (RF-05).</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-04" src="assets/casos-de-uso/RF04.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-05">
+<header class="rf-cab">
+<span class="rf-id">RF-05</span>
+<span class="chip chip-must">Must</span>
+</header>
+<h3>Mapa interactivo de eventos</h3>
+<p>El sistema debe mostrar en un mapa interactivo los eventos activos y próximos, agrupados en clústeres por zona, cargando lo visible en menos de 2 segundos (RNF1). En el MVP el mapa se actualiza al abrirse y al moverse; no es en tiempo real (sin WebSockets).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al usuario identificado y haber solicitado su consentimiento explícito antes de acceder a la ubicación del dispositivo (RNF5).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor visualice los eventos activos y próximos cercanos, organizados por clústeres, en menos de 2 segundos.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre la pantalla principal (mapa).</li>
+<li>Si el actor consiente, el sistema obtiene la ubicación del dispositivo; si la rechaza o no está disponible, informa y usa la ubicación predeterminada del piloto ECI.</li>
+<li>El sistema consulta los eventos activos/próximos cercanos.</li>
+<li>El sistema agrupa eventos cercanos en clústeres y los renderiza.</li>
+<li>El actor puede hacer zoom/pan; el sistema recalcula clústeres.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-05" src="assets/casos-de-uso/RF05.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="should" id="rf-06">
+<header class="rf-cab">
+<span class="rf-id">RF-06</span>
+<span class="chip chip-should">Should</span>
+<span class="rf-nota">alcance reducido</span>
+</header>
+<h3>Búsqueda y filtrado de eventos</h3>
+<p>El sistema debe permitir al usuario buscar y filtrar eventos por categoría, zona y fecha (alcance MVP reducido, sin ordenamiento por popularidad).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor en la pantalla del mapa o listado de eventos (RF-05).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor visualice únicamente los eventos que cumplen los criterios seleccionados.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre el panel de filtros/búsqueda.</li>
+<li>El actor ingresa texto libre y/o selecciona categoría, zona, rango de fechas.</li>
+<li>El sistema consulta los eventos que cumplen los criterios.</li>
+<li>El sistema actualiza el mapa/listado con los resultados filtrados.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-06" src="assets/casos-de-uso/RF06.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="should" id="rf-07">
+<header class="rf-cab">
+<span class="rf-id">RF-07</span>
+<span class="chip chip-should">Should</span>
+<span class="rf-nota">alcance reducido</span>
+</header>
+<h3>Confirmación de asistencia</h3>
+<p>El sistema debe permitir a un usuario confirmar su asistencia a un evento y mostrar un conteo de asistentes confirmados (alcance MVP reducido, sin actualización en vivo por WebSockets).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y visualizando el detalle de un evento (RF-05).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor quede registrado como asistente confirmado y el conteo público se actualice.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre el detalle de un evento.</li>
+<li>El actor selecciona "Confirmar asistencia".</li>
+<li>El sistema registra la confirmación asociada al actor y al evento.</li>
+<li>El sistema actualiza el conteo de asistentes visible.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-07" src="assets/casos-de-uso/RF07.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-08">
+<header class="rf-cab">
+<span class="rf-id">RF-08</span>
+<span class="chip chip-must">Must</span>
+<span class="rf-nota">requerimiento del profesor</span>
+</header>
+<h3>Recomendaciones personalizadas por IA Generativa</h3>
+<p>El sistema debe generar recomendaciones de eventos en lenguaje natural, conversando con el usuario sobre sus intereses del momento, en vez de mostrar solo una lista filtrada. Requerimiento explícito del profesor.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado, idealmente con intereses configurados (RF-02).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor reciba una recomendación personalizada en lenguaje natural, con eventos concretos que puede explorar o confirmar.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor escribe qué tipo de plan busca.</li>
+<li>El sistema envía el mensaje, los intereses del actor y los eventos disponibles al modelo de IA Generativa.</li>
+<li>El modelo genera una respuesta conversacional recomendando eventos específicos.</li>
+<li>El sistema muestra la respuesta con enlaces directos a los eventos recomendados.</li>
+<li>El actor puede seguir conversando para refinar la recomendación.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-08" src="assets/casos-de-uso/RF08.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-09">
+<header class="rf-cab">
+<span class="rf-id">RF-09</span>
+<span class="chip chip-must">Must</span>
+<span class="rf-nota">requerimiento del profesor</span>
+</header>
+<h3>Descripción de evento generada por IA</h3>
+<p>El sistema debe generar automáticamente, a partir de datos básicos ingresados por el comercio, una descripción atractiva del evento redactada por IA Generativa. Requerimiento explícito del profesor.</p>
+<p class="rf-actor"><strong>Actor:</strong> Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio creando un evento con los datos básicos ya ingresados (RF-04).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el evento quede con una descripción atractiva generada (o editada) por IA, lista para publicarse.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor ingresa nombre, ubicación y tipo de actividad del evento.</li>
+<li>El actor selecciona "Generar descripción con IA".</li>
+<li>El sistema envía los datos básicos al modelo de IA Generativa.</li>
+<li>El modelo genera una descripción atractiva.</li>
+<li>El sistema muestra la descripción para revisión del actor.</li>
+<li>El actor acepta o edita la descripción.</li>
+<li>El sistema persiste la descripción final (no se regenera en visualizaciones futuras).</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-09" src="assets/casos-de-uso/RF09.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="must" id="rf-10">
+<header class="rf-cab">
+<span class="rf-id">RF-10</span>
+<span class="chip chip-must">Must</span>
+<span class="rf-nota">indicación del profesor</span>
+</header>
+<h3>Validación de asistencia por QR</h3>
+<p>El sistema debe generar un código QR único por asistente para eventos gratuitos confirmados y por boleto comprado para eventos pagos. El QR es de un solo uso (RNF7) y se escanea al ingreso para validar la asistencia. Indicación explícita del profesor.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario (presenta el QR), Comercio/Organizador (escanea el QR)</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor con una confirmación de asistencia o boleto para el evento (RF-07 o RF-11).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el check-in quede registrado de forma única e irrepetible.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El sistema genera un código QR único cuando el usuario confirma asistencia a un evento gratuito (RF-07) o cuando se completa la compra de una entrada para un evento pago (RF-11).</li>
+<li>El actor presenta el QR al ingreso del evento.</li>
+<li>El comercio escanea el QR con la app.</li>
+<li>El sistema valida que el QR sea auténtico, corresponda al evento y no haya sido usado antes.</li>
+<li>El sistema marca el QR como usado y registra el check-in.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-10" src="assets/casos-de-uso/RF10.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="wont" id="rf-11">
+<header class="rf-cab">
+<span class="rf-id">RF-11</span>
+<span class="chip chip-wont">Won't</span>
+<span class="rf-nota">(versión futura)</span>
+</header>
+<h3>Venta de boletería</h3>
+<p>El sistema debe permitir vender boletería dentro de la app para eventos que lo requieran, a través de Wompi. La comisión de la pasarela la descuenta Wompi del pago que recibe el comercio; el comprador paga solo el precio de la boleta. Era indicación del profesor; el 25 de noviembre el equipo la pasó a una versión futura: el cobro está construido y probado con el webhook simulado, pero no se activa en el MVP.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario (comprador)</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y un evento de pago con cupo disponible.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor quede con un boleto válido (con QR) y el organizador reciba el valor neto de la venta.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre el detalle de un evento de pago y selecciona "Comprar entrada".</li>
+<li>El sistema inicia el pago con Wompi por el precio de la boleta.</li>
+<li>El actor completa el pago.</li>
+<li>Wompi confirma el pago al sistema.</li>
+<li>El sistema liquida al organizador el valor neto, descontada la comisión de la pasarela.</li>
+<li>El sistema genera el boleto con su QR (RF-10) y descuenta el cupo.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-11" src="assets/casos-de-uso/RF11.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="should" id="rf-12">
+<header class="rf-cab">
+<span class="rf-id">RF-12</span>
+<span class="chip chip-should">Should</span>
+<span class="rf-nota">fase 2; fuera del MVP actual</span>
+</header>
+<h3>Notificaciones push</h3>
+<p>Fase 2 (fuera del MVP actual): el sistema enviará notificaciones push al usuario sobre eventos cercanos relevantes y recordatorios de asistencia a eventos confirmados con entrega a dispositivos Android mediante Firebase Cloud Messaging. iOS queda fuera de esta versión.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y con permiso de notificaciones otorgado en el dispositivo.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor reciba oportunamente notificaciones sobre eventos relevantes cercanos y recordatorios de eventos confirmados.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>Ocurre un evento relevante en el sistema (evento nuevo cercano, o recordatorio de un evento confirmado).</li>
+<li>El sistema encola la notificación correspondiente.</li>
+<li>El sistema envía el push al dispositivo del actor vía Firebase Cloud Messaging (Android).</li>
+<li>El actor recibe la notificación y puede tocarla para ir al detalle del evento.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-12" src="assets/casos-de-uso/RF12.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="could" id="rf-13">
+<header class="rf-cab">
+<span class="rf-id">RF-13</span>
+<span class="chip chip-could">Could</span>
+</header>
+<h3>Compartir eventos en redes sociales</h3>
+<p>El sistema debe permitir compartir eventos mediante enlaces hacia redes sociales externas, usando el mecanismo nativo de compartir del sistema operativo.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente el evento publicado y visible (RF-04).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que se genere y envíe un enlace público al evento hacia el destino elegido por el actor.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor abre el detalle de un evento.</li>
+<li>El actor selecciona "Compartir".</li>
+<li>El sistema invoca el mecanismo nativo de compartir del sistema operativo con un enlace al evento.</li>
+<li>El actor elige el destino (red social, chat, etc.) y envía.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-13" src="assets/casos-de-uso/RF13.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="should" id="rf-14">
+<header class="rf-cab">
+<span class="rf-id">RF-14</span>
+<span class="chip chip-should">Should</span>
+</header>
+<h3>Reporte de eventos o usuarios</h3>
+<p>El sistema debe permitir reportar eventos o usuarios; para el piloto en ECI, la moderación es una revisión manual del equipo (no automatizada).</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Equipo Festa (revisor manual)</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado y visualizando el evento o usuario a reportar.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el reporte quede registrado y, si aplica, se tome una acción de moderación sobre el evento o usuario reportado.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor selecciona "Reportar" sobre un evento o usuario.</li>
+<li>El actor indica el motivo del reporte.</li>
+<li>El sistema registra el reporte y lo pone en cola de revisión.</li>
+<li>El equipo Festa revisa manualmente el reporte y toma una acción (advertencia, retiro del contenido, ninguna acción).</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-14" src="assets/casos-de-uso/RF14.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="should" id="rf-15">
+<header class="rf-cab">
+<span class="rf-id">RF-15</span>
+<span class="chip chip-should">Should</span>
+</header>
+<h3>Panel de comercio</h3>
+<p>El sistema debe mostrar al comercio un panel simple para medir retorno (conteos de asistentes y boletos vendidos), sin ser un dashboard completo con gráficas en el MVP.</p>
+<p class="rf-actor"><strong>Actor:</strong> Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al comercio identificado y con al menos un evento publicado.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el comercio pueda ver el retorno (asistencia y ventas) atribuible a sus eventos publicados.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor accede a "Mi panel".</li>
+<li>El sistema consulta los eventos del comercio y sus métricas (asistentes confirmados, boletos vendidos).</li>
+<li>El sistema muestra los conteos por evento.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-15" src="assets/casos-de-uso/RF15.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="wont" id="rf-16">
+<header class="rf-cab">
+<span class="rf-id">RF-16</span>
+<span class="chip chip-wont">Won't</span>
+<span class="rf-nota">/ roadmap futuro</span>
+</header>
+<h3>Otorgamiento de XP (roadmap futuro)</h3>
+<p>El sistema debe otorgar XP por asistir, crear y promocionar eventos, según reglas configurables. <em>Fuera del alcance del MVP de este semestre (Won't).</em></p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente definido un sistema de reglas de puntuación configurable.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor acumule XP visible en su perfil, según las reglas vigentes.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor realiza una acción elegible (asistir, crear o promocionar un evento).</li>
+<li>El sistema evalúa la acción contra las reglas configurables.</li>
+<li>El sistema otorga la XP correspondiente al actor.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-16" src="assets/casos-de-uso/RF16.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="wont" id="rf-17">
+<header class="rf-cab">
+<span class="rf-id">RF-17</span>
+<span class="chip chip-wont">Won't</span>
+<span class="rf-nota">/ roadmap futuro</span>
+</header>
+<h3>Canje de puntos por descuentos (roadmap futuro)</h3>
+<p>El sistema debe permitir el canje de puntos por descuentos en comercios aliados, con generación y redención de cupones. <em>Fuera del alcance del MVP de este semestre (Won't).</em></p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Comercio aliado</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor con puntos acumulados (RF-16) y comercios aliados configurados.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el actor obtenga un cupón válido y sus puntos se descuenten en consecuencia.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor selecciona un descuento disponible para canjear.</li>
+<li>El sistema valida que el actor tenga puntos suficientes.</li>
+<li>El sistema genera un cupón y descuenta los puntos.</li>
+<li>El actor redime el cupón en el comercio aliado.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-17" src="assets/casos-de-uso/RF17.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="wont" id="rf-18">
+<header class="rf-cab">
+<span class="rf-id">RF-18</span>
+<span class="chip chip-wont">Won't</span>
+<span class="rf-nota">/ roadmap futuro</span>
+</header>
+<h3>Sistema de reputación (roadmap futuro)</h3>
+<p>El sistema debe mantener un sistema de reputación para creadores de eventos: ranking, insignias y mayor visibilidad en el mapa. <em>Fuera del alcance del MVP de este semestre (Won't).</em></p>
+<p class="rf-actor"><strong>Actor:</strong> Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente un historial de eventos creados y su desempeño (asistencia, calificaciones).</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que los organizadores con mejor desempeño obtengan mayor visibilidad e insignias visibles en su perfil.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El sistema calcula la reputación del actor a partir de su historial de eventos.</li>
+<li>El sistema asigna insignias y posición en el ranking según reglas definidas.</li>
+<li>El sistema aumenta la visibilidad en el mapa de los actores con mejor reputación.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-18" src="assets/casos-de-uso/RF18.png" /></p>
+</div>
+</details>
+</article>
+<article class="rf" data-prio="could" id="rf-19">
+<header class="rf-cab">
+<span class="rf-id">RF-19</span>
+<span class="chip chip-could">Could</span>
+</header>
+<h3>Parches en Vivo</h3>
+<p>El sistema debe permitir crear eventos improvisados ("Parches en Vivo") que se activan en menos de 2 horas y expiran automáticamente.</p>
+<p class="rf-actor"><strong>Actor:</strong> Usuario, Comercio/Organizador</p>
+<details class="plegable">
+<summary>Ver el detalle</summary>
+<div class="plegable-cuerpo">
+<div class="rf-condiciones">
+<div><h4>Precondiciones</h4><p>Para que el sistema cumpla con este requerimiento, Festa debe tener previamente al actor identificado.</p></div>
+<div><h4>Poscondiciones</h4><p>Se espera como resultado que el parche quede visible en el mapa mientras esté vigente, y desaparezca automáticamente al expirar.</p></div>
+</div>
+<h4>Flujo principal</h4>
+<ol>
+<li>El actor crea un "Parche en Vivo" indicando lugar, hora de inicio (dentro de las próximas 2 horas) y descripción breve.</li>
+<li>El sistema publica el evento inmediatamente en el mapa, marcado como "en vivo".</li>
+<li>El sistema expira automáticamente el evento al cumplirse su ventana de tiempo.</li>
+</ol>
+<h4>Diagrama de caso de uso</h4>
+<p><img alt="Caso de uso RF-19" src="assets/casos-de-uso/RF19.png" /></p>
+</div>
+</details>
+</article>
+</div>
+</section>
+
+<section class="bloque" aria-labelledby="no-funcionales">
+<h2 id="no-funcionales">2. Requerimientos no funcionales</h2>
+<p>El sistema de Festa debe tener:</p>
+<ul class="rnf-lista">
+<li class="rnf">
+<span class="rf-id">RNF1</span>
+<h3>Rendimiento</h3>
+<p>El mapa debe cargar los eventos visibles en menos de 2 segundos.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF2</span>
+<h3>Escalabilidad</h3>
+<p>Arquitectura desplegable en la nube, dimensionada para el piloto en ECI.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF3</span>
+<h3>Disponibilidad</h3>
+<p>Disponibilidad razonable para un piloto académico, sin SLA formal en esta etapa.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF4</span>
+<h3>Seguridad</h3>
+<p>Autenticación con tokens (JWT), cifrado en tránsito (HTTPS) y en reposo para datos personales.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF5</span>
+<h3>Privacidad</h3>
+<p>Solicitar y registrar consentimiento explícito antes de usar la ubicación del dispositivo; si se rechaza o no está disponible, informar que se usará la ubicación predeterminada del piloto ECI. Solicitar autorización para el tratamiento de datos personales conforme a la Ley 1581 de 2012.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF6</span>
+<h3>Pasarela de pagos</h3>
+<p>Integración con la pasarela de pagos Wompi para la venta de boletería.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF7</span>
+<h3>Anti-fraude</h3>
+<p>El código QR de validación debe ser único por boleto/asistente y de un solo uso.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF8</span>
+<h3>Costo de IA controlado</h3>
+<p>Las descripciones (RF9) se generan una sola vez y se persisten; las recomendaciones (RF8) tienen un límite por usuario y por minuto: 10 solicitudes de chat y 5 de descripción. El proveedor de IA es Gemini.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF9</span>
+<h3>Eficiencia de recursos</h3>
+<p>Funcionamiento fluido en dispositivos de gama media/baja, con consumo moderado de datos y batería.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF10</span>
+<h3>Compatibilidad y adaptabilidad</h3>
+<p>Soporte iOS y Android desde una sola base de código (Flutter), interfaz responsive. En el MVP la distribución es solo Android (APK); iOS queda pendiente.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF11</span>
+<h3>Usabilidad</h3>
+<p>Interfaz intuitiva sin instrucciones previas, con prevención de errores comunes mediante validaciones claras.</p>
+</li>
+<li class="rnf">
+<span class="rf-id">RNF12</span>
+<h3>Mantenibilidad</h3>
+<p>Arquitectura modular y documentada, con pruebas automatizadas mínimas en los flujos críticos (QR y pagos).</p>
+</li>
+</ul>
+</section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

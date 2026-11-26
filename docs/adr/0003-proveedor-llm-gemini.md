@@ -1,6 +1,6 @@
 # ADR 0003 — Proveedor de LLM: Gemini
 
-- **Estado:** Aceptada
+- **Estado:** Reemplazada por [ADR 0006](0006-proveedor-llm-groq.md) (Groq, 25-nov-2026)
 - **Fecha:** 2026-11-01
 - **Participantes:** decidido por Juan Sebastián Guayazán Clavijo; el equipo Desparcha2 debe ratificarlo.
 - **Historias relacionadas (Jira):** SCRUM-30 (RF8), SCRUM-31 (RF9), SCRUM-98
