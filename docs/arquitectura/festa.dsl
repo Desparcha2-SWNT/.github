@@ -6,10 +6,10 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
     # Despliegue en AWS: ADR 0001. Proveedor de LLM: ADR 0003.
 
     model {
-        persona = person "Persona interesada en eventos" "Descubre eventos y planes en un mapa, recibe recomendaciones, confirma su asistencia y compra boletas."
-        comercio = person "Comercio / organizador" "Crea y gestiona eventos, vende boletería, valida entradas con QR y mide el retorno desde su panel."
+        persona = person "Persona interesada en eventos" "Descubre eventos y planes en un mapa, recibe recomendaciones, confirma su asistencia y entra con un QR."
+        comercio = person "Comercio / organizador" "Crea y gestiona eventos, valida entradas con QR y mide el retorno desde su panel."
 
-        pagos = softwareSystem "Wompi (pasarela de pagos)" "Servicio externo donde la persona paga en un checkout firmado; confirma el resultado por webhook." "External"
+        pagos = softwareSystem "Wompi (pasarela de pagos, versión futura)" "Cobro de boletas en un checkout firmado, confirmado por webhook. Construido, pero no se activa en el MVP (RF11)." "External"
         ia = softwareSystem "Groq API" "Modelo de lenguaje externo para descripciones de eventos y recomendaciones (ADR 0006)." "External"
         notificaciones = softwareSystem "Firebase Cloud Messaging" "Servicio de Google que entrega las notificaciones push al dispositivo Android." "External"
         identidad = softwareSystem "Google Identity" "Autenticación federada (OAuth2). El backend la soporta; el inicio de sesión con Google en la app queda fuera del MVP." "External"
@@ -19,7 +19,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
             administrador = person "Administrador de la plataforma" "Verifica comercios y modera reportes; soporte interno del producto."
             equipoPlataforma = person "Equipo de plataforma (DevOps)" "Perfil técnico interno: despliega, configura y monitorea la infraestructura de Festa."
 
-            festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa, con recomendaciones por IA y venta de boletería." {
+            festa = softwareSystem "Festa" "Aplicación que centraliza el descubrimiento de eventos en un mapa, con recomendaciones por IA y entrada con QR." {
                 mobile = container "festa-mobile" "App del usuario y vista de comercio: mapa, chat con IA, compra, pases QR, escáner y panel (RF15). Caché local del último listado." "Flutter (Android)" "Mobile"
                 gateway = container "festa-gateway" "Punto de entrada único: enruta peticiones, valida el JWT y aplica rate limiting (RNF8)." "Kong 3.9 DB-less (tarea en Amazon ECS Fargate)"
                 auth = container "festa-auth-service" "RF1: registro e inicio de sesión con correo y Google; emite el JWT." "Spring Boot 3.5 (tarea en Amazon ECS Fargate)" {
@@ -201,7 +201,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         festa.booking.outbox -> festa.broker "Publica eventos" "AMQP"
         festa.gateway -> festa.booking.api "Enruta peticiones" "REST"
         festa.payment.ordenes -> festa.payment_db "Lee y escribe órdenes" "SQL"
-        pagos -> festa.payment.webhook "Confirma el pago" "HTTPS"
+        pagos -> festa.payment.webhook "Confirmará el pago (versión futura)" "HTTPS"
         festa.broker -> festa.payment.inbox "Entrega eventos" "AMQP"
         festa.payment.outbox -> festa.broker "Publica eventos de pago" "AMQP"
         festa.gateway -> festa.payment.api "Enruta peticiones" "REST"
@@ -213,8 +213,8 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         festa.ai.outbox -> festa.broker "Publica uso de IA" "AMQP"
         festa.gateway -> festa.ai.api "Enruta peticiones" "REST"
 
-        persona -> festa.mobile "Descubre eventos, compra y muestra su QR"
-        persona -> pagos "Paga en el checkout" "HTTPS"
+        persona -> festa.mobile "Descubre eventos, confirma asistencia y muestra su QR"
+        persona -> pagos "Pagará en el checkout (versión futura)" "HTTPS"
         comercio -> festa.mobile "Crea eventos, valida QR y consulta su panel"
         administrador -> festa "Verifica comercios y modera reportes"
         equipoPlataforma -> festa.observabilidad "Monitorea la plataforma"
