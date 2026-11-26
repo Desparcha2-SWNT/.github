@@ -1906,3 +1906,666 @@ FORMATO: Entradas P48 a P74 con la plantilla.
 - **Resultado obtenido:** Este borrador (P48 a P74), pendiente de aprobación del autor antes de commit y push a `docs/bitacora-prompts`. No se abre PR a `main`.
 - **Validación (riesgos):** La primera versión inventaba cifras y mezclaba trabajo de otros integrantes; se descartó y se rehízo con verificación. La segunda versión sobrecargó los prompts con la estructura completa de la plataforma ADA; se redujeron a una estructura mínima (rol, tarea, restricciones y formato) conservando lo que pidió el usuario.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## Etapa 6 — Sprint 4: reportes, compartir y moderación en la app (24 y 25 de noviembre de 2026)
+
+## P75
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Persona + Context Grounding (organización, Jira y Figma como fuentes) + Structured Output
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador del equipo Festa que se incorpora al Sprint 4.
+TAREA: Revisa los repositorios de la organización Desparcha2-SWNT para entender la arquitectura (app Flutter, gateway Kong y microservicios). Luego entra al backlog de Jira (proyecto SCRUM) y lista las tareas del Sprint 4 asignadas a Sebastián Duque. Usa el Figma como referencia de diseño y cruza todo con el mensaje del equipo sobre lo que falta (PR por revisar, RF12, RF13, RF14, RF19, sitio de documentación, bitácora y presentación).
+RESTRICCIONES: Básate solo en lo que esté en el código, en Jira o en Figma; si algo no se puede leer, dilo. No modifiques nada en Jira ni en GitHub sin preguntarme.
+FORMATO: Resumen de la arquitectura y una tabla de pendientes con tarea, estado, dueño y si ya existe algo en el código.
+```
+
+- **Resultado obtenido:** Mapa de la app (Riverpod, go_router, Dio con JWT) y de los servicios detrás de Kong. Tabla de pendientes: PR #41 y #32 por revisar; RF14 (reportes) sin pantallas en la app aunque user-service ya tenía los endpoints; compartir evento sin implementar.
+- **Validación (riesgos):** Riesgo mitigado: alucinación sobre el estado del proyecto. Cada afirmación se contrastó con el código de `develop` y con el tablero. Figma solo se pudo ver en modo lectura, con capturas de pantalla.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P76
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Role-play adversarial (revisor de código) + Delimitadores (criterios de aceptación de la HU y pantallas de Figma)
+- **Prompt utilizado:**
+
+```
+ROL: Revisor exigente de los PR de festa-mobile.
+TAREA: Revisa los PR #41 («Mis entradas» con el QR sin conexión, SCRUM-91) y #32 (SCRUM-90). Compáralos con los criterios de aceptación de la historia y con las pantallas de Figma. Busca bugs reales: flujos que no se pueden alcanzar, estados sin manejar y diferencias de diseño.
+RESTRICCIONES: Separa los bloqueantes de las sugerencias. Cada hallazgo debe decir cómo reproducirlo. No publiques los comentarios hasta que yo los apruebe.
+FORMATO: Lista de hallazgos por PR, con la severidad y el texto listo para el comentario.
+```
+
+- **Resultado obtenido:** En #41, un bloqueante: el QR sin conexión no se alcanza si la app arranca en frío sin red. En #32, diferencias con el Figma. Los comentarios se publicaron tras la aprobación del autor.
+- **Validación (riesgos):** Riesgo mitigado: el sesgo de autoconfirmación, es decir, aprobar sin probar. Cada hallazgo se trazó en el código del PR antes de publicarlo.
+- **Decisión de uso:** Aceptado. El autor eligió cuáles comentarios publicar.
+
+
+---
+
+## P77
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Negative Constraints
+- **Prompt utilizado:**
+
+```
+TAREA: Instala Flutter en este PC para poder correr flutter analyze y flutter test en festa-mobile.
+RESTRICCIONES: La terminal usa fish, no bash: configura el PATH en la sintaxis de fish. No uses sudo ni instales el SDK de Android (no hace falta para las pruebas).
+FORMATO: Los comandos que ejecutaste y la verificación final con flutter --version.
+```
+
+- **Resultado obtenido:** Flutter quedó en `~/development/flutter`, con el PATH configurado en fish. `flutter analyze` y `flutter test` corren sobre el proyecto.
+- **Validación (riesgos):** Riesgo detectado después (ver P81): con una versión local de Flutter distinta, `pub get` reescribe `pubspec.lock`. Desde entonces se revisa el diff del lock antes de cada commit.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P78
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparar el costo de cada opción) + Restricción de alcance
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que prioriza el trabajo que falta antes de la sustentación.
+TAREA: De lo que falta (reportes, notificaciones push, compartir y Parches en Vivo; Google queda fuera del MVP), razona paso a paso cuál es lo más sencillo de implementar en la app y no está hecho ni en curso por otro integrante.
+RESTRICCIONES: Revisa ramas, PR abiertos y asignaciones en Jira para no duplicar trabajo. Para cada opción, di si el backend ya la soporta. No empieces a programar hasta que yo elija.
+FORMATO: Tabla con la opción, el esfuerzo, las dependencias del backend y una recomendación.
+```
+
+- **Resultado obtenido:** Recomendación: Reportes (SCRUM-109), porque user-service ya expone `POST /api/reports`, y Compartir (SCRUM-107), que solo usa el menú del sistema. Push y Parches en Vivo requieren infraestructura adicional. El autor eligió las dos primeras.
+- **Validación (riesgos):** Riesgos mitigados: la sobre-ingeniería y la duplicación de trabajo. Se verificó que nadie tenía ramas ni PR abiertos sobre esas tareas.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P79
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (contrato real del backend) + Few-shot (patrones existentes del código) + TDD
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-109: desde el detalle de un evento se puede reportar el evento o a su organizador. La hoja de reporte tiene el motivo (spam, fraude, contenido inapropiado, información falsa, acoso u otro) y un comentario opcional, y llama a POST /api/reports de user-service.
+RESTRICCIONES: Usa exactamente los valores y límites del backend (lee el DTO de user-service): el comentario tiene máximo 500 caracteres. Sigue los patrones del repo: Riverpod, authenticatedDioProvider, ApiException y los tokens FestaSpace y FestaColors. No muestres «Reportar al organizador» si el evento es mío. Escribe pruebas de la API y de widget con mocktail.
+FORMATO: Código, pruebas, y flutter analyze y flutter test en verde.
+```
+
+- **Resultado obtenido:** `ReportSheet`, `ReportsApi` y el menú del detalle del evento, con pruebas de la API y de la hoja de reporte. Se fusionó como PR #42 (`893c8d7`).
+- **Validación (riesgos):** Riesgo mitigado: un bug silencioso. `@Size(max=500)` de Java cuenta unidades UTF-16, así que un emoji ocupa dos. La app valida igual que el servidor y no rechaza tarde. Las pruebas de widget fallaban al tocar controles fuera de pantalla; se corrigieron con `ensureVisible`, sin relajar las aserciones.
+- **Decisión de uso:** Aceptado tras revisión de un compañero.
+
+
+---
+
+## P80
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Structured Output (formato del mensaje compartido)
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-107: un botón para compartir el evento con el menú del sistema (share_plus). El texto lleva el título, la fecha, el lugar, el precio y el enlace de descarga de la app.
+RESTRICCIONES: No muestres el botón si el evento está cancelado. Si el evento no tiene dirección, no dejes comas sueltas. El enlace de descarga se configura con --dart-define y por defecto apunta al último release. Pon el envío detrás de una interfaz para poder probarlo sin la plataforma. Agrega solo los paquetes nuevos al pubspec.lock.
+FORMATO: Código y pruebas del texto generado y del botón.
+```
+
+- **Resultado obtenido:** `eventShareText`, `EventSharer` y `_ShareButton` en el detalle del evento, con sus pruebas. Se fusionó como PR #43 (`92cb7ab`).
+- **Validación (riesgos):** Riesgo mitigado: la inconsistencia del texto según los datos del evento; se probaron casos con y sin dirección. En la primera versión del PR, el lock subía versiones fijadas por el SDK (ver P81).
+- **Decisión de uso:** Aceptado con ajustes.
+
+
+---
+
+## P81
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Self-Critique + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+TAREA: Haz los commits y abre los PR de SCRUM-109 y SCRUM-107. Corrige los comentarios de la revisión de Brayan. Cuando estén aprobados, fusiónalos en develop y resuelve los conflictos con lo que entró mientras tanto (#37 y #40).
+RESTRICCIONES: Los commits van con mi identidad de git. Antes de cada push, revisa tu propio diff y comprueba que lo que dice la descripción del PR es cierto, sobre todo en pubspec.lock. Fusiona solo sobre el último commit aprobado.
+FORMATO: Enlace de cada PR, conflictos resueltos y commit de merge.
+```
+
+- **Resultado obtenido:** Se abrieron y fusionaron los PR #42 y #43. Se resolvieron los conflictos del AppBar del detalle (compartir y reportar), de `app_config.dart` y `pubspec.yaml` con `package_info_plus` (#40) y del lock.
+- **Validación (riesgos):** Error de la IA detectado en la revisión: la descripción de #43 afirmaba que en el lock solo entraban los paquetes nuevos, pero el Flutter local había subido `meta`, `test_api` y `vector_math`. Se corrigió conservando los bloques de `develop` y agregando solo los nuevos. Segundo error: cambiar la base de un PR apilado descarta su aprobación, así que hubo que pedir de nuevo la revisión. Riesgo mitigado: la autoconfirmación en las descripciones de los PR.
+- **Decisión de uso:** Aceptado con ajustes.
+
+
+---
+
+## P82
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5) con Claude in Chrome
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+TAREA: Actualiza Jira: asígname SCRUM-109 y SCRUM-107 y pásalas a Finalizado, porque sus PR ya están en develop.
+RESTRICCIONES: Solo esas dos tareas. Confirma el estado final leyendo de nuevo cada issue.
+FORMATO: El estado antes y después de cada tarea.
+```
+
+- **Resultado obtenido:** SCRUM-109 y SCRUM-107 quedaron asignadas al autor y en Finalizado.
+- **Validación (riesgos):** Riesgo mitigado: reportar un estado de Jira que no se aplicó. Se volvió a leer cada issue después de la transición.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P83
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (controladores de user-service y auth-service) + Few-shot (pantallas del equipo ya existentes) + TDD
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-110: para cuentas admin, una cola de reportes abiertos (GET /api/users/admin/reports) con qué se reporta, el motivo, el comentario y hace cuánto. Al abrir un reporte, muestra el evento o la cuenta reportada (GET /api/auth/admin/accounts/{id}) y permite descartarlo.
+RESTRICCIONES: Lee los controladores reales para el contrato: el estado de la cuenta viene en minúscula. Reutiliza el estilo de las pantallas de solicitudes de comerciante extrayendo los widgets comunes en lugar de copiarlos. Maneja los estados vacío, de error con reintento, sin red y 409 (otra persona ya lo cerró). Mientras se envía, bloquea volver atrás y enviar de nuevo.
+FORMATO: Código, pruebas de widget con hora fija y el PR.
+```
+
+- **Resultado obtenido:** `ReportQueueScreen`, `ReportReviewScreen`, `TeamReportsApi` y `team_widgets.dart`, compartido con las pantallas de comerciante. Hay un botón «Reportes» en el inicio para admins. Se fusionó como PR #49 (`0c61486`).
+- **Validación (riesgos):** Bug evitado al leer el backend: el estado llega como `suspended`, no `SUSPENDED`. Las pruebas cubren la carrera de dos admins (409) y la falta de red. Riesgo mitigado: la cobertura falsa de pruebas, porque se usa una hora inyectada en vez de la del sistema.
+- **Decisión de uso:** Aceptado tras revisión de un compañero.
+
+
+---
+
+## P84
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (eventos de RabbitMQ de moderación) + TDD + Negative Constraints
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-111 sobre la cola de SCRUM-110: desde un reporte, el admin puede ocultar el evento o suspender la cuenta, con un motivo opcional y, para cuentas, una duración (7 días, 30 días o sin fin). Usa POST /api/users/admin/reports/{id}/resolve.
+RESTRICCIONES: Confirma la acción en un diálogo. El motivo respeta el límite de 500 en UTF-16. La fecha de fin se envía en UTC y se cuenta desde ahora. No inventes campos: usa solo los que acepta el DTO de user-service. El mensaje final dice qué pasó realmente (por ejemplo, que el evento ya no aparece en el mapa).
+FORMATO: Código, pruebas y un PR apilado sobre #49.
+```
+
+- **Resultado obtenido:** Botones «Ocultar evento» y «Suspender cuenta» con un diálogo de motivo y duración. Pruebas de los tres caminos, del límite de emojis y de la cancelación. Se fusionó como PR #50 (`958afc8`). Con esto, RF14 funciona en la app de punta a punta.
+- **Validación (riesgos):** Riesgo mitigado: alucinación del contrato. Los campos `outcome`, `action` y `suspendedUntil` se tomaron del controlador. No hay pantalla para deshacer una acción, aunque el backend lo permite; queda como pendiente.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P85
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Self-Critique + Few-shot (entradas P48 a P74 como formato)
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de la bitácora de prompts de Festa.
+TAREA: Con base en el trabajo de esta sesión, registra mis prompts en BITACORA_PROMPTS.md, en la rama docs/bitacora-prompts. Agrupa los mensajes por tarea y redacta cada prompt con la estructura de la bitácora (rol, tarea, restricciones y formato).
+RESTRICCIONES: Resultados verificables (número de PR y commit de merge); no inventes cifras. Incluye los errores que cometió la IA y cómo se corrigieron. Sin correos ni datos personales.
+FORMATO: Entradas P75 en adelante con la plantilla vigente.
+```
+
+- **Resultado obtenido:** Entradas P75 a P85 (Etapa 6).
+- **Validación (riesgos):** Los números de PR y los commits se verificaron con `gh pr view`. Riesgo mitigado: una bitácora que exagera lo que hizo la IA o esconde sus errores (ver P81).
+- **Decisión de uso:** Aceptado por el autor al pedir su publicación.
+
+
+---
+
+## Etapa 7: CI/CD, servicios del backend y despliegue en AWS (28 de octubre al 17 de noviembre de 2026)
+
+## P86
+- **Fecha:** 2026-10-28
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** System Persona (tutor pedagógico) + Context Grounding (carpeta de contexto, los 12 repositorios y Jira) + descomposición del problema («por partes»)
+- **Prompt utilizado:**
+
+```
+ROL: Compañero de desarrollo que explica cada paso de forma pedagógica.
+TAREA: Lee el contexto del proyecto (carpeta FESTA_CONTEXT y el mensaje del equipo), clona los 12 repositorios de Desparcha2-SWNT e instala el MCP de Jira para ver lo que está asignado a mi nombre. Con eso haz una planeación minuciosa del proyecto, para trabajarlo por partes.
+RESTRICCIONES: Regla de oro: no aparecer como coautor en GitHub; los commits van solo a mi nombre. Verifica en Jira lo que de verdad está asignado antes de trabajar.
+FORMATO: Plan por sprints con mis tareas, y una explicación de para qué sirve cada repositorio.
+```
+
+- **Resultado obtenido:** Repositorios clonados en una carpeta de trabajo, MCP de Jira instalado y plan por sprints semanales con las tareas de Brayan (Sprint 1: CI/CD, SCRUM-15; Sprint 2: secretos y editar o cancelar evento; Sprint 3: API de asistencia; Sprint 4: pagos). La regla de no incluir a la IA como coautora quedó configurada en Claude Code y en las reglas del espacio de trabajo.
+- **Validación (riesgos):** Riesgo mitigado: trabajar sobre tareas que no son propias o que ya cambiaron. El plan se contrastó con el tablero de Jira y no solo con los documentos del curso.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P87
+- **Fecha:** 2026-10-28 al 2026-10-30
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5 el 28 de octubre; Sonnet 5 el 29 y 30)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida, un repositorio a la vez (descomposición) + preguntas de verificación sobre las decisiones de la IA
+- **Prompt utilizado:**
+
+```
+ROL: Ingeniero de DevOps del equipo.
+TAREA: Arma el CI de cada repositorio (SCRUM-44), uno por uno: auth-service, gateway, infra y mobile. Después el CD (SCRUM-45): imagen en GHCR para los servicios y el APK como release con QR para la app. Documenta la gestión de secretos (SCRUM-49).
+RESTRICCIONES: Explícame para qué sirve cada parte antes de hacerla. Si algo queda desactivado (por ejemplo CodeQL), dime por qué. Los repos solo se hacen públicos si el equipo está de acuerdo.
+FORMATO: Un PR por repositorio, con el enlace para que el equipo lo apruebe.
+```
+
+- **Resultado obtenido:** CI en auth-service #1 y #2, gateway #1, infra #1, mobile #3 y .github #5 y #6; CD en auth-service #3, gateway #2 y mobile #4; secretos documentados en infra #2. Las revisiones del equipo encontraron cuatro fallas que se corrigieron en infra #3 (referencias de secretos desalineadas), infra #4 (la prueba de aislamiento no cubría todos los pares de bases), auth-service #4 (el filtro de rutas del CD no detectaba cambios de código) y mobile #5 (el APK publicado no podía conectarse desde un teléfono físico; ahora el release falla si falta `API_BASE_URL`).
+- **Validación (riesgos):** Riesgo mitigado: un pipeline que pasa en verde sin probar nada. Al preguntar por qué CodeQL salía como «desactivado a propósito», se vio que necesitaba repos públicos; se hicieron públicos con el acuerdo del equipo y se activó.
+- **Decisión de uso:** Aceptado con ajustes: los cuatro hallazgos de la revisión se corrigieron antes de fusionar.
+
+
+---
+
+## P88
+- **Fecha:** 2026-10-29 al 2026-10-30
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Sonnet 5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Iteración guiada por revisión externa (los hallazgos del revisor van entre delimitadores) + verificación explícita de cada hallazgo
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador backend de festa-event-service.
+TAREA: Crea el esqueleto del servicio y la API para crear un evento (SCRUM-64). Después corrige cada ronda de hallazgos de la revisión que te pego (claim del JWT, outbox sin idempotencia, mensajes que se atascan en la inbox, migraciones sin candado, reconexión de RabbitMQ, contador de reintentos).
+RESTRICCIONES: Verifica todo minuciosamente: cada hallazgo debe quedar corregido con una prueba, no solo con el cambio. Dime si alguno no aplica y por qué.
+FORMATO: Commits por ronda y un resumen de qué se corrigió y con qué prueba.
+```
+
+- **Resultado obtenido:** event-service #1 fusionado después de cuatro rondas de revisión: rol leído del claim correcto, `eventId` persistido en el outbox, filas reclamadas con `FOR UPDATE SKIP LOCKED`, mensajes malformados a la DLQ, migraciones con candado de Postgres, reconexión de RabbitMQ sin trabajadores duplicados y contador de reintentos validado.
+- **Validación (riesgos):** Riesgo mitigado: bugs silenciosos de concurrencia que el CI no detecta (las pruebas pasaban en verde desde la primera ronda). Cada hallazgo se reprodujo con una prueba antes de corregirlo.
+- **Decisión de uso:** Aceptado. Las correcciones se fusionaron después de la aprobación del revisor.
+
+
+---
+
+## P89
+- **Fecha:** 2026-10-30
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Sonnet 5)
+- **Fase del SDLC:** Diseño
+- **Técnica de prompting utilizada:** Context Grounding multimodal (diagrama de Lucidchart por MCP e imagen) + contraste con restricciones reales (AWS Learner Lab)
+- **Prompt utilizado:**
+
+```
+ROL: Arquitecto de nube que revisa un diseño antes de implementarlo.
+TAREA: Analiza el diagrama de arquitectura en AWS del equipo (Lucidchart) y el inventario de recursos que hizo otro integrante. Compáralos con lo que de verdad permite el Learner Lab.
+RESTRICCIONES: Conéctate al diagrama directamente, no te bases solo en la descripción. Los cambios van en una copia, no en el original.
+FORMATO: Lista de hallazgos, un mensaje para Juan pidiendo que los confirme y la copia corregida del diagrama.
+```
+
+- **Resultado obtenido:** Lista de hallazgos y mensaje para Juan. En la copia del diagrama se corrigieron solo errores objetivos u omisiones claras: el ícono de Grafana (era de Azure), la nota de bases de datos (DocumentDB con instancia compartida y credenciales separadas, como Postgres), un balanceador con TLS entre la app y el gateway, y el NAT Gateway con el Internet Gateway dentro de la VPC. Las decisiones que le tocaban a Juan, como el proveedor de IA o ECR frente a GHCR, quedaron señaladas sin resolver.
+- **Validación (riesgos):** Riesgo mitigado: que la IA tome decisiones de arquitectura que no le corresponden. No se tocó el diagrama original, y la copia se exportó como imagen para revisar que todo quedara legible. Las restricciones del Learner Lab (sin DocumentDB, Amazon MQ, Cloud Map ni CloudFront) aparecieron después, en el despliegue real (P91).
+- **Decisión de uso:** Aceptado con ajustes: el equipo confirmó los hallazgos antes de llevarlos al diagrama oficial.
+
+
+---
+
+## P90
+- **Fecha:** 2026-11-03 al 2026-11-07
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Sonnet 5 hasta el 4 de noviembre; Opus 5.5 desde el 6)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Role-play adversarial (revisor de toda la organización) + regla de decisión explícita (comentar o fusionar)
+- **Prompt utilizado:**
+
+```
+ROL: Revisor de los PR de toda la organización.
+TAREA: Haz un barrido de todos los repos y de Jira. En cada PR abierto, revisa si algo está mal o es incongruente con los contratos entre servicios.
+RESTRICCIONES: Si encuentras algo, deja los comentarios y no lo fusiones; si todo está bien, fusiónalo. Cuadra los nombres de los eventos con los contratos. Corrige solo lo que el autor me pidió corregir.
+FORMATO: Reporte de PRs (fusionados, comentados y por qué) y los mensajes para el equipo.
+```
+
+- **Resultado obtenido:** Barridos periódicos con reporte por PR. Con el visto bueno de Manuel se ajustaron los nombres de los eventos a los contratos y se abrió user-service #1 (perfil, intereses, consentimientos y verificación de comercio). También se alinearon el contrato de comercio (infra #5, categoría «otro») y las variables de Compose (infra #6).
+- **Validación (riesgos):** Riesgo mitigado: inconsistencia entre servicios (nombres de eventos que no coinciden con los esquemas de `contracts/`). Cada cambio se validó contra el esquema JSON del contrato.
+- **Decisión de uso:** Aceptado. La IA solo fusionó lo que no tenía hallazgos.
+
+
+---
+
+## P91
+- **Fecha:** 2026-11-07
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida con restricciones del entorno + Chain-of-Thought (diagnóstico de cada error del despliegue) + registro de lecciones
+- **Prompt utilizado:**
+
+```
+ROL: Ingeniero de infraestructura del equipo.
+TAREA: Integra Terraform en el pipeline para desplegar en el AWS Learner Lab y haz el primer despliegue (gateway, auth, user y event). Al terminar, guarda todos los errores y sus soluciones para poder desplegar otro día, y destruye todo.
+RESTRICCIONES: Las credenciales del lab son temporales: úsalas solo para el despliegue y no las guardes en el repositorio. Avísame cuando termine cada paso. Al final no debe quedar nada consumiendo créditos.
+FORMATO: PRs de infraestructura, enlace para probar el API y un runbook con los errores y cómo se resolvió cada uno.
+```
+
+- **Resultado obtenido:** Despliegue con Terraform y workflow de apply y destroy (infra #9 a #13; gateway #5 y #6; event-service #5 y #6). El registro, el perfil por RabbitMQ y la creación de eventos funcionaron de punta a punta por HTTPS. El runbook con los 28 errores del despliegue y su solución quedó en infra #14.
+- **Validación (riesgos):** Riesgo mitigado: repetir el diagnóstico en cada despliegue y dejar recursos encendidos. El destroy se verificó en la consola de AWS: solo quedó el bucket del estado de Terraform. Las credenciales temporales que se pegaron en la conversación no se registran en esta bitácora.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P92
+- **Fecha:** 2026-11-09 al 2026-11-10
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Role-play adversarial (revisión de seguridad del workflow) + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+ROL: Responsable del despliegue de la app.
+TAREA: Vuelve a encender el backend en el lab y publica el APK como GitHub Release apuntando a ese API. Revisa los PR de Juan del CD de la app antes de aprobarlos.
+RESTRICCIONES: El APK no debe salir apuntando al emulador. Al terminar, apaga back y front.
+FORMATO: Release con el APK y su QR, comentarios en los PR y confirmación de que todo quedó destruido.
+```
+
+- **Resultado obtenido:** Release del APK con la URL del API al fusionar mobile #8 en `main`. En mobile #9 (republicar el APK a mano) la revisión encontró que la URL se podía ejecutar como comando dentro de `flutter build` (`https://x.com;curl ...|sh` pasaba la validación); se propuso validarla con una expresión estricta y pasarla por variable de entorno. Juan aplicó el arreglo en #9 y mobile #10 lo pasó a `main`. Todo quedó destruido al final.
+- **Validación (riesgos):** Riesgo mitigado: inyección de comandos en el pipeline. El hallazgo se demostró con una URL de ejemplo antes de comentarlo.
+- **Decisión de uso:** Aceptado. Juan aplicó la corrección propuesta.
+
+
+---
+
+## P93
+- **Fecha:** 2026-11-11
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Verificación previa de alcance (¿está en mis tareas?) + Instrucción dirigida por partes
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador backend de festa-booking-service.
+TAREA: Arranca con el esqueleto de booking y sigue con la API de asistencia a eventos gratis (SCRUM-71). Permite también que el creador cancele su evento (SCRUM-68).
+RESTRICCIONES: Antes de empezar, confirma en Jira que esas tareas están a mi nombre. PRs pequeños y apilados, uno por paso.
+FORMATO: PRs con enlace para que Juan los apruebe.
+```
+
+- **Resultado obtenido:** booking-service #1 (esqueleto), #2 (outbox e inbox de RabbitMQ) y #3 (API de asistencia), y event-service #7 (cancelar evento con aviso a los asistentes). Se fusionaron en orden después de la revisión.
+- **Validación (riesgos):** Riesgo mitigado: duplicar trabajo de otro integrante. La asignación se confirmó en Jira antes de escribir código.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P94
+- **Fecha:** 2026-11-12 al 2026-11-14
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Structured Output (reporte con métricas) + corrección verificada con el CI
+- **Prompt utilizado:**
+
+```
+ROL: Coordinador técnico del sprint.
+TAREA: Haz un reporte de los PRs para que Juan decida qué hacer, y dime qué falta del Sprint 2 con métricas. Verifica los PRs abiertos, corrige los fallos que encuentres (por ejemplo la ruta del mapa en mobile #11) y redirige a develop los PRs que apuntaban a otra rama.
+RESTRICCIONES: Distingue cuáles puedo aprobar yo y cuáles deben aprobar otras personas. Valida con el CI antes de fusionar.
+FORMATO: Reporte en Markdown y mensajes para Juan con los enlaces.
+```
+
+- **Resultado obtenido:** Reporte de PRs en Markdown, métricas del Sprint 2 y la ruta del mapa corregida en mobile #11 (fue necesario instalar Flutter 3.50 en el equipo para correr las pruebas). Se movieron SCRUM-69 y SCRUM-71 a En revisión.
+- **Validación (riesgos):** Riesgo mitigado: aprobar PRs propios. La regla de `develop` no cuenta la aprobación de quien subió commits, así que el reporte separó qué podía aprobar Brayan y qué debía aprobar otra persona.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P95
+- **Fecha:** 2026-11-16
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought con supuestos explícitos + validación del equipo en el PR
+- **Prompt utilizado:**
+
+```
+ROL: Analista de costos de la plataforma.
+TAREA: Arma el modelo de costos de Festa por transacción y por fase en AWS (SCRUM-131).
+RESTRICCIONES: Cada cifra sale de un supuesto escrito o de un precio verificable; nada inventado. Los supuestos los aprueba el equipo en el PR.
+FORMATO: Documento en docs/costos con un script que recalcule los números.
+```
+
+- **Resultado obtenido:** Modelo de costos en .github #19 (`docs/costos/` con `modelo_costos.py`), con los supuestos aprobados por el equipo el 16 de noviembre.
+- **Validación (riesgos):** Riesgo mitigado: cifras inventadas. Cada número sale de un supuesto escrito en el documento, y el script permite recalcular si el equipo cambia uno.
+- **Decisión de uso:** Aceptado con ajustes: el equipo revisó los supuestos en el PR.
+
+
+---
+
+## Etapa 8: App móvil, cierre del MVP y despliegue final (17 al 26 de noviembre de 2026)
+
+## P96
+- **Fecha:** 2026-11-17 al 2026-11-19
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida de punta a punta (backend, contrato y app) + iteración guiada por revisión
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador full stack del equipo.
+TAREA: Arranca con SCRUM-141 (lista de asistentes del evento para el organizador) y SCRUM-142 (mis planes, próximos y pasados): API en booking, contratos y pantallas en la app. Corrige lo que pidan en los hilos de revisión y respóndelos.
+RESTRICCIONES: Un PR por capa. Haz push y abre los PRs solo cuando te lo diga. Mueve las tareas en Jira al abrir el PR.
+FORMATO: Enlaces de los PRs y el estado de las tareas.
+```
+
+- **Resultado obtenido:** booking-service #5, #6 y #7; infra #18 (contrato); auth-service #9; mobile #22 a #27. Juan encontró dos carreras en la revisión: una revocación doble cuando llegaban a la vez la cancelación del evento y el borrado de la cuenta, y un nombre que se podía reescribir después del borrado. Se corrigieron con un `UPDATE` condicionado y un candado por usuario, con pruebas que reproducen la concurrencia en Postgres.
+- **Validación (riesgos):** Riesgo mitigado: condiciones de carrera que las pruebas de un solo hilo no muestran. Las pruebas esperan a que la otra transacción quede bloqueada (`pg_stat_activity`) antes de soltar el candado, así la carrera ocurre de verdad.
+- **Decisión de uso:** Aceptado. Las correcciones se aprobaron en la segunda ronda.
+
+
+---
+
+## P97
+- **Fecha:** 2026-11-20 al 2026-11-25
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Structured Output (tablero) + rúbrica explícita de calificación (Hecho, Parcial, Falta)
+- **Prompt utilizado:**
+
+```
+ROL: Responsable del seguimiento del proyecto.
+TAREA: Haz un reporte del porcentaje de finalización del proyecto y actualízalo con cada barrido. Ordena Jira para que refleje lo que ya está fusionado.
+RESTRICCIONES: El avance real se mide contra el código de develop, no solo contra Jira. Un PR abierto cuenta como parcial. Antes de cerrar una historia, comprueba que todas sus subtareas estén terminadas y deja un comentario con el PR.
+FORMATO: Tablero publicado con el avance del MVP (backend y app) y el de Jira.
+```
+
+- **Resultado obtenido:** Tablero «Avance de FESTA» con el porcentaje real del MVP por requisito y el de Jira. Al ordenar Jira se cerraron las tareas de la comisión del 8 % que ya no aplicaban (SCRUM-27, 86 y 87) y otras 15 cuyo trabajo ya estaba fusionado, cada una con un comentario que enlaza su PR. Jira pasó de 48 % a 74 % de tareas finalizadas.
+- **Validación (riesgos):** Riesgo mitigado: un avance inflado. La IA empezó por error SCRUM-109, que estaba fuera del MVP; se revirtió y el alcance del reporte se fijó en RF1 a RF11 y RF15.
+- **Decisión de uso:** Aceptado con ajustes: se corrigió el alcance del MVP.
+
+
+---
+
+## P98
+- **Fecha:** 2026-11-20 al 2026-11-21
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida + coordinación explícita con el equipo antes de tomar tareas ajenas
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador de la app móvil.
+TAREA: Mientras se aprueban los PRs, adelanta lo que más falta en la app: confirmar y cancelar la asistencia desde el detalle (SCRUM-70), los eventos sin conexión en el mapa (SCRUM-140), «Mis entradas» con el QR (SCRUM-90) y el escáner del comercio (SCRUM-92).
+RESTRICCIONES: SCRUM-70 era de Isaac: redacta el mensaje para preguntarle antes de tomarla. Verifica que no haya solapamiento con los PRs abiertos antes del push.
+FORMATO: Un PR por tarea, con pruebas.
+```
+
+- **Resultado obtenido:** mobile #29 (asistencia), #30 (eventos sin conexión), #32 (Mis entradas) y #35 (escáner). Isaac confirmó que no podía tomar SCRUM-70 antes de empezar. En #32, la revisión de Duque comparó con el Figma y se agregaron el botón «Ver mi QR» desde Mis planes y el estado del boleto.
+- **Validación (riesgos):** Riesgo mitigado: conflictos entre PRs que tocan los mismos archivos. Antes de cada push se unieron las ramas abiertas en una copia aparte de `develop` y se corrieron todas las pruebas.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P99
+- **Fecha:** 2026-11-21 al 2026-11-26
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Role-play adversarial (revisor) + verificación contra el código de los otros servicios
+- **Prompt utilizado:**
+
+```
+ROL: Revisor de los PRs del equipo.
+TAREA: Revisa los PRs de Juan, Duque y Carlos (app, infraestructura, logs y cobertura de pruebas) y dime cuáles puedo aprobar.
+RESTRICCIONES: Prueba cada PR unido a develop y comprueba que los campos coincidan con el servicio que consume. Separa lo que bloquea de lo que no. No publiques la revisión hasta que yo la apruebe.
+FORMATO: Texto de cada revisión, listo para publicar.
+```
+
+- **Resultado obtenido:** Revisiones de mobile #33 a #40, #42, #43, #45 y #47, de gateway #7 y #8 y de infra #24 a #26, entre otras. Hallazgos que se corrigieron antes de fusionar: en mobile #37 la clave de idempotencia se generaba en cada toque y permitía órdenes duplicadas; en infra #26 faltaba `ignore_changes = [desired_count]`, así que un `terraform apply` deshacía el autoescalado.
+- **Validación (riesgos):** Riesgo mitigado: el sesgo de autoconfirmación (aprobar sin probar). Cada aprobación dice con cuántas pruebas pasó el PR unido a develop.
+- **Decisión de uso:** Aceptado. El autor eligió qué revisiones publicar.
+
+
+---
+
+## P100
+- **Fecha:** 2026-11-24 al 2026-11-25
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Iteración guiada por revisión de tres revisores + Self-Critique sobre privacidad
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador de la app móvil.
+TAREA: Termina el QR sin conexión (SCRUM-91) para que se pueda mostrar en la puerta del evento sin señal. Corrige lo que pidan Duque, Carlos y Juan en la revisión y respóndeles punto por punto.
+RESTRICCIONES: El QR es lo que deja entrar: guárdalo en el almacenamiento seguro del teléfono y atado a la cuenta. No hagas push sin que te lo diga.
+FORMATO: PR con pruebas de cada caso que pidan los revisores.
+```
+
+- **Resultado obtenido:** mobile #41 fusionado después de tres rondas. La primera versión no servía si la app se abría sin señal (Duque); se agregó el acceso «Ver mis entradas guardadas» desde el login. Carlos y Juan encontraron que la copia podía quedar a la vista de otra persona al cerrar sesión; se corrigió con una clave por cuenta, un borrado que se espera y se repite, y una prueba que reproduce la carrera. Con este PR la app cubrió el 100 % del MVP.
+- **Validación (riesgos):** Riesgo mitigado: filtrar los QR de una persona a quien use después el mismo teléfono. Un error de la IA: al fusionar #32 borró su rama y eso cerró #41, que estaba encima; se restauró la rama, se reabrió el PR y se cambió su base a `develop` sin perder las revisiones.
+- **Decisión de uso:** Aceptado con ajustes: los tres revisores confirmaron las correcciones.
+
+
+---
+
+## P101
+- **Fecha:** 2026-11-25
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (Figma por MCP) + verificación de solapamiento con el equipo
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador de la app móvil.
+TAREA: Haz la vista del equipo Festa para verificar comercios (SCRUM-61). Compárala con el Figma y ajústala.
+RESTRICCIONES: Antes de empezar, verifica qué están haciendo los demás para no solapar trabajo. Usa los endpoints de administración que ya existen en user-service.
+FORMATO: PR con pruebas y el mensaje para el equipo.
+```
+
+- **Resultado obtenido:** mobile #44 con las pantallas «28 · Revisión de comercios» y «29 · Solicitud de comercio» del Figma: lista de pendientes, verificar con confirmación y rechazar con un motivo de hasta 500 caracteres. Se corrigieron los hallazgos de la revisión: el botón atrás se bloquea mientras se envía y el contador del motivo cuenta igual que user-service. Con esto quedó completo RF3.
+- **Validación (riesgos):** Riesgo mitigado: diseñar sin referencia. El Figma no se pudo leer hasta tener permiso de edición; con el acceso se compararon los textos exactos de cada pantalla. Quedó declarado lo que falta del Figma: las pestañas «Aprobados» y «Rechazados», que necesitan un endpoint que todavía no existe.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P102
+- **Fecha:** 2026-11-25
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Análisis de brechas de cobertura antes de escribir pruebas
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de pruebas del QR.
+TAREA: Cubre las pruebas de QR inválido, repetido y de otro evento (SCRUM-95), en booking-service y en la app.
+RESTRICCIONES: Primero revisa qué casos ya están probados y agrega solo los que faltan. Las pruebas de booking corren contra PostgreSQL real.
+FORMATO: Un PR por repositorio.
+```
+
+- **Resultado obtenido:** booking-service #11 (5 pruebas de integración: firma alterada, textos que no son un QR de Festa, pase inexistente, QR de otro evento y asistencia cancelada, cada una con el evento de rechazo según el contrato) y mobile #46 (el escáner muestra el motivo correcto y deja escanear el siguiente). En la misma jornada, mobile #48 cambió los textos que prometían avisos que la app no envía.
+- **Validación (riesgos):** Riesgo mitigado: cobertura falsa de pruebas. Se confirmó en la salida detallada que las pruebas nuevas corrieron contra Postgres y no se saltaron.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P103
+- **Fecha:** 2026-11-26
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida con verificación en producción + diagnóstico guiado por logs
+- **Prompt utilizado:**
+
+```
+ROL: Responsable del despliegue final.
+TAREA: Fusiona a main y despliega todo en el lab. Inyecta datos de prueba para verificar la IA y el mapa. Diagnostica y corrige lo que falle (por ejemplo la descripción con IA) y compara el diagrama de despliegue de Lucidchart con lo que quedó en el lab. Calcula si los créditos alcanzan para dejarlo prendido hasta la presentación.
+RESTRICCIONES: Las credenciales del lab van solo al environment de GitHub. Las llaves de firma del APK no se suben al repositorio ni se mandan por chat.
+FORMATO: Lista de lo que hay que corregir para el equipo, estado del despliegue y costo por hora.
+```
+
+- **Resultado obtenido:** Despliegue completo por el workflow (87 recursos y 11 tareas en ECS), APK firmado con un keystore nuevo y datos de demostración. El diagnóstico de la IA encontró dos causas que Juan corrigió: Groq había retirado el modelo que se usaba (ai-service #4) y ai-service no se enteraba de los comercios recién aprobados (ai-service #6). El entorno quedó prendido para la presentación final, a un costo de unos USD 0,33 por hora.
+- **Validación (riesgos):** Riesgo mitigado: llegar a la presentación con funciones que solo sirven en local. Cada flujo se probó contra el API desplegado. Las credenciales y llaves no se registran en esta bitácora.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P104
+- **Fecha:** 2026-11-26
+- **Autor:** Brayan Loaiza Leal
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Few-shot (entradas P75 a P85 como formato) + Context Grounding (historial de las sesiones y la lista de PRs de GitHub)
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de la bitácora de prompts de Festa.
+TAREA: Busca el archivo del repo donde se documentan los prompts y registra los míos con el formato que ya tiene.
+RESTRICCIONES: Agrupa los mensajes por tarea. Resultados verificables (números de PR); nada inventado. Sin credenciales, correos ni datos personales.
+FORMATO: Entradas nuevas al final de BITACORA_PROMPTS.md, con la plantilla vigente.
+```
+
+- **Resultado obtenido:** Entradas P86 a P104 (Etapas 7 y 8), redactadas a partir de los mensajes de las sesiones de Claude Code y de la lista de PRs de Brayan en la organización.
+- **Validación (riesgos):** Riesgo mitigado: una bitácora que atribuye trabajo ajeno. Los números de PR se verificaron con `gh search prs --author brloa05`; los que eran de otros integrantes (por ejemplo infra #20 y #21, de Juan) aparecen como revisiones, no como trabajo propio. En los mensajes originales había credenciales temporales de AWS, que no se copiaron.
+- **Decisión de uso:** [confirmar con el autor]

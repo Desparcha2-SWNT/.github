@@ -24,30 +24,31 @@
 
   <main class="doc calidad">
 <h1>Calidad</h1>
-<p>Cómo se comprueba que Festa funciona y qué falta por comprobar. Las cifras corresponden a la última ejecución en verde del CI de <code>develop</code>, el 25 de noviembre de 2026.</p>
+<p>Cómo se comprueba que Festa funciona y qué falta por comprobar. Las cifras corresponden a las ejecuciones en verde del CI del 26 de noviembre de 2026, con las bases de datos reales del CI.</p>
 
 <div class="stats">
-<div class="stat stat-must"><strong>834</strong><span>pruebas automáticas en verde</span></div>
-<div class="stat stat-should"><strong>585</strong><span>en los servicios de backend</span></div>
-<div class="stat stat-could"><strong>249</strong><span>en la app móvil</span></div>
+<div class="stat stat-must"><strong>964</strong><span>pruebas automáticas en verde</span></div>
+<div class="stat stat-should"><strong>604</strong><span>en los servicios de backend</span></div>
+<div class="stat stat-could"><strong>360</strong><span>en la app móvil</span></div>
 <div class="stat stat-wont"><strong>1</strong><span>aprobación obligatoria por cambio</span></div>
 </div>
 
 <h2>Pruebas por repositorio</h2>
 <table>
-<thead><tr><th>Repositorio</th><th>Parte</th><th>Herramienta</th><th>Pruebas</th><th>Base de datos en las pruebas</th></tr></thead>
+<thead><tr><th>Repositorio</th><th>Parte</th><th>Herramienta</th><th>Pruebas</th><th>Base de datos en las pruebas</th><th>Cobertura de líneas</th></tr></thead>
 <tbody>
-<tr><td><code>festa-mobile</code></td><td>App Flutter</td><td>Flutter test</td><td>249</td><td>No usa</td></tr>
-<tr><td><code>festa-auth-service</code></td><td>Autenticación</td><td>JUnit</td><td>46</td><td>No usa</td></tr>
-<tr><td><code>festa-user-service</code></td><td>Perfiles y comercios</td><td>JUnit</td><td>45</td><td>PostgreSQL real</td></tr>
-<tr><td><code>festa-event-service</code></td><td>Eventos y mapa</td><td>Vitest</td><td>105</td><td>PostgreSQL real</td></tr>
-<tr><td><code>festa-booking-service</code></td><td>Asistencia y pases</td><td>Vitest</td><td>103</td><td>PostgreSQL real</td></tr>
-<tr><td><code>festa-payment-service</code></td><td>Compras</td><td>Vitest</td><td>101</td><td>PostgreSQL real</td></tr>
-<tr><td><code>festa-ai-service</code></td><td>Chat y descripciones</td><td>pytest</td><td>75</td><td>MongoDB real</td></tr>
-<tr><td><code>festa-analytics-service</code></td><td>Métricas</td><td>Vitest</td><td>71</td><td>MongoDB real</td></tr>
-<tr><td><code>festa-notification-service</code></td><td>Notificaciones</td><td>Vitest</td><td>39</td><td>MongoDB real</td></tr>
+<tr><td><code>festa-mobile</code></td><td>App Flutter</td><td>Flutter test</td><td>360</td><td>No usa</td><td>90,5 %</td></tr>
+<tr><td><code>festa-event-service</code></td><td>Eventos y mapa</td><td>Vitest</td><td>107</td><td>PostgreSQL real</td><td>81,9 %</td></tr>
+<tr><td><code>festa-analytics-service</code></td><td>Métricas</td><td>Vitest</td><td>71</td><td>MongoDB real</td><td>83,2 %</td></tr>
+<tr><td><code>festa-ai-service</code></td><td>Chat y descripciones</td><td>pytest</td><td>85</td><td>MongoDB real</td><td>81,8 %</td></tr>
+<tr><td><code>festa-booking-service</code></td><td>Asistencia y pases</td><td>Vitest</td><td>109</td><td>PostgreSQL real</td><td>80,4 %</td></tr>
+<tr><td><code>festa-payment-service</code></td><td>Compras (versión futura)</td><td>Vitest</td><td>101</td><td>PostgreSQL real</td><td>72,0 %</td></tr>
+<tr><td><code>festa-notification-service</code></td><td>Notificaciones</td><td>Vitest</td><td>40</td><td>MongoDB real</td><td>65,7 %</td></tr>
+<tr><td><code>festa-auth-service</code></td><td>Autenticación</td><td>JUnit</td><td>46</td><td>No usa</td><td>51,8 %</td></tr>
+<tr><td><code>festa-user-service</code></td><td>Perfiles y comercios</td><td>JUnit</td><td>45</td><td>No usa (aún no tiene pruebas de integración)</td><td>15,5 %</td></tr>
 </tbody>
 </table>
+<p>La cobertura es la proporción de líneas del código de cada servicio que ejecutan sus pruebas. Se mide en cada cambio con la herramienta de cada lenguaje (JaCoCo en Java, <code>@vitest/coverage-v8</code> en Node, <code>pytest-cov</code> en Python y <code>flutter test --coverage</code> en la app) y se publica en el resumen de su ejecución de CI; todavía no hay un mínimo obligatorio. Las cifras más bajas (<code>festa-user-service</code> y <code>festa-auth-service</code>) son la prioridad para las siguientes pruebas. En user-service la cifra es real: JaCoCo mide bien, pero el servicio solo tiene pruebas unitarias y de seguridad; la base para pruebas con PostgreSQL en Testcontainers está lista y todavía no tiene pruebas que la usen.</p>
 <p>Además, <code>festa-gateway</code> tiene pruebas de humo, y <code>festa-infra</code> valida los contratos de mensajes y Terraform, y comprueba que la infraestructura levante y quede aislada.</p>
 
 <h2>Antes de integrar un cambio</h2>
@@ -138,11 +139,11 @@
 
 <h2>Lo que falta comprobar</h2>
 <ul>
-<li>Desplegar en AWS y probar la aplicación contra ese entorno.</li>
+<li>Repetir en AWS las pruebas de punta a punta en cada despliegue (el 25 de noviembre se probaron registro, perfil, eventos, asistencia, pases y notificaciones en la bandeja).</li>
 <li>Medir el tiempo de carga del mapa con muchos eventos.</li>
-<li>Probar los pagos en el ambiente de pruebas de Wompi.</li>
+<li>Probar los pagos en el ambiente de pruebas de Wompi cuando se active la compra (versión futura).</li>
 <li>Ejecutar el análisis dinámico de seguridad (OWASP ZAP), que está preparado y requiere un entorno desplegado.</li>
-<li>Reunir y publicar la cobertura de las pruebas.</li>
+<li>Subir la cobertura de <code>festa-user-service</code> (15,5 %) y <code>festa-auth-service</code> (51,8 %) y fijar un mínimo en el CI.</li>
 <li>Probar la app con estudiantes y comercios.</li>
 </ul>
   </main>
