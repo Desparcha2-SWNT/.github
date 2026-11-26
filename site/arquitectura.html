@@ -38,7 +38,7 @@
 <article class="figura">
 <h3>Contexto del sistema</h3>
 <p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
-<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Groq para la IA, Wompi para los cobros. El inicio con Google y las notificaciones push quedan fuera del MVP.</p>
+<p>Las personas usan Festa para descubrir planes, confirmar asistencia y gestionar eventos. Festa usa Mapbox para el mapa y Groq para la IA. La compra de boletas con Wompi, el inicio con Google y las notificaciones push quedan fuera del MVP.</p>
 </article>
 <article class="figura">
 <h3>Despliegue en AWS</h3>
@@ -63,7 +63,7 @@
 <h2 id="flujos">Flujos principales</h2>
 <div class="grupo">
 <details class="plegable" open>
-<summary>Compra de una boleta</summary>
+<summary>Compra de una boleta (versión futura)</summary>
 <div class="plegable-cuerpo">
 <p><img alt="Secuencia de compra de una boleta" src="assets/diagramas/secuencia_compra.png" /></p>
 <p>Festa nunca recibe datos de tarjeta. Devuelve un checkout firmado y la persona paga en Wompi. El webhook confirma el pago, payment-service publica <code>order.approved</code> y booking-service crea el pase.</p>
@@ -614,7 +614,7 @@
 </div>
 </details>
 <details class="plegable servicio" id="svc-payment">
-<summary><span class="svc-nombre">Compras</span> <code>festa-payment-service</code></summary>
+<summary><span class="svc-nombre">Compras (versión futura)</span> <code>festa-payment-service</code></summary>
 <div class="plegable-cuerpo">
 <ul class="tecnologias" aria-label="Tecnologías">
 <li><img src="assets/logos/nodedotjs.svg" alt="" width="36" height="36"><span>Node.js 20</span></li>
