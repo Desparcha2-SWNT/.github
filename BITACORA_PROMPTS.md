@@ -1906,3 +1906,244 @@ FORMATO: Entradas P48 a P74 con la plantilla.
 - **Resultado obtenido:** Este borrador (P48 a P74), pendiente de aprobación del autor antes de commit y push a `docs/bitacora-prompts`. No se abre PR a `main`.
 - **Validación (riesgos):** La primera versión inventaba cifras y mezclaba trabajo de otros integrantes; se descartó y se rehízo con verificación. La segunda versión sobrecargó los prompts con la estructura completa de la plataforma ADA; se redujeron a una estructura mínima (rol, tarea, restricciones y formato) conservando lo que pidió el usuario.
 - **Decisión de uso:** [confirmar con el autor]
+
+
+---
+
+## Etapa 6 — Sprint 4: reportes, compartir y moderación en la app (24 y 25 de noviembre de 2026)
+
+## P75
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Persona + Context Grounding (organización, Jira y Figma como fuentes) + Structured Output
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador del equipo Festa que se incorpora al Sprint 4.
+TAREA: Revisa los repositorios de la organización Desparcha2-SWNT para entender la arquitectura (app Flutter, gateway Kong y microservicios). Luego entra al backlog de Jira (proyecto SCRUM) y lista las tareas del Sprint 4 asignadas a Sebastián Duque. Usa el Figma como referencia de diseño y cruza todo con el mensaje del equipo sobre lo que falta (PR por revisar, RF12, RF13, RF14, RF19, sitio de documentación, bitácora y presentación).
+RESTRICCIONES: Básate solo en lo que esté en el código, en Jira o en Figma; si algo no se puede leer, dilo. No modifiques nada en Jira ni en GitHub sin preguntarme.
+FORMATO: Resumen de la arquitectura y una tabla de pendientes con tarea, estado, dueño y si ya existe algo en el código.
+```
+
+- **Resultado obtenido:** Mapa de la app (Riverpod, go_router, Dio con JWT) y de los servicios detrás de Kong. Tabla de pendientes: PR #41 y #32 por revisar; RF14 (reportes) sin pantallas en la app aunque user-service ya tenía los endpoints; compartir evento sin implementar.
+- **Validación (riesgos):** Riesgo mitigado: alucinación sobre el estado del proyecto. Cada afirmación se contrastó con el código de `develop` y con el tablero. Figma solo se pudo ver en modo lectura, con capturas de pantalla.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P76
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Pruebas
+- **Técnica de prompting utilizada:** Role-play adversarial (revisor de código) + Delimitadores (criterios de aceptación de la HU y pantallas de Figma)
+- **Prompt utilizado:**
+
+```
+ROL: Revisor exigente de los PR de festa-mobile.
+TAREA: Revisa los PR #41 («Mis entradas» con el QR sin conexión, SCRUM-91) y #32 (SCRUM-90). Compáralos con los criterios de aceptación de la historia y con las pantallas de Figma. Busca bugs reales: flujos que no se pueden alcanzar, estados sin manejar y diferencias de diseño.
+RESTRICCIONES: Separa los bloqueantes de las sugerencias. Cada hallazgo debe decir cómo reproducirlo. No publiques los comentarios hasta que yo los apruebe.
+FORMATO: Lista de hallazgos por PR, con la severidad y el texto listo para el comentario.
+```
+
+- **Resultado obtenido:** En #41, un bloqueante: el QR sin conexión no se alcanza si la app arranca en frío sin red. En #32, diferencias con el Figma. Los comentarios se publicaron tras la aprobación del autor.
+- **Validación (riesgos):** Riesgo mitigado: el sesgo de autoconfirmación, es decir, aprobar sin probar. Cada hallazgo se trazó en el código del PR antes de publicarlo.
+- **Decisión de uso:** Aceptado. El autor eligió cuáles comentarios publicar.
+
+
+---
+
+## P77
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Negative Constraints
+- **Prompt utilizado:**
+
+```
+TAREA: Instala Flutter en este PC para poder correr flutter analyze y flutter test en festa-mobile.
+RESTRICCIONES: La terminal usa fish, no bash: configura el PATH en la sintaxis de fish. No uses sudo ni instales el SDK de Android (no hace falta para las pruebas).
+FORMATO: Los comandos que ejecutaste y la verificación final con flutter --version.
+```
+
+- **Resultado obtenido:** Flutter quedó en `~/development/flutter`, con el PATH configurado en fish. `flutter analyze` y `flutter test` corren sobre el proyecto.
+- **Validación (riesgos):** Riesgo detectado después (ver P81): con una versión local de Flutter distinta, `pub get` reescribe `pubspec.lock`. Desde entonces se revisa el diff del lock antes de cada commit.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P78
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Análisis
+- **Técnica de prompting utilizada:** Chain-of-Thought (comparar el costo de cada opción) + Restricción de alcance
+- **Prompt utilizado:**
+
+```
+ROL: Líder técnico que prioriza el trabajo que falta antes de la sustentación.
+TAREA: De lo que falta (reportes, notificaciones push, compartir y Parches en Vivo; Google queda fuera del MVP), razona paso a paso cuál es lo más sencillo de implementar en la app y no está hecho ni en curso por otro integrante.
+RESTRICCIONES: Revisa ramas, PR abiertos y asignaciones en Jira para no duplicar trabajo. Para cada opción, di si el backend ya la soporta. No empieces a programar hasta que yo elija.
+FORMATO: Tabla con la opción, el esfuerzo, las dependencias del backend y una recomendación.
+```
+
+- **Resultado obtenido:** Recomendación: Reportes (SCRUM-109), porque user-service ya expone `POST /api/reports`, y Compartir (SCRUM-107), que solo usa el menú del sistema. Push y Parches en Vivo requieren infraestructura adicional. El autor eligió las dos primeras.
+- **Validación (riesgos):** Riesgos mitigados: la sobre-ingeniería y la duplicación de trabajo. Se verificó que nadie tenía ramas ni PR abiertos sobre esas tareas.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P79
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (contrato real del backend) + Few-shot (patrones existentes del código) + TDD
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-109: desde el detalle de un evento se puede reportar el evento o a su organizador. La hoja de reporte tiene el motivo (spam, fraude, contenido inapropiado, información falsa, acoso u otro) y un comentario opcional, y llama a POST /api/reports de user-service.
+RESTRICCIONES: Usa exactamente los valores y límites del backend (lee el DTO de user-service): el comentario tiene máximo 500 caracteres. Sigue los patrones del repo: Riverpod, authenticatedDioProvider, ApiException y los tokens FestaSpace y FestaColors. No muestres «Reportar al organizador» si el evento es mío. Escribe pruebas de la API y de widget con mocktail.
+FORMATO: Código, pruebas, y flutter analyze y flutter test en verde.
+```
+
+- **Resultado obtenido:** `ReportSheet`, `ReportsApi` y el menú del detalle del evento, con pruebas de la API y de la hoja de reporte. Se fusionó como PR #42 (`893c8d7`).
+- **Validación (riesgos):** Riesgo mitigado: un bug silencioso. `@Size(max=500)` de Java cuenta unidades UTF-16, así que un emoji ocupa dos. La app valida igual que el servidor y no rechaza tarde. Las pruebas de widget fallaban al tocar controles fuera de pantalla; se corrigieron con `ensureVisible`, sin relajar las aserciones.
+- **Decisión de uso:** Aceptado tras revisión de un compañero.
+
+
+---
+
+## P80
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Instrucción dirigida + Structured Output (formato del mensaje compartido)
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-107: un botón para compartir el evento con el menú del sistema (share_plus). El texto lleva el título, la fecha, el lugar, el precio y el enlace de descarga de la app.
+RESTRICCIONES: No muestres el botón si el evento está cancelado. Si el evento no tiene dirección, no dejes comas sueltas. El enlace de descarga se configura con --dart-define y por defecto apunta al último release. Pon el envío detrás de una interfaz para poder probarlo sin la plataforma. Agrega solo los paquetes nuevos al pubspec.lock.
+FORMATO: Código y pruebas del texto generado y del botón.
+```
+
+- **Resultado obtenido:** `eventShareText`, `EventSharer` y `_ShareButton` en el detalle del evento, con sus pruebas. Se fusionó como PR #43 (`92cb7ab`).
+- **Validación (riesgos):** Riesgo mitigado: la inconsistencia del texto según los datos del evento; se probaron casos con y sin dirección. En la primera versión del PR, el lock subía versiones fijadas por el SDK (ver P81).
+- **Decisión de uso:** Aceptado con ajustes.
+
+
+---
+
+## P81
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Self-Critique + Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+TAREA: Haz los commits y abre los PR de SCRUM-109 y SCRUM-107. Corrige los comentarios de la revisión de Brayan. Cuando estén aprobados, fusiónalos en develop y resuelve los conflictos con lo que entró mientras tanto (#37 y #40).
+RESTRICCIONES: Los commits van con mi identidad de git. Antes de cada push, revisa tu propio diff y comprueba que lo que dice la descripción del PR es cierto, sobre todo en pubspec.lock. Fusiona solo sobre el último commit aprobado.
+FORMATO: Enlace de cada PR, conflictos resueltos y commit de merge.
+```
+
+- **Resultado obtenido:** Se abrieron y fusionaron los PR #42 y #43. Se resolvieron los conflictos del AppBar del detalle (compartir y reportar), de `app_config.dart` y `pubspec.yaml` con `package_info_plus` (#40) y del lock.
+- **Validación (riesgos):** Error de la IA detectado en la revisión: la descripción de #43 afirmaba que en el lock solo entraban los paquetes nuevos, pero el Flutter local había subido `meta`, `test_api` y `vector_math`. Se corrigió conservando los bloques de `develop` y agregando solo los nuevos. Segundo error: cambiar la base de un PR apilado descarta su aprobación, así que hubo que pedir de nuevo la revisión. Riesgo mitigado: la autoconfirmación en las descripciones de los PR.
+- **Decisión de uso:** Aceptado con ajustes.
+
+
+---
+
+## P82
+- **Fecha:** 2026-11-24
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5) con Claude in Chrome
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Instrucción dirigida
+- **Prompt utilizado:**
+
+```
+TAREA: Actualiza Jira: asígname SCRUM-109 y SCRUM-107 y pásalas a Finalizado, porque sus PR ya están en develop.
+RESTRICCIONES: Solo esas dos tareas. Confirma el estado final leyendo de nuevo cada issue.
+FORMATO: El estado antes y después de cada tarea.
+```
+
+- **Resultado obtenido:** SCRUM-109 y SCRUM-107 quedaron asignadas al autor y en Finalizado.
+- **Validación (riesgos):** Riesgo mitigado: reportar un estado de Jira que no se aplicó. Se volvió a leer cada issue después de la transición.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P83
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (controladores de user-service y auth-service) + Few-shot (pantallas del equipo ya existentes) + TDD
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-110: para cuentas admin, una cola de reportes abiertos (GET /api/users/admin/reports) con qué se reporta, el motivo, el comentario y hace cuánto. Al abrir un reporte, muestra el evento o la cuenta reportada (GET /api/auth/admin/accounts/{id}) y permite descartarlo.
+RESTRICCIONES: Lee los controladores reales para el contrato: el estado de la cuenta viene en minúscula. Reutiliza el estilo de las pantallas de solicitudes de comerciante extrayendo los widgets comunes en lugar de copiarlos. Maneja los estados vacío, de error con reintento, sin red y 409 (otra persona ya lo cerró). Mientras se envía, bloquea volver atrás y enviar de nuevo.
+FORMATO: Código, pruebas de widget con hora fija y el PR.
+```
+
+- **Resultado obtenido:** `ReportQueueScreen`, `ReportReviewScreen`, `TeamReportsApi` y `team_widgets.dart`, compartido con las pantallas de comerciante. Hay un botón «Reportes» en el inicio para admins. Se fusionó como PR #49 (`0c61486`).
+- **Validación (riesgos):** Bug evitado al leer el backend: el estado llega como `suspended`, no `SUSPENDED`. Las pruebas cubren la carrera de dos admins (409) y la falta de red. Riesgo mitigado: la cobertura falsa de pruebas, porque se usa una hora inyectada en vez de la del sistema.
+- **Decisión de uso:** Aceptado tras revisión de un compañero.
+
+
+---
+
+## P84
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Implementación
+- **Técnica de prompting utilizada:** Context Grounding (eventos de RabbitMQ de moderación) + TDD + Negative Constraints
+- **Prompt utilizado:**
+
+```
+ROL: Desarrollador Flutter de festa-mobile.
+TAREA: Implementa SCRUM-111 sobre la cola de SCRUM-110: desde un reporte, el admin puede ocultar el evento o suspender la cuenta, con un motivo opcional y, para cuentas, una duración (7 días, 30 días o sin fin). Usa POST /api/users/admin/reports/{id}/resolve.
+RESTRICCIONES: Confirma la acción en un diálogo. El motivo respeta el límite de 500 en UTF-16. La fecha de fin se envía en UTC y se cuenta desde ahora. No inventes campos: usa solo los que acepta el DTO de user-service. El mensaje final dice qué pasó realmente (por ejemplo, que el evento ya no aparece en el mapa).
+FORMATO: Código, pruebas y un PR apilado sobre #49.
+```
+
+- **Resultado obtenido:** Botones «Ocultar evento» y «Suspender cuenta» con un diálogo de motivo y duración. Pruebas de los tres caminos, del límite de emojis y de la cancelación. Se fusionó como PR #50 (`958afc8`). Con esto, RF14 funciona en la app de punta a punta.
+- **Validación (riesgos):** Riesgo mitigado: alucinación del contrato. Los campos `outcome`, `action` y `suspendedUntil` se tomaron del controlador. No hay pantalla para deshacer una acción, aunque el backend lo permite; queda como pendiente.
+- **Decisión de uso:** Aceptado.
+
+
+---
+
+## P85
+- **Fecha:** 2026-11-25
+- **Autor:** Sebastián Duque
+- **Herramienta/Modelo:** Claude Code (Opus 5.5)
+- **Fase del SDLC:** Documentación
+- **Técnica de prompting utilizada:** Self-Critique + Few-shot (entradas P48 a P74 como formato)
+- **Prompt utilizado:**
+
+```
+ROL: Responsable de la bitácora de prompts de Festa.
+TAREA: Con base en el trabajo de esta sesión, registra mis prompts en BITACORA_PROMPTS.md, en la rama docs/bitacora-prompts. Agrupa los mensajes por tarea y redacta cada prompt con la estructura de la bitácora (rol, tarea, restricciones y formato).
+RESTRICCIONES: Resultados verificables (número de PR y commit de merge); no inventes cifras. Incluye los errores que cometió la IA y cómo se corrigieron. Sin correos ni datos personales.
+FORMATO: Entradas P75 en adelante con la plantilla vigente.
+```
+
+- **Resultado obtenido:** Entradas P75 a P85 (Etapa 6).
+- **Validación (riesgos):** Los números de PR y los commits se verificaron con `gh pr view`. Riesgo mitigado: una bitácora que exagera lo que hizo la IA o esconde sus errores (ver P81).
+- **Decisión de uso:** Aceptado por el autor al pedir su publicación.
