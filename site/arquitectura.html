@@ -38,7 +38,7 @@
 <article class="figura">
 <h3>Contexto del sistema</h3>
 <p><img alt="Personas, Festa y los sistemas externos" src="assets/diagramas/contexto.png" /></p>
-<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Gemini para la IA, Wompi para los cobros. El inicio con Google y las notificaciones push quedan fuera del MVP.</p>
+<p>Las personas usan Festa para descubrir planes, comprar boletas y gestionar eventos. Festa usa Mapbox para el mapa, Groq para la IA, Wompi para los cobros. El inicio con Google y las notificaciones push quedan fuera del MVP.</p>
 </article>
 <article class="figura">
 <h3>Despliegue en AWS</h3>
@@ -87,7 +87,7 @@
 <summary>Descripción con IA</summary>
 <div class="plegable-cuerpo">
 <p><img alt="Secuencia para generar una descripción con IA" src="assets/diagramas/secuencia_descripcion_ia.png" /></p>
-<p>El servicio de IA le pide a Gemini la descripción solo con los datos del evento. Lo guarda y lo devuelve. Si el modelo falla, la app recibe un error controlado.</p>
+<p>El servicio de IA le pide a Groq la descripción solo con los datos del evento. Lo guarda y lo devuelve. Si el modelo falla, la app recibe un error controlado.</p>
 </div>
 </details>
 <details class="plegable">
@@ -700,7 +700,7 @@
 <li><img src="assets/logos/mongodb.svg" alt="" width="36" height="36"><span>MongoDB</span></li>
 <li><img src="assets/logos/redis.svg" alt="" width="36" height="36"><span>Redis</span></li>
 <li><img src="assets/logos/rabbitmq.svg" alt="" width="36" height="36"><span>RabbitMQ</span></li>
-<li><img src="assets/logos/googlegemini.svg" alt="" width="36" height="36"><span>Gemini</span></li>
+<li><img src="assets/logos/llm.svg" alt="" width="36" height="36"><span>Groq</span></li>
 </ul>
 <p><strong>Base:</strong> MongoDB (descripciones y sesiones de chat).</p>
 <table>
@@ -747,7 +747,7 @@
 <p><img alt="Clases y modelo de datos de ai" src="assets/diagramas/clases_ai.png" /></p>
 <h4>Decisiones</h4>
 <ul>
-<li><strong>Modelo de lenguaje:</strong> Gemini, como API externa. Se descartaron Azure OpenAI y Amazon Bedrock porque ataban el modelo a una sola nube (ADR 0003). La clave va en el gestor de secretos y la política de privacidad debe nombrar a Google como proveedor.</li>
+<li><strong>Modelo de lenguaje:</strong> Groq (<code>llama-3.3-70b-versatile</code>), como API externa compatible con OpenAI. Reemplazó a Gemini el 25 de noviembre por costo y cuota (ADR 0006); antes se habían descartado Azure OpenAI y Amazon Bedrock porque ataban el modelo a una sola nube (ADR 0003). La clave va en el gestor de secretos y la política de privacidad nombra a Groq como proveedor.</li>
 <li><strong>Costo controlado:</strong> límite por usuario y minuto (10 mensajes de chat y 5 descripciones) y cada descripción se genera una vez y se guarda.</li>
 <li><strong>La IA sugiere:</strong> solo recomienda eventos reales del catálogo y avisa que es una sugerencia automatizada.</li>
 <li><strong>Datos:</strong> MongoDB en un contenedor en Fargate, porque el laboratorio no permite DocumentDB; Redis para el límite de uso.</li>

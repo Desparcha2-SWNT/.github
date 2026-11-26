@@ -10,7 +10,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
         comercio = person "Comercio / organizador" "Crea y gestiona eventos, vende boletería, valida entradas con QR y mide el retorno desde su panel."
 
         pagos = softwareSystem "Wompi (pasarela de pagos)" "Servicio externo donde la persona paga en un checkout firmado; confirma el resultado por webhook." "External"
-        ia = softwareSystem "Google Gemini API" "Modelo de lenguaje externo para descripciones de eventos y recomendaciones (ADR 0003)." "External"
+        ia = softwareSystem "Groq API" "Modelo de lenguaje externo para descripciones de eventos y recomendaciones (ADR 0006)." "External"
         notificaciones = softwareSystem "Firebase Cloud Messaging" "Servicio de Google que entrega las notificaciones push al dispositivo Android." "External"
         identidad = softwareSystem "Google Identity" "Autenticación federada (OAuth2). El backend la soporta; el inicio de sesión con Google en la app queda fuera del MVP." "External"
         mapas = softwareSystem "Mapbox" "Servicio externo de mapas que usa la app para mostrar eventos." "External"
@@ -107,7 +107,7 @@ workspace "Festa" "Aplicación de descubrimiento de eventos y visibilidad para c
                     limitador = component "Limitador de solicitudes" "Aplica el tope por usuario y por minuto en Redis (RNF8)." "Servicio"
                     chat = component "Chat de recomendaciones" "Arma el contexto con eventos reales y descarta los que no estén entre los candidatos (RF8)." "Servicio"
                     descripciones = component "Generador de descripciones" "Genera la descripción y la guarda para no volver a pedirla (RF9)." "Servicio"
-                    cliente = component "Cliente Gemini" "Llama al modelo y controla errores." "Cliente HTTP"
+                    cliente = component "Cliente LLM (Groq)" "Llama al modelo y controla errores." "Cliente HTTP"
                     inbox = component "Consumidor (inbox)" "Mantiene catálogo, preferencias y comercios desde RabbitMQ." "Consumidor AMQP"
                     outbox = component "Publicador (outbox)" "Publica el uso de la IA para analítica." "Productor AMQP"
                     api -> limitador "Valida el cupo"

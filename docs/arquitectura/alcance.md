@@ -37,7 +37,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 | Sistema | Descripción |
 |---|:---:|
 | Wompi (pasarela de pagos) | Servicio externo donde la persona paga en un checkout firmado; confirma el resultado a Festa por webhook. Su comisión la paga el comercio: se descuenta de lo que recibe. |
-| Google Gemini API | Modelo de lenguaje externo (proveedor decidido en el ADR 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
+| Groq API | Modelo de lenguaje externo (proveedor decidido en el ADR 0006, que reemplaza al 0003) que genera descripciones de eventos y recomendaciones personalizadas. |
 | Firebase Cloud Messaging | Servicio de Google que entrega las notificaciones push al dispositivo Android; `festa-notification-service` lo llama directamente con `firebase-admin`. |
 | Google Identity | Proveedor externo (OAuth2) de autenticación federada para iniciar sesión. |
 | Mapbox | Servicio externo de mapas que usa la app para mostrar eventos y clústeres. |
@@ -94,7 +94,7 @@ Los planes y eventos locales se pierden entre publicaciones de redes sociales si
 ### 5.3 Relaciones principales
 
 - La app llama solo al gateway (HTTPS); el gateway enruta a cada servicio por REST.
-- `festa-auth-service` se federa con Google Identity; `festa-payment-service` firma el checkout y recibe el webhook de Wompi; `festa-ai-service` consulta a la API de Gemini; `festa-notification-service` envía push a Firebase Cloud Messaging; la app muestra el mapa con Mapbox.
+- `festa-auth-service` se federa con Google Identity; `festa-payment-service` firma el checkout y recibe el webhook de Wompi; `festa-ai-service` consulta a la API de Groq; `festa-notification-service` envía push a Firebase Cloud Messaging; la app muestra el mapa con Mapbox.
 - Los servicios publican y consumen eventos versionados en RabbitMQ con outbox e inbox: pagos, asistencia, cuentas, perfiles y eventos de dominio.
 - En Docker Compose, el equipo de plataforma observa el sistema con Prometheus + Grafana.
 
@@ -140,7 +140,7 @@ Es el nivel 3 del modelo C4: abre un contenedor y muestra sus piezas internas. S
 | Limitador de solicitudes | Aplica el tope por usuario y por minuto con contadores en Redis (RNF8). |
 | Chat de recomendaciones | Arma el contexto con el catálogo y descarta los eventos que el modelo no puede respaldar (RF8). |
 | Generador de descripciones | Genera la descripción y la guarda para no volver a pedirla (RF9, RNF8). |
-| Cliente Gemini | Llama al modelo y maneja sus errores. |
+| Cliente LLM (Groq) | Llama al modelo y maneja sus errores. |
 | Consumidor (inbox) | Mantiene el catálogo, las preferencias y el borrado de cuentas. |
 | Publicador (outbox) | Publica el uso de IA en RabbitMQ. |
 
