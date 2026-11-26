@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual de identidad · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+                    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html">Requerimientos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="calidad.html">Calidad</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="identidad.html" aria-current="page">Identidad</a>
+      <a href="instalacion.html">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main class="doc identidad">
+    <h1>Manual de identidad</h1>
+    <p>Cómo se ve Festa. Los valores salen de la página «Fundamentos» del <a href="https://www.figma.com/design/pfQHNthJdifeQQSD6blXVo/Festa-%E2%80%94-Dise%C3%B1o-de-la-app?node-id=5-2" target="_blank" rel="noopener">diseño en Figma</a> y son los mismos que usa la app.</p>
+
+    <h2>La marca</h2>
+    <p class="lema">Menos buscar, más vivir la ciudad.</p>
+    <p>Festa ayuda a descubrir eventos en Bogotá y le da visibilidad a los comercios locales. Su asistente de inteligencia artificial se llama Festi.</p>
+
+    <h2>Logo y corona</h2>
+    <ul class="logos">
+      <li><div class="lienzo"><img src="assets/images/logo_festa.png" alt="Logo de Festa: la palabra en negro con una corona magenta"></div><strong>Logo</strong><span>Texto negro y corona magenta. En la app se usa en la pantalla de arranque.</span><a href="assets/images/logo_festa.png" download>Descargar PNG</a></li>
+      <li><div class="lienzo"><img src="assets/images/corona_festa.png" alt="Corona de Festa"></div><strong>Corona</strong><span>La marca corta: se usa en el resto de las pantallas.</span><a href="assets/images/corona_festa.png" download>Descargar PNG</a></li>
+      <li><div class="lienzo"><img src="assets/images/icono_festa.png" alt="Ícono de la app: la corona sobre fondo blanco"></div><strong>Ícono de la app</strong><span>Solo la corona, sin el texto, sobre fondo blanco.</span><a href="assets/images/icono_festa.png" download>Descargar PNG</a></li>
+    </ul>
+    <div class="reglas">
+      <div class="si"><strong>Sí</strong><div class="lienzo"><img src="assets/images/logo_festa.png" alt="Logo sobre fondo claro"></div><p>El logo va sobre fondos claros.</p></div>
+      <div class="no"><strong>No</strong><div class="lienzo lienzo-oscuro"><img src="assets/images/logo_festa.png" alt="Logo sobre fondo oscuro, uso incorrecto"></div><p>Sobre fondos oscuros el texto negro se pierde.</p></div>
+    </div>
+
+    <h2>Color</h2>
+    <p>La paleta sale del logo: negro de aerosol y corona magenta. Tres colores tienen un significado fijo: <strong>lila para la IA</strong>, <strong>menta para lo gratis</strong> y <strong>amarillo para un Parche en Vivo</strong>.</p>
+    <h3>Marca</h3>
+    <ul class="muestras">
+      <li><span class="muestra" style="background:#F0127E"></span><strong>Marca</strong><code>#F0127E</code><span>bg/brand</span></li>
+      <li><span class="muestra" style="background:#C20A65"></span><strong>Marca oscuro</strong><code>#C20A65</code><span>text/brand</span></li>
+      <li><span class="muestra" style="background:#FFE3F0"></span><strong>Marca suave</strong><code>#FFE3F0</code><span>bg/brand-soft</span></li>
+      <li><span class="muestra" style="background:#111111"></span><strong>Tinta</strong><code>#111111</code><span>text/primary</span></li>
+    </ul>
+    <h3>Neutros</h3>
+    <ul class="muestras">
+      <li><span class="muestra" style="background:#5A5A5A"></span><strong>Texto secundario</strong><code>#5A5A5A</code><span>text/secondary</span></li>
+      <li><span class="muestra" style="background:#DEDEE3"></span><strong>Borde</strong><code>#DEDEE3</code><span>border/default</span></li>
+      <li><span class="muestra" style="background:#F1F1F4"></span><strong>Fondo gris</strong><code>#F1F1F4</code><span>bg/muted</span></li>
+      <li><span class="muestra" style="background:#FAFAFA"></span><strong>Papel</strong><code>#FAFAFA</code><span>bg/subtle</span></li>
+    </ul>
+    <h3>Con significado</h3>
+    <ul class="muestras">
+      <li><span class="muestra" style="background:#E6FFF3"></span><strong>Gratis</strong><code>#E6FFF3</code><span>bg/free</span></li>
+      <li><span class="muestra" style="background:#D9CCFF"></span><strong>IA / Festi</strong><code>#D9CCFF</code><span>bg/ia</span></li>
+      <li><span class="muestra" style="background:#A66CFF"></span><strong>IA acento</strong><code>#A66CFF</code><span>accent/ia</span></li>
+      <li><span class="muestra" style="background:#FFD23F"></span><strong>Parche en Vivo</strong><code>#FFD23F</code><span>bg/live</span></li>
+      <li><span class="muestra" style="background:#FF9EA6"></span><strong>Coral</strong><code>#FF9EA6</code><span>accent/coral</span></li>
+    </ul>
+    <h3>Avisos</h3>
+    <ul class="muestras">
+      <li><span class="muestra" style="background:#1E9E5A"></span><strong>Éxito</strong><code>#1E9E5A</code><span>feedback/success</span></li>
+      <li><span class="muestra" style="background:#15703F"></span><strong>Éxito en texto</strong><code>#15703F</code><span>text/success</span></li>
+      <li><span class="muestra" style="background:#D64545"></span><strong>Error</strong><code>#D64545</code><span>feedback/error</span></li>
+      <li><span class="muestra" style="background:#B7791F"></span><strong>Alerta</strong><code>#B7791F</code><span>feedback/warning</span></li>
+    </ul>
+
+    <h3>Contraste del texto</h3>
+    <p>El texto sobre magenta va en negro. Para texto normal se exige al menos 4,5:1 (WCAG AA).</p>
+    <table>
+      <thead><tr><th>Combinación</th><th>Contraste</th><th>¿Cumple AA?</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ejemplo" style="color:#111111;background:#FAFAFA">Festa</span> Tinta sobre papel</td><td>18,1:1</td><td>Sí</td></tr>
+        <tr><td><span class="ejemplo" style="color:#111111;background:#F0127E">Festa</span> Tinta sobre magenta</td><td>4,6:1</td><td>Sí</td></tr>
+        <tr><td><span class="ejemplo" style="color:#FFFFFF;background:#F0127E">Festa</span> Blanco sobre magenta</td><td>4,1:1</td><td>No: no usar en texto normal</td></tr>
+        <tr><td><span class="ejemplo" style="color:#C20A65;background:#FFFFFF">Festa</span> Marca oscuro sobre blanco</td><td>6,0:1</td><td>Sí</td></tr>
+        <tr><td><span class="ejemplo" style="color:#5A5A5A;background:#FFFFFF">Festa</span> Texto secundario sobre blanco</td><td>6,9:1</td><td>Sí</td></tr>
+        <tr><td><span class="ejemplo" style="color:#15703F;background:#FFFFFF">Festa</span> Éxito en texto sobre blanco</td><td>6,1:1</td><td>Sí</td></tr>
+        <tr><td><span class="ejemplo" style="color:#111111;background:#D9CCFF">Festa</span> Tinta sobre lila (IA)</td><td>12,6:1</td><td>Sí</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Tipografía</h2>
+    <p><strong>Bricolage Grotesque</strong> para los títulos grandes y <strong>Plus Jakarta Sans</strong> para el resto. Ambas tienen licencia abierta (OFL). Cada estilo indica tamaño e interlínea en píxeles.</p>
+    <ul class="tipos">
+      <li><span class="tipo-nombre">Display/L · 40/44</span><span class="tipo-muestra tipo-titulo" style="font-size:40px;line-height:44px;font-weight:800">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Title/L · 28/34</span><span class="tipo-muestra tipo-titulo" style="font-size:28px;line-height:34px;font-weight:700">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Title/M · 20/26</span><span class="tipo-muestra" style="font-size:20px;line-height:26px;font-weight:700">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Title/S · 16/22</span><span class="tipo-muestra" style="font-size:16px;line-height:22px;font-weight:700">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Body/L · 16/24</span><span class="tipo-muestra" style="font-size:16px;line-height:24px;font-weight:400">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Body/M · 14/20</span><span class="tipo-muestra" style="font-size:14px;line-height:20px;font-weight:400">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Label/L · 16/20</span><span class="tipo-muestra" style="font-size:16px;line-height:20px;font-weight:600">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Label/M · 14/18</span><span class="tipo-muestra" style="font-size:14px;line-height:18px;font-weight:600">Menos buscar, más vivir la ciudad</span></li>
+      <li><span class="tipo-nombre">Caption · 12/16</span><span class="tipo-muestra" style="font-size:12px;line-height:16px;font-weight:500">Menos buscar, más vivir la ciudad</span></li>
+    </ul>
+
+    <h2>Espaciado y radios</h2>
+    <p>La escala parte de 4 px. Las esquinas redondeadas dan el tono amable de la marca.</p>
+    <ul class="escala">
+      <li><span class="cuadro" style="width:4px;height:4px"></span>2xs · 4</li>
+      <li><span class="cuadro" style="width:8px;height:8px"></span>xs · 8</li>
+      <li><span class="cuadro" style="width:12px;height:12px"></span>sm · 12</li>
+      <li><span class="cuadro" style="width:16px;height:16px"></span>md · 16</li>
+      <li><span class="cuadro" style="width:20px;height:20px"></span>lg · 20</li>
+      <li><span class="cuadro" style="width:24px;height:24px"></span>xl · 24</li>
+      <li><span class="cuadro" style="width:32px;height:32px"></span>2xl · 32</li>
+      <li><span class="cuadro" style="width:40px;height:40px"></span>3xl · 40</li>
+    </ul>
+    <ul class="escala">
+      <li><span class="radio" style="border-radius:8px"></span>sm · 8</li>
+      <li><span class="radio" style="border-radius:12px"></span>md · 12</li>
+      <li><span class="radio" style="border-radius:20px"></span>lg · 20</li>
+      <li><span class="radio" style="border-radius:28px"></span>xl · 28</li>
+      <li><span class="radio" style="border-radius:999px"></span>completo</li>
+    </ul>
+
+    <h2>Reglas para diseñar pantallas</h2>
+    <ul>
+      <li>Usar solo los colores, estilos de texto, espacios y radios de este manual.</li>
+      <li>Usar los botones y campos del tema, sin estilos propios.</li>
+      <li>Si falta un valor, se agrega primero en Figma y después en el código.</li>
+      <li>El diseño define únicamente el modo claro.</li>
+    </ul>
+  </main>
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

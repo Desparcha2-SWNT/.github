@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calidad · Festa</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="index.html"><img src="assets/images/logo_festa.png" alt="Festa"></a>
+                    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="requisitos.html">Requerimientos</a>
+      <a href="arquitectura.html">Arquitectura</a>
+      <a href="calidad.html" aria-current="page">Calidad</a>
+      <a href="ia.html">Uso de IA</a>
+      <a href="identidad.html">Identidad</a>
+      <a href="instalacion.html">Instalar la app</a>
+      <a href="equipo.html">Equipo</a>
+    </nav>
+  </header>
+
+  <main class="doc calidad">
+<h1>Calidad</h1>
+<p>Cómo se comprueba que Festa funciona y qué falta por comprobar. Las cifras corresponden a la última ejecución en verde del CI de <code>develop</code>, el 25 de noviembre de 2026.</p>
+
+<div class="stats">
+<div class="stat stat-must"><strong>834</strong><span>pruebas automáticas en verde</span></div>
+<div class="stat stat-should"><strong>585</strong><span>en los servicios de backend</span></div>
+<div class="stat stat-could"><strong>249</strong><span>en la app móvil</span></div>
+<div class="stat stat-wont"><strong>1</strong><span>aprobación obligatoria por cambio</span></div>
+</div>
+
+<h2>Pruebas por repositorio</h2>
+<table>
+<thead><tr><th>Repositorio</th><th>Parte</th><th>Herramienta</th><th>Pruebas</th><th>Base de datos en las pruebas</th></tr></thead>
+<tbody>
+<tr><td><code>festa-mobile</code></td><td>App Flutter</td><td>Flutter test</td><td>249</td><td>No usa</td></tr>
+<tr><td><code>festa-auth-service</code></td><td>Autenticación</td><td>JUnit</td><td>46</td><td>No usa</td></tr>
+<tr><td><code>festa-user-service</code></td><td>Perfiles y comercios</td><td>JUnit</td><td>45</td><td>PostgreSQL real</td></tr>
+<tr><td><code>festa-event-service</code></td><td>Eventos y mapa</td><td>Vitest</td><td>105</td><td>PostgreSQL real</td></tr>
+<tr><td><code>festa-booking-service</code></td><td>Asistencia y pases</td><td>Vitest</td><td>103</td><td>PostgreSQL real</td></tr>
+<tr><td><code>festa-payment-service</code></td><td>Compras</td><td>Vitest</td><td>101</td><td>PostgreSQL real</td></tr>
+<tr><td><code>festa-ai-service</code></td><td>Chat y descripciones</td><td>pytest</td><td>75</td><td>MongoDB real</td></tr>
+<tr><td><code>festa-analytics-service</code></td><td>Métricas</td><td>Vitest</td><td>71</td><td>MongoDB real</td></tr>
+<tr><td><code>festa-notification-service</code></td><td>Notificaciones</td><td>Vitest</td><td>39</td><td>MongoDB real</td></tr>
+</tbody>
+</table>
+<p>Además, <code>festa-gateway</code> tiene pruebas de humo, y <code>festa-infra</code> valida los contratos de mensajes y Terraform, y comprueba que la infraestructura levante y quede aislada.</p>
+
+<h2>Antes de integrar un cambio</h2>
+<ol class="pasos">
+<li><strong>Rama y pull request</strong><span>En los repositorios de código, todo cambio entra a <code>develop</code> por un pull request. La rama está protegida: no se puede borrar ni forzar.</span></li>
+<li><strong>Pruebas automáticas</strong><span>Formato, linter y pruebas se ejecutan en cada pull request.</span></li>
+<li><strong>Seguridad</strong><span>Trivy busca secretos, dependencias vulnerables y errores de configuración; un hallazgo alto o crítico con corrección disponible hace fallar la verificación.</span></li>
+<li><strong>Análisis de código</strong><span>CodeQL revisa los servicios de backend y SonarCloud varios de los repositorios. El gateway y la app (Dart) no pasan por CodeQL.</span></li>
+<li><strong>Revisión de otra persona</strong><span>Hace falta al menos una aprobación, además de la revisión automática de código.</span></li>
+</ol>
+
+<h2>Requerimientos no funcionales</h2>
+<p>4 implementados, 6 parciales y 2 sin validar. El texto de cada uno está en <a href="requisitos.html#no-funcionales">Requerimientos</a>.</p>
+<ul class="calidad-lista">
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF1</span><span class="chip q-chip">Parcial</span></div>
+<h3>Rendimiento</h3>
+<p>Las búsquedas por cercanía usan un índice espacial (GiST) en PostGIS.</p>
+<p class="q-falta">Falta medir que el mapa cargue en menos de 2 segundos.</p>
+</li>
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF2</span><span class="chip q-chip">Parcial</span></div>
+<h3>Escalabilidad</h3>
+<p>Cada servicio corre en un contenedor, sin guardar sesiones, y la infraestructura está definida con Terraform.</p>
+<p class="q-falta">Hoy se define una instancia por servicio, sin autoescalado.</p>
+</li>
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF3</span><span class="chip q-chip">Parcial</span></div>
+<h3>Disponibilidad</h3>
+<p>Los servicios exponen verificaciones de salud y métricas. El requerimiento no pide un acuerdo formal de nivel de servicio.</p>
+<p class="q-falta">Falta desplegar para comprobarla.</p>
+</li>
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF4</span><span class="chip q-chip">Parcial</span></div>
+<h3>Seguridad</h3>
+<p>El gateway valida el token JWT, y el nombre, el teléfono y la dirección del comercio se guardan cifrados con AES-GCM.</p>
+<p class="q-falta">El HTTPS público está definido en Terraform y falta desplegarlo; dentro de la red privada el tráfico va por HTTP.</p>
+</li>
+<li class="q q-ok">
+<div class="rf-cab"><span class="rf-id">RNF5</span><span class="chip q-chip">Implementado</span></div>
+<h3>Privacidad</h3>
+<p>El registro exige autorizar el tratamiento de datos. La ubicación solo se usa con consentimiento; sin él se usa la de la Escuela. Borrar la cuenta se propaga a los servicios.</p>
+</li>
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF6</span><span class="chip q-chip">Parcial</span></div>
+<h3>Pasarela de pagos</h3>
+<p>El checkout de Wompi va firmado y se verifica la firma de cada notificación de pago.</p>
+<p class="q-falta">Falta probar contra el ambiente de pruebas de Wompi.</p>
+</li>
+<li class="q q-ok">
+<div class="rf-cab"><span class="rf-id">RNF7</span><span class="chip q-chip">Implementado</span></div>
+<h3>Anti-fraude</h3>
+<p>Cada QR va firmado (HMAC) y la base de datos impide usarlo dos veces.</p>
+</li>
+<li class="q q-ok">
+<div class="rf-cab"><span class="rf-id">RNF8</span><span class="chip q-chip">Implementado</span></div>
+<h3>Costo de IA controlado</h3>
+<p>Límite por usuario y minuto, y cada descripción se genera una vez y se guarda.</p>
+<p class="q-falta">El límite no acota el gasto diario.</p>
+</li>
+<li class="q q-pendiente">
+<div class="rf-cab"><span class="rf-id">RNF9</span><span class="chip q-chip">Sin validar</span></div>
+<h3>Eficiencia de recursos</h3>
+<p>La app está hecha en Flutter.</p>
+<p class="q-falta">No se ha medido consumo de datos ni de batería en gama media o baja.</p>
+</li>
+<li class="q q-parcial">
+<div class="rf-cab"><span class="rf-id">RNF10</span><span class="chip q-chip">Parcial</span></div>
+<h3>Compatibilidad y adaptabilidad</h3>
+<p>Una sola base de código en Flutter.</p>
+<p class="q-falta">El MVP se distribuye solo para Android.</p>
+</li>
+<li class="q q-pendiente">
+<div class="rf-cab"><span class="rf-id">RNF11</span><span class="chip q-chip">Sin validar</span></div>
+<h3>Usabilidad</h3>
+<p>Los formularios validan los datos y explican los errores.</p>
+<p class="q-falta">Falta probarla con usuarios.</p>
+</li>
+<li class="q q-ok">
+<div class="rf-cab"><span class="rf-id">RNF12</span><span class="chip q-chip">Implementado</span></div>
+<h3>Mantenibilidad</h3>
+<p>Un servicio por responsabilidad, contratos versionados y pruebas en los flujos de QR y pagos.</p>
+</li>
+</ul>
+
+<h2>Observabilidad</h2>
+<p>Los servicios publican métricas que Prometheus recoge, junto con las del gateway y de RabbitMQ, y Grafana las consulta. Hoy ese montaje funciona con Docker Compose, en local.</p>
+
+<h2>Lo que falta comprobar</h2>
+<ul>
+<li>Desplegar en AWS y probar la aplicación contra ese entorno.</li>
+<li>Medir el tiempo de carga del mapa con muchos eventos.</li>
+<li>Probar los pagos en el ambiente de pruebas de Wompi.</li>
+<li>Ejecutar el análisis dinámico de seguridad (OWASP ZAP), que está preparado y requiere un entorno desplegado.</li>
+<li>Reunir y publicar la cobertura de las pruebas.</li>
+<li>Probar la app con estudiantes y comercios.</li>
+</ul>
+  </main>
+  <footer class="pie">
+    <div class="pie-inner">
+      <img src="assets/images/logo_festa.png" alt="Festa">
+      <div>
+        <strong>Equipo Desparcha2</strong>
+        <p>Innovación Software apoyada en Nuevas Tecnologías · grupos SWNT-1/101, SWNT-2/201 y SWNT-3/301 · 2026-2</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

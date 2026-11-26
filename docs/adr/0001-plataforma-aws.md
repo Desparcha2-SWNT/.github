@@ -26,7 +26,7 @@ Se despliega en **AWS**, en la región us-east-1, con los servicios de la págin
 - Mensajería: RabbitMQ como contenedor en Fargate (imagen oficial `rabbitmq:3.13-management`), con un contenedor auxiliar en la misma tarea que hace `POST /api/definitions` con `contracts/rabbitmq/definitions.json` apenas RabbitMQ está sano, el mismo mecanismo que `rabbitmq-topology` en el Docker Compose de `festa-infra`.
 - Permisos: las tareas de ECS usan el rol existente `LabRole` (`data "aws_iam_role"` en Terraform); no se crean roles IAM ni proveedores OIDC.
 - Red: las tareas van en las subredes públicas de la VPC por defecto con IP pública, sin NAT Gateway.
-- LLM: Gemini, como API externa (ADR 0003).
+- LLM: Groq, como API externa (ADR 0006, que reemplaza al 0003).
 
 ## Consecuencias
 - Los créditos de AWS solo aplican si se avisa al profesor con los correos del equipo (SCRUM-134).
