@@ -45,10 +45,10 @@
 <tr><td><code>festa-payment-service</code></td><td>Compras (versión futura)</td><td>Vitest</td><td>101</td><td>PostgreSQL real</td><td>72,0 %</td></tr>
 <tr><td><code>festa-notification-service</code></td><td>Notificaciones</td><td>Vitest</td><td>40</td><td>MongoDB real</td><td>65,7 %</td></tr>
 <tr><td><code>festa-auth-service</code></td><td>Autenticación</td><td>JUnit</td><td>46</td><td>No usa</td><td>51,8 %</td></tr>
-<tr><td><code>festa-user-service</code></td><td>Perfiles y comercios</td><td>JUnit</td><td>45</td><td>PostgreSQL real</td><td>15,5 %</td></tr>
+<tr><td><code>festa-user-service</code></td><td>Perfiles y comercios</td><td>JUnit</td><td>45</td><td>No usa (aún no tiene pruebas de integración)</td><td>15,5 %</td></tr>
 </tbody>
 </table>
-<p>La cobertura es la proporción de líneas del código de cada servicio que ejecutan sus pruebas. Se mide en cada cambio con la herramienta de cada lenguaje (JaCoCo en Java, <code>@vitest/coverage-v8</code> en Node, <code>pytest-cov</code> en Python y <code>flutter test --coverage</code> en la app) y se publica en el resumen de su ejecución de CI; todavía no hay un mínimo obligatorio. Las cifras más bajas (<code>festa-user-service</code> y <code>festa-auth-service</code>) son la prioridad para las siguientes pruebas.</p>
+<p>La cobertura es la proporción de líneas del código de cada servicio que ejecutan sus pruebas. Se mide en cada cambio con la herramienta de cada lenguaje (JaCoCo en Java, <code>@vitest/coverage-v8</code> en Node, <code>pytest-cov</code> en Python y <code>flutter test --coverage</code> en la app) y se publica en el resumen de su ejecución de CI; todavía no hay un mínimo obligatorio. Las cifras más bajas (<code>festa-user-service</code> y <code>festa-auth-service</code>) son la prioridad para las siguientes pruebas. En user-service la cifra es real: JaCoCo mide bien, pero el servicio solo tiene pruebas unitarias y de seguridad; la base para pruebas con PostgreSQL en Testcontainers está lista y todavía no tiene pruebas que la usen.</p>
 <p>Además, <code>festa-gateway</code> tiene pruebas de humo, y <code>festa-infra</code> valida los contratos de mensajes y Terraform, y comprueba que la infraestructura levante y quede aislada.</p>
 
 <h2>Antes de integrar un cambio</h2>
