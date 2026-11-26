@@ -4,6 +4,12 @@
 
 Festa es una aplicación móvil que centraliza el descubrimiento de eventos y planes en Bogotá en un mapa interactivo en tiempo real, resolviendo el problema de que los planes se pierden entre publicaciones de redes sociales sin trazabilidad temporal clara, y de que los comercios pequeños no pueden competir por visibilidad sin pagar pauta. Su diferenciador central es un motor de Inteligencia Artificial Generativa que recomienda eventos personalizados y ayuda a los comercios a redactar automáticamente descripciones atractivas.
 
+## 📚 Documentación
+
+**Sitio del proyecto:** https://desparcha2-swnt.github.io/.github/
+
+Requerimientos, arquitectura y servicios, calidad y cobertura de pruebas, uso de IA (bitácora de prompts), identidad de marca e instalación de la app.
+
 ---
 
 ## 👥 Autores — Equipo Desparchados
